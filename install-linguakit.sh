@@ -3,7 +3,7 @@
 
 for file in linguakit*
 do
-    awk '$0=="MAIN_DIR=\"./CitiusLinguakit\""{print "MAIN_DIR=\"'`pwd`'\"";next}\
+    awk '$0=="MAIN_DIR=\"./Linguakit\""{print "MAIN_DIR=\"'`pwd`'\"";next}\
         {print}' $file > $file.tmp;
     mv $file.tmp $file;
 done

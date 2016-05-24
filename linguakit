@@ -18,7 +18,7 @@
 # Config
 ############################
 
-MAIN_DIR="./CitiusLinguakit"
+MAIN_DIR="./Linguakit"
 PROGS=$MAIN_DIR"/scripts"
 DIRPARSER=$MAIN_DIR"/parsers"
 
