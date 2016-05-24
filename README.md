@@ -32,7 +32,7 @@ cpan>install Storable
 
 ## How to install
 ```
-git clone https://github.com/gamallo/CitiusLinguakit.git
+git clone https://github.com/citiususc/Linguakit.git
 sh install-linguakit.sh
 ```
 Pay attention: do not install the package in a directory whose name contains blank spaces!
