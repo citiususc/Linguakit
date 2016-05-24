@@ -24,8 +24,8 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 * Language recognition (flag "recog"): It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
 
 ## Requirements
-GNU/LINUX (bash + perl)
-*Storable* Perl module. To install, you may use CPAN:
+* GNU/LINUX (bash + perl)
+* *Storable* Perl module. To install, you may use CPAN:
 ```
 cpan>install Storable
 ```
