@@ -38,6 +38,7 @@ sh install-linguakit.sh
 Pay attention: do not install the package in a directory whose name contains blank spaces!
 
 ## How to use
+```
  linguakit <lang> <module> <file> [options]
       
       language = gl, es, en, pt, none
@@ -59,7 +60,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       -mi      co-occurrence measure: mutual information  (only with 'mwe' module)
       -cooc    co-occurrence measure: co-occurrence counting  (only with 'mwe' module)
       -s       the input <file> is just a string (only with both 'sent' and 'recog' modules)
-
+```
 
 ## Examples of use
 
