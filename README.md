@@ -1,9 +1,9 @@
 #LINGUAKIT 
-## ProLNat@GE Group
+### ProLNat@GE Group
 
 A linguistic tool containing:
  * dependency parser (DepPattern)
- *  PoS tagger
+ * PoS tagger
  * NER (named entity recognition)
  * NEC (named entity classification)
  * Sentiment analysis
@@ -23,8 +23,10 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 
 ## Requirements
 GNU/LINUX (bash + perl)
-'Storable' Perl module. To install, you may use CPAN: 
-	   cpan>install Storable
+*Storable* Perl module. To install, you may use CPAN:
+```
+cpan>install Storable
+```
 
 ## How to install
 ```
@@ -59,16 +61,24 @@ Pay attention: do not install the package in a directory whose name contain blan
 
 ## Examples of use
 
-> ./linguakit pt dep tests/pt.txt -conll
+```
+./linguakit pt dep tests/pt.txt -conll
+```
 (this returns a dependency-based analysis in CoNLL format)
 
-> ./linguakit en tagger tests/en.txt -nec
+```
+ ./linguakit en tagger tests/en.txt -nec
+```
 (this returns the PoS tags with NEC information for named entities)
 
-> ./linguakit en sent "I don't like the film" -s
+```
+./linguakit en sent "I don't like the film" -s
+```
 (this returns a sentiment value)  
 
-> ./linguakit none mw tests/pt.txt -mi
+```
+./linguakit none mw tests/pt.txt -mi
+```
 (this identifies the language of the input text and then makes multiword extraction ranked with mutual information)
 
 ## Input file
@@ -79,8 +89,10 @@ The input must be in plain text format, and codified in UTF8.
 ## Lexicons
 
 Lexicons (electronic dictionaries) are in tagger/$lang/lexicon/dicc.src files (where $lang is en, es, pt, gl). If you modify them, then you should compile them as follows:
->sh lexicon_compiler.sh
-(Remember you need the 'Storalbe' Perl package)
+```
+sh lexicon_compiler.sh
+```
+(Remember you need the *Storalbe* Perl package)
 
 
 ## Dependency parser 
@@ -157,4 +169,5 @@ Gamallo, P. and Garcia, M. 2014. Citius: A Naive-Bayes Strategy for Sentiment An
 Gamallo, P., Garcia, M. and Fernández-Lanza, S. (2013). TASS: A Naive-Bayes strategy for sentiment analysis on Spanish tweets, Proceedings of XXIX Congreso de la Sociedad Española de Procesamiento de lenguaje natural. Workshop on Sentiment Analysis at SEPLN (TASS2013), Madrid. pp. 126-132. ISBN: 978-84-695-8349-4. (FIRST system in the task of polarity detection at the entity level)
 
 * Multiword extraction:
+
 Barcala M., E. Domínguez-Noya, P. Gamallo, M.López, E. Moscoso, G. Rojo, P. Santalla, S. Sotelo. (2007) A Corpus and Lexical Resources for Multi-word Terminology Extraction in the Field of Economy, 3rd Language & Technology Conference(LeTC'2007), Poznan, Poland (355-359). 
