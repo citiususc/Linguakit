@@ -35,7 +35,7 @@ cpan>install Storable
 git clone https://github.com/gamallo/CitiusLinguakit.git
 sh install-linguakit.sh
 ```
-Pay attention: do not install the package in a directory whose name contain blank spaces!
+Pay attention: do not install the package in a directory whose name contains blank spaces!
 
 ## How to use
  linguakit <lang> <module> <file> [options]
@@ -63,29 +63,29 @@ Pay attention: do not install the package in a directory whose name contain blan
 
 ## Examples of use
 
+This returns a dependency-based analysis in CoNLL format:
 ```
 ./linguakit pt dep tests/pt.txt -conll
 ```
-(this returns a dependency-based analysis in CoNLL format)
 
+This returns the PoS tags with NEC information for named entities:
 ```
  ./linguakit en tagger tests/en.txt -nec
 ```
-(this returns the PoS tags with NEC information for named entities)
 
+This returns a sentiment value:
 ```
 ./linguakit en sent "I don't like the film" -s
 ```
-(this returns a sentiment value)  
 
+This identifies the language of the input text and then makes multiword extraction ranked with mutual information:
 ```
 ./linguakit none mw tests/pt.txt -mi
 ```
-(this identifies the language of the input text and then makes multiword extraction ranked with mutual information)
 
 ## Input file
 
-The input must be in plain text format, and codified in UTF8.
+The input must be in plain text format, and encoded in UTF8.
 
 
 ## Lexicons
