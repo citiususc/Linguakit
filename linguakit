@@ -1,0 +1,260 @@
+#!/bin/bash
+
+#shopt -s extglob
+
+
+###################################################################
+# Script to use different linguistic tools
+#   - - dependency parser (DepPattern)
+#   - - PoS tagger + NER + NEC (CitiusTools)
+#   - - Sentiment Analysis (CitiusSentiment)
+#
+# Pablo Gamallo
+# ProLNat@GE Group, CiTIUS
+# University of Santiago de Compostela
+###################################################################
+
+############################
+# Config
+############################
+
+MAIN_DIR="./CitiusLinguakit"
+PROGS=$MAIN_DIR"/scripts"
+DIRPARSER=$MAIN_DIR"/parsers"
+
+
+
+############################
+# Functions
+############################
+
+help()
+{
+  echo "Syntax: linguakit <lang> <module> <file> [options]
+      
+      language = gl, es, en, pt
+      module = dep, tagger, mwe, recog, sent
+      file = path of the file input 
+
+      Available command-line options:
+
+      -a       by default output of the parser: simple dependency analysis (only with 'dep' module)
+      -fa      parser output: full dependency analysis  (only with 'dep' module)
+      -c       parser output: correct tagged text (only with 'dep' module)
+      -conll   parser output: CoNLL style (only with 'dep' module)
+      -noner   by default PoS tagger output: no NER or NEC is processed (only with 'tagger' module)
+      -ner     PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
+      -nec     PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
+      -chi     by default co-occurrence measure: chi-square (only with 'mwe' module)
+      -log     co-occurrence measure: loglikelihood (only with 'mwe' module)
+      -scp     co-occurrence measure: symmetrical conditional probability  (only with 'mwe' module)
+      -mi      co-occurrence measure: mutual information  (only with 'mwe' module)
+      -cooc    co-occurrence measure: co-occurrence counting  (only with 'mwe' module)
+      -s       the input <file> is just a string (only with both 'sent' and 'recog' modules)
+"
+  exit
+}
+
+
+# Parámetros obrigatorios
+[ $# -lt 3 ] && help
+LING=$1
+MOD=$2
+FILE=$3
+
+if [ "$LING" == "none" ]  ; then
+  LING_back="none"
+  LING="en"
+fi
+
+
+# Parámetros opcionais
+OPT=""
+[ "$4" != "" ] && OPT=$4
+
+NAMEPARSER="$DIRPARSER/parserDefault-$LING"
+FILTER="$PROGS/AdapterFreeling-${LING}.perl"
+CONLL="$PROGS/saidaCoNLL-fa.perl"
+
+SENT=$MAIN_DIR"/tagger/"$LING"/sentences-"$LING"_exe.perl" 
+TOK=$MAIN_DIR"/tagger/"$LING"/tokens-"$LING"_exe.perl" 
+SPLIT=$MAIN_DIR"/tagger/"$LING"/splitter-"$LING"_exe.perl"
+LEMMA=$MAIN_DIR"/tagger/"$LING"/lemma-"$LING"_exe.perl"
+NER=$MAIN_DIR"/tagger/"$LING"/ner-"$LING"_exe.perl"
+TAGGER=$MAIN_DIR"/tagger/"$LING"/tagger-"$LING"_exe.perl" 
+NEC=$MAIN_DIR"/tagger/"$LING"/nec-"$LING"_exe.perl"
+
+SENTIMENT=$MAIN_DIR"/sentiment/nbayes.perl"
+SENT_TRAIN=$MAIN_DIR"/sentiment/"$LING"/train_"$LING 
+SENT_LEX=$MAIN_DIR"/sentiment/"$LING"/lex_"$LING
+
+MWE=$MAIN_DIR"/mwe/mwe.perl"
+MWE_FILT=$MAIN_DIR"/mwe/filtro_galextra.perl"
+MWE_SIX=$MAIN_DIR"/mwe/six_tokens.perl"
+
+QUELINGUA=$MAIN_DIR"/lanrecog/lanrecog.perl"
+QUELINGUA_LEX=$MAIN_DIR"/lanrecog/lexicons"
+QUELINGUA_SUFFIX=$MAIN_DIR"/lanrecog/morpho/suffix.txt"
+###building a temporal lexicon:
+for i in $QUELINGUA_LEX/* ; do cat $i |awk -v LANG=`basename $i |sed "s/\.lx//"` '{print $0"\t"LANG}' >> __tmp; done
+QUELINGUA_LEX=__tmp 
+
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] ; then
+  help;
+  echo "help" ;
+fi
+
+
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ]   && [ "$OPT" != "" ] ; then
+#if  [ "$OPT" != "-a" ] ; then
+  help;
+  echo "help" ;
+fi
+
+
+case $LING in
+  es) ;;
+  en) ;;
+  gl) ;;
+  pt) ;;
+  none) ;;
+ # fr) ;;
+  *) help
+esac
+
+
+#NAMEFILE=`basename $FILE`;
+
+ZIP=`echo $FILE |awk '($0 ~ /(gz$|zip$)/) {print "zip"}'`
+
+
+if [ "$MOD" != "recog" ] && [ "$LING_back" == "none" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  LING=`zcat $FILE |tr -d '\015' | $SENT  | $TOK   | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX`
+ else 
+  LING=`cat  $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX`
+ fi
+ echo "language = $LING"
+ NAMEPARSER="$DIRPARSER/parserDefault-$LING"
+ FILTER="$PROGS/AdapterFreeling-${LING}.perl"
+ CONLL="$PROGS/saidaCoNLL-fa.perl"
+
+ SENT=$MAIN_DIR"/tagger/"$LING"/sentences-"$LING"_exe.perl" 
+ TOK=$MAIN_DIR"/tagger/"$LING"/tokens-"$LING"_exe.perl" 
+ SPLIT=$MAIN_DIR"/tagger/"$LING"/splitter-"$LING"_exe.perl"
+ LEMMA=$MAIN_DIR"/tagger/"$LING"/lemma-"$LING"_exe.perl"
+ NER=$MAIN_DIR"/tagger/"$LING"/ner-"$LING"_exe.perl"
+ TAGGER=$MAIN_DIR"/tagger/"$LING"/tagger-"$LING"_exe.perl" 
+ NEC=$MAIN_DIR"/tagger/"$LING"/nec-"$LING"_exe.perl"
+
+ SENTIMENT=$MAIN_DIR"/sentiment/nbayes.perl"
+ SENT_TRAIN=$MAIN_DIR"/sentiment/"$LING"/train_"$LING 
+ SENT_LEX=$MAIN_DIR"/sentiment/"$LING"/lex_"$LING
+fi
+
+##by default dependency output
+if [ "$MOD" == "dep" ] && [ "$OPT" == "" ]   ; then 
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER |
+      $FILTER | $NAMEPARSER.perl "-a"  ;
+ 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER |
+       $FILTER | $NAMEPARSER.perl "-a"  ;
+ fi
+
+##Conll dependency output
+elif [ "$MOD" == "dep" ] && [ "$OPT" == "-conll" ] ; then 
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER |
+      $FILTER | $NAMEPARSER.perl "-fa" | $CONLL  ;
+ 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER |
+       $FILTER | $NAMEPARSER.perl  "-fa" | $CONLL  ;
+ fi
+
+##Other dependency outputs
+elif [ "$MOD" == "dep" ] && [ "$OPT" != "" ] ; then 
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER |
+      $FILTER | $NAMEPARSER.perl $OPT   ;
+ 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER |
+       $FILTER | $NAMEPARSER.perl  $OPT  ;
+ fi
+
+ ##by default PoS tagging
+elif [ "$MOD" == "tagger" ] && [ "$OPT" == "" ] || [ "$OPT" == "-noner" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER 
+ 
+ else 
+   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER
+ fi
+
+##PoS tagging with ner
+elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-ner" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER 
+ 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER
+ fi
+
+##PoS tagging with ner
+elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-nec" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC
+ 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC
+ fi
+
+
+##multiword extraction
+##sentiment analysis
+elif [ "$MOD" == "mwe" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $MWE_FILT | $MWE_SIX  | $MWE "-chi" 1
+  
+ else
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $MWE_FILT | $MWE_SIX  |$MWE  "-chi" 1
+ fi
+
+elif [ "$MOD" == "mwe" ] && [ "$OPT" != "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $MWE_FILT | $MWE_SIX  | $MWE $OPT 1
+  
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $MWE_FILT | $MWE_SIX  |$MWE  $OPT 1
+ fi
+
+##sentiment analysis
+elif [ "$MOD" == "sent" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $SENTIMENT $SENT_TRAIN $SENT_LEX
+  
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $SENTIMENT $SENT_TRAIN $SENT_LEX
+ fi
+
+##sentiment analysis with a string as input
+elif [ "$MOD" == "sent" ] && [ "$OPT" == "-s" ] ; then
+  echo  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $SENTIMENT $SENT_TRAIN $SENT_LEX
+
+##language recognition
+elif [ "$MOD" == "recog" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX
+  
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX
+ fi
+##language recognition with a string as input
+elif [ "$MOD" == "recog" ] && [ "$OPT" == "-s" ] ; then
+  echo $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX
+fi
+
+rm __tmp

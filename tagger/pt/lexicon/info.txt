@@ -1,0 +1,3 @@
+- Foram removidos do dicionario os NC de:
+y, la, lo, las, los, pero, de
+- Foi invertido a ordem dos lemas de "como" (deixando 'comer' em terceira posiçao)

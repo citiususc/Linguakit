@@ -1,0 +1,39 @@
+CitiusSentiment: PERL scripts for opinion mining 
+
+Author:
+Pablo Gamallo
+ProLNat Group, CiTIUS
+University of Santiago de Compostela
+Galiza, Spain
+
+################ WORK IN PROGRESS!!!!! ###########################
+
+
+REQUIREMENTS
+Perl and bash interpreters 
+
+It contains CitiusTool (CitiusTagger + CitiusNEC).
+
+HOW TO INSTALL
+> git clone https://github.com/gamallo/CitiusSentiment.git
+> sh install-citiussentiment.sh
+
+Pay attention: do not install the package in a directory whose name contain blank spaces!
+
+HOW TO USE
+sentiment.sh <lang> <file>
+
+      language=pt, es, en, gl
+      file=path of the input file
+
+
+INPUT FILE
+
+The input file must be in plain text format. 
+File codification must be UTF-8.
+
+
+EXAMPLE OF USE
+
+./sentiment.sh es test/es.txt
+
