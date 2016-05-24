@@ -7,6 +7,8 @@ A linguistic tool containing:
  * NER (named entity recognition)
  * NEC (named entity classification)
  * Sentiment analysis
+ * Multiword extraction
+ * Language recognition
 
 ## Description
 The command 'linguakit' is able to process 4 languages (Portuguese, English, Spanish, Galician), and allows you to run the following linguistic tools:
@@ -135,6 +137,9 @@ The input can be either a file (by default) or a string (option -e). The output 
 The classifier was trained with tweets, so the input should be just one sentence or a small paragraph. 
 
 For more information: http://gramatica.usc.es/pln/tools/CitiusSentiment.html
+
+## Multiword Extraction
+For more information: http://gramatica.usc.es/~gamallo/gale-extra/index2.1.htm
 
 ## Language identification:
 It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
