@@ -48,7 +48,7 @@ Pay attention: do not install the package in a directory whose name contains bla
 
 ## How to use
 ```
- linguakit <lang> <module> <file> [options]
+ linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
       module = dep, tagger, mwe, recog, sent, tok
