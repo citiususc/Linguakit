@@ -10,6 +10,7 @@ A linguistic tool containing:
  * Multiword extraction
  * Language recognition
  * Tokenizer
+ * Keyword in context
 
 ## Description
 The command 'linguakit' is able to process 4 languages (Portuguese, English, Spanish, Galician), and allows you to run the following linguistic tools:
@@ -24,7 +25,9 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 
 * Language recognition (flag "recog"): It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
 
-* Tokenizer (flag "tok"): It returns a tokenized text. Option -split splits word contractions and verb clitics. Option -sort ranks tokens by frequency.
+* Tokenizer (flag "tok"): It returns a tokenized text. Option -split splits word contractions and verb clitics. Option -sort ranks tokens by frequency. 
+
+* Keyword in context (flag "kwic"): It returns a target word in context (window: 10 tokens). Option -tokens returns tokens as context. This module requires another argument: the keyword to be searched. 
 
 ## Requirements
 * GNU/LINUX (bash + perl)
@@ -51,7 +54,7 @@ Pay attention: do not install the package in a directory whose name contains bla
  linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent, tok
+      module = dep, tagger, mwe, recog, sent, tok, kwic
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -60,6 +63,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       'recog'   language recognition
       'sent'    sentiment analysis
       'tok'     tokenizer
+      'kwic'    keyword in context (concordances)
 
       Available command-line options:
 
@@ -80,6 +84,8 @@ Pay attention: do not install the package in a directory whose name contains bla
      
       -split   'tok' option: tokenization with splitting
       -sort    'tok' option: tokenization with tokens sorted by frequency
+ 
+      -tokens  'kwic' option: contexts are tokens 
 
       -s       'sent' and 'recog' options: if <input> is a string and not a file   
 ```
@@ -104,6 +110,11 @@ This returns a sentiment value:
 This identifies the language of the input text and then makes multiword extraction ranked with mutual information:
 ```
 ./linguakit none mw tests/pt.txt -mi
+```
+
+This generates the context in tokens of the keyword "presidente" (concordances or keyword in context). 
+```
+./linguakit none kwic tests/pt.txt -tokens "presidente"
 ```
 
 ## Input file

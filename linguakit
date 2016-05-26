@@ -33,7 +33,7 @@ help()
   echo "Syntax: linguakit <lang> <module> <input> [options]
       
       language = gl, es, en, pt
-      module = dep, tagger, mwe, recog, sent, tok
+      module = dep, tagger, mwe, recog, sent, tok, kwic
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -42,6 +42,7 @@ help()
       'recog'   language recognition
       'sent'    sentiment analysis
       'tok'     tokenizer
+      'kwic'    keyword in context (concordances)
 
       Available command-line options:
 
@@ -63,6 +64,9 @@ help()
       -split   'tok' option: tokenization with splitting
       -sort    'tok' option: tokenization with tokens sorted by frequency
 
+      -tokens  'kwic' option: contexts are tokens
+               This option requires another argument: the keyword to be searched
+      
       -s       'sent' and 'recog' options: if <input> is a string and not a file 
 "
   exit
@@ -112,13 +116,15 @@ QUELINGUA_SUFFIX=$MAIN_DIR"/lanrecog/morpho/suffix.txt"
 for i in $QUELINGUA_LEX/* ; do cat $i |awk -v LANG=`basename $i |sed "s/\.lx//"` '{print $0"\t"LANG}' >> __tmp; done
 QUELINGUA_LEX=__tmp 
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] ; then
+KWIC=$MAIN_DIR"/kwic/kwic.perl"
+
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ] ; then
   help;
   echo "help" ;
 fi
 
 
-if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ]  && [ "$OPT" != "" ] ; then
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ] && [ "$OPT" != "-tokens" ]  && [ "$OPT" != "" ] ; then
 #if  [ "$OPT" != "-a" ] ; then
   help;
   echo "help" ;
@@ -142,11 +148,17 @@ ZIP=`echo $FILE |awk '($0 ~ /(gz$|zip$)/) {print "zip"}'`
 
 
 if [ "$MOD" != "recog" ] && [ "$LING_back" == "none" ] ; then
- if [ "$ZIP" == "zip" ] ; then
+ if [ "$OPT" == "-s" ] ; then
+  LING=`echo $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX`
+
+ elif [ "$ZIP" == "zip" ] ; then
   LING=`zcat $FILE |tr -d '\015' | $SENT  | $TOK   | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX`
+
  else 
   LING=`cat  $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX`
  fi
+
+
  echo "language = $LING"
  NAMEPARSER="$DIRPARSER/parserDefault-$LING"
  FILTER="$PROGS/AdapterFreeling-${LING}.perl"
@@ -281,12 +293,20 @@ elif [ "$MOD" == "tok" ] && [ "$OPT" == "-split" ] ; then
  else 
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT
  fi
-##tokenizer with sorting
+##tokenizer with sorting by frequency
 elif [ "$MOD" == "tok" ] && [ "$OPT" == "-sort" ] ; then
   if [ "$ZIP" == "zip" ] ; then
   zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | sort | uniq -c | sort -nr
  else 
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | sort | uniq -c | sort -nr
+ fi
+
+##tokenizer with key word in context (kwic) or concordances
+elif [ "$MOD" == "kwic" ] && [ "$OPT" == "-tokens" ] ; then
+  if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015'  | $KWIC $5
+ else 
+  cat  $FILE |tr -d '\015'  | $KWIC $5
  fi
 
 ##language recognition with a string as input
