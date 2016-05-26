@@ -9,6 +9,7 @@ A linguistic tool containing:
  * Sentiment analysis
  * Multiword extraction
  * Language recognition
+ * Tokenizer
 
 ## Description
 The command 'linguakit' is able to process 4 languages (Portuguese, English, Spanish, Galician), and allows you to run the following linguistic tools:
@@ -23,6 +24,8 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 
 * Language recognition (flag "recog"): It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
 
+* Tokenizer (flag "tok"): It returns a tokenized text. Option -split splits word contractions and verb clitics.
+
 ## Requirements
 * GNU/LINUX (bash + perl)
 * *Storable* Perl module. To install, you may use CPAN:
@@ -31,8 +34,14 @@ cpan>install Storable
 ```
 
 ## How to install
+* With git:
 ```
 git clone https://github.com/citiususc/Linguakit.git
+sh install-linguakit.sh
+```
+* With zip version (download Linguistik-master.zip):
+```
+unzip Linguistic-master.zip
 sh install-linguakit.sh
 ```
 Pay attention: do not install the package in a directory whose name contains blank spaces!
@@ -40,26 +49,38 @@ Pay attention: do not install the package in a directory whose name contains bla
 ## How to use
 ```
  linguakit <lang> <module> <file> [options]
-      
+    
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent
-      file = path of the file input 
+      module = dep, tagger, mwe, recog, sent, tok
+      input = path of the input (by default a txt file or gz/zip) 
+
+      'dep'     dependency syntactic analysis
+      'tagger'  part-of-speech tagging
+      'mwe'     multiword extraction
+      'recog'   language recognition
+      'sent'    sentiment analysis
+      'tok'     tokenizer
 
       Available command-line options:
 
-      -a       by default output of the parser: simple dependency analysis (only with 'dep' module)
-      -fa      parser output: full dependency analysis  (only with 'dep' module)
-      -c       parser output: correct tagged text (only with 'dep' module)
-      -conll   parser output: CoNLL style (only with 'dep' module)
-      -noner   by default PoS tagger output: no NER or NEC is processed (only with 'tagger' module)
-      -ner     PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
-      -nec     PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
-      -chi     by default co-occurrence measure: chi-square (only with 'mwe' module)
-      -log     co-occurrence measure: loglikelihood (only with 'mwe' module)
-      -scp     co-occurrence measure: symmetrical conditional probability  (only with 'mwe' module)
-      -mi      co-occurrence measure: mutual information  (only with 'mwe' module)
-      -cooc    co-occurrence measure: co-occurrence counting  (only with 'mwe' module)
-      -s       the input <file> is just a string (only with both 'sent' and 'recog' modules)
+      -a       'dep' option: simple dependency analysis (by default syntactic output)
+      -fa      'dep' option: full dependency analysis
+      -c       'dep' option: tagged text with syntactic information (for correction rules)
+      -conll   'dep' option: CoNLL output style
+
+      -noner   'tagger' option: no NER or NEC is processed (by default PoS tagger output)
+      -ner     'tagger' option: PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
+      -nec     'tagger' option: PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
+
+      -chi     'mwe' option: chi-square co-occurrence measure (by default)
+      -log     'mwe' option: loglikelihood 
+      -scp     'mwe' option: symmetrical conditional probability
+      -mi      'mwe' option: mutual information 
+      -cooc    'mwe' option: co-occurrence counting
+     
+      -split   'tok' option: tokenization with splitting
+
+      -s       'sent' and 'recog' options: if <input> is a string and not a file   
 ```
 
 ## Examples of use

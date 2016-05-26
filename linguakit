@@ -30,27 +30,39 @@ DIRPARSER=$MAIN_DIR"/parsers"
 
 help()
 {
-  echo "Syntax: linguakit <lang> <module> <file> [options]
+  echo "Syntax: linguakit <lang> <module> <input> [options]
       
       language = gl, es, en, pt
-      module = dep, tagger, mwe, recog, sent
-      file = path of the file input 
+      module = dep, tagger, mwe, recog, sent, tok
+      input = path of the input (by default a txt file or gz/zip) 
+
+      'dep'     dependency syntactic analysis
+      'tagger'  part-of-speech tagging
+      'mwe'     multiword extraction
+      'recog'   language recognition
+      'sent'    sentiment analysis
+      'tok'     tokenizer
 
       Available command-line options:
 
-      -a       by default output of the parser: simple dependency analysis (only with 'dep' module)
-      -fa      parser output: full dependency analysis  (only with 'dep' module)
-      -c       parser output: correct tagged text (only with 'dep' module)
-      -conll   parser output: CoNLL style (only with 'dep' module)
-      -noner   by default PoS tagger output: no NER or NEC is processed (only with 'tagger' module)
-      -ner     PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
-      -nec     PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
-      -chi     by default co-occurrence measure: chi-square (only with 'mwe' module)
-      -log     co-occurrence measure: loglikelihood (only with 'mwe' module)
-      -scp     co-occurrence measure: symmetrical conditional probability  (only with 'mwe' module)
-      -mi      co-occurrence measure: mutual information  (only with 'mwe' module)
-      -cooc    co-occurrence measure: co-occurrence counting  (only with 'mwe' module)
-      -s       the input <file> is just a string (only with both 'sent' and 'recog' modules)
+      -a       'dep' option: simple dependency analysis (by default syntactic output)
+      -fa      'dep' option: full dependency analysis
+      -c       'dep' option: tagged text with syntactic information (for correction rules)
+      -conll   'dep' option: CoNLL output style
+
+      -noner   'tagger' option: no NER or NEC is processed (by default PoS tagger output)
+      -ner     'tagger' option: PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
+      -nec     'tagger' option: PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
+
+      -chi     'mwe' option: chi-square co-occurrence measure (by default)
+      -log     'mwe' option: loglikelihood 
+      -scp     'mwe' option: symmetrical conditional probability
+      -mi      'mwe' option: mutual information 
+      -cooc    'mwe' option: co-occurrence counting
+     
+      -split   'tok' option: tokenization with splitting
+
+      -s       'sent' and 'recog' options: if <input> is a string and not a file 
 "
   exit
 }
@@ -99,13 +111,13 @@ QUELINGUA_SUFFIX=$MAIN_DIR"/lanrecog/morpho/suffix.txt"
 for i in $QUELINGUA_LEX/* ; do cat $i |awk -v LANG=`basename $i |sed "s/\.lx//"` '{print $0"\t"LANG}' >> __tmp; done
 QUELINGUA_LEX=__tmp 
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] ; then
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] ; then
   help;
   echo "help" ;
 fi
 
 
-if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ]   && [ "$OPT" != "" ] ; then
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]   && [ "$OPT" != "" ] ; then
 #if  [ "$OPT" != "-a" ] ; then
   help;
   echo "help" ;
@@ -252,9 +264,28 @@ elif [ "$MOD" == "recog" ] && [ "$OPT" == "" ] ; then
  else 
   cat  $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX
  fi
+
+##tokenizer
+##tokenizer
+elif [ "$MOD" == "tok" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK 
+ fi
+##tokenizer with splitting
+elif [ "$MOD" == "tok" ] && [ "$OPT" == "-split" ] ; then
+  if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT
+ fi
+
+
 ##language recognition with a string as input
 elif [ "$MOD" == "recog" ] && [ "$OPT" == "-s" ] ; then
   echo $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX
 fi
+
 
 rm __tmp
