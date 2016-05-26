@@ -18,7 +18,7 @@
 # Config
 ############################
 
-MAIN_DIR="./Linguakit"
+MAIN_DIR="/home/gamallo/CitiusTools/devel/Linguakit"
 PROGS=$MAIN_DIR"/scripts"
 DIRPARSER=$MAIN_DIR"/parsers"
 
@@ -61,6 +61,7 @@ help()
       -cooc    'mwe' option: co-occurrence counting
      
       -split   'tok' option: tokenization with splitting
+      -sort    'tok' option: tokenization with tokens sorted by frequency
 
       -s       'sent' and 'recog' options: if <input> is a string and not a file 
 "
@@ -117,7 +118,7 @@ if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "
 fi
 
 
-if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]   && [ "$OPT" != "" ] ; then
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ]  && [ "$OPT" != "" ] ; then
 #if  [ "$OPT" != "-a" ] ; then
   help;
   echo "help" ;
@@ -280,7 +281,13 @@ elif [ "$MOD" == "tok" ] && [ "$OPT" == "-split" ] ; then
  else 
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT
  fi
-
+##tokenizer with sorting
+elif [ "$MOD" == "tok" ] && [ "$OPT" == "-sort" ] ; then
+  if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | sort | uniq -c | sort -nr
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | sort | uniq -c | sort -nr
+ fi
 
 ##language recognition with a string as input
 elif [ "$MOD" == "recog" ] && [ "$OPT" == "-s" ] ; then

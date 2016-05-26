@@ -24,7 +24,7 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 
 * Language recognition (flag "recog"): It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
 
-* Tokenizer (flag "tok"): It returns a tokenized text. Option -split splits word contractions and verb clitics.
+* Tokenizer (flag "tok"): It returns a tokenized text. Option -split splits word contractions and verb clitics. Option -sort ranks tokens by frequency.
 
 ## Requirements
 * GNU/LINUX (bash + perl)
@@ -79,6 +79,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       -cooc    'mwe' option: co-occurrence counting
      
       -split   'tok' option: tokenization with splitting
+      -sort    'tok' option: tokenization with tokens sorted by frequency
 
       -s       'sent' and 'recog' options: if <input> is a string and not a file   
 ```
