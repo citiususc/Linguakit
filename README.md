@@ -13,6 +13,7 @@ A linguistic tool containing:
  * Language recognition
  * Tokenizer
  * Keyword in context
+ * Entity linking and semantic annotation
 
 ## Description
 The command 'linguakit' is able to process 4 languages (Portuguese, English, Spanish, Galician), and allows you to run the following linguistic tools:
@@ -34,6 +35,8 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 * Tokenizer (flag "tok"): It returns a tokenized text. Option -split splits word contractions and verb clitics. Option -sort ranks tokens by frequency. 
 
 * Keyword in context (flag "kwic"): It returns a target word in context (window: 10 tokens). Option -tokens returns tokens as context. This module requires another argument: the keyword to be searched. 
+
+* Entity linking (flag "link"): It returns a list of terms which represent Wikipedia entities. Besides, the input text is annotated with those terms and their links to Wikipedia. This module requires Internet conection since the search is done via a Web server. The output can be in two formats: json and xml.
 
 ## Requirements
 * GNU/LINUX (bash + perl)
@@ -60,7 +63,7 @@ Pay attention: do not install the package in a directory whose name contains bla
  linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent, rel, tok, kwic
+      module = dep, tagger, mwe, recog, sent, rel, tok, kwic, link
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -72,6 +75,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       'rel'     relation extraction
       'tok'     tokenizer
       'kwic'    keyword in context (concordances)
+      'link'    entity linking and semantic annotation
 
       Available command-line options:
 
@@ -93,7 +97,11 @@ Pay attention: do not install the package in a directory whose name contains bla
       -split   'tok' option: tokenization with splitting
       -sort    'tok' option: tokenization with tokens sorted by frequency
  
-      -tokens  'kwic' option: contexts are tokens 
+      -tokens  'kwic' option: contexts are tokens
+               This option requires another argument: the keyword to be searched
+
+      -json   'link' option: json output format of entity linking (by default)
+      -xml    'link' option: xml output format of entity linking
 
       -s       'sent' and 'recog' options: if <input> is a string and not a file   
 ```
