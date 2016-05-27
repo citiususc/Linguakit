@@ -33,12 +33,13 @@ help()
   echo "Syntax: linguakit <lang> <module> <input> [options]
       
       language = gl, es, en, pt
-      module = dep, tagger, mwe, recog, sent, tok, kwic
+      module = dep, tagger, mwe, key, recog, sent, tok, kwic
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
       'tagger'  part-of-speech tagging
       'mwe'     multiword extraction
+      'key'     keyword extraction
       'recog'   language recognition
       'sent'    sentiment analysis
       'tok'     tokenizer
@@ -109,6 +110,8 @@ MWE=$MAIN_DIR"/mwe/mwe.perl"
 MWE_FILT=$MAIN_DIR"/mwe/filtro_galextra.perl"
 MWE_SIX=$MAIN_DIR"/mwe/six_tokens.perl"
 
+KEYWORD=$MAIN_DIR"/keywords/keywords_exe.perl"
+
 QUELINGUA=$MAIN_DIR"/lanrecog/lanrecog.perl"
 QUELINGUA_LEX=$MAIN_DIR"/lanrecog/lexicons"
 QUELINGUA_SUFFIX=$MAIN_DIR"/lanrecog/morpho/suffix.txt"
@@ -118,7 +121,7 @@ QUELINGUA_LEX=__tmp
 
 KWIC=$MAIN_DIR"/kwic/kwic.perl"
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ] ; then
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ] ; then
   help;
   echo "help" ;
 fi
@@ -239,7 +242,6 @@ elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-nec" ] ; then
 
 
 ##multiword extraction
-##sentiment analysis
 elif [ "$MOD" == "mwe" ] && [ "$OPT" == "" ] ; then
  if [ "$ZIP" == "zip" ] ; then
   zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $MWE_FILT | $MWE_SIX  | $MWE "-chi" 1
@@ -254,6 +256,15 @@ elif [ "$MOD" == "mwe" ] && [ "$OPT" != "" ] ; then
   
  else 
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $MWE_FILT | $MWE_SIX  |$MWE  $OPT 1
+ fi
+
+##keyword extraction
+elif [ "$MOD" == "key" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER | $KEYWORD $LING
+  
+ else
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER | $KEYWORD $LING
  fi
 
 ##sentiment analysis
@@ -278,7 +289,6 @@ elif [ "$MOD" == "recog" ] && [ "$OPT" == "" ] ; then
   cat  $FILE |tr -d '\015' | $SENT  | $TOK  | $QUELINGUA $QUELINGUA_LEX $QUELINGUA_SUFFIX
  fi
 
-##tokenizer
 ##tokenizer
 elif [ "$MOD" == "tok" ] && [ "$OPT" == "" ] ; then
  if [ "$ZIP" == "zip" ] ; then
