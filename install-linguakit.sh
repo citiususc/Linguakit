@@ -24,6 +24,7 @@ chmod 0755 sentiment/pt/*
 chmod 0755 sentiment/gl/*
 chmod 0755 kwic/*
 chmod 0755 keywords/*
+chmod 0755 triples/*
 
 echo "Permissions of execution, done!"
 
