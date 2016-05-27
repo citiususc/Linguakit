@@ -8,6 +8,7 @@ A linguistic tool containing:
  * NEC (named entity classification)
  * Sentiment analysis
  * Multiword extraction
+ * Keyword extraction
  * Language recognition
  * Tokenizer
  * Keyword in context
@@ -20,6 +21,8 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 * PoS tagger (flag "tagger"): the software also provides the PoS tagger 'CitiusTools". It is provided with two submodules: NER (-ner) and NEC (-nec). The NEC module returns semantic tags for named entities: NP0SP00 (Person), NP00G00 (Location), NP00O00 (Organization), NP00V00 (Miscelaneous)
 
 * Multiword extraction (flag "mwe"): It extracts multiwords from PoS tagged text. There are several options, each one being a specific lexical association measure for ranking the candidate terms: chi square ("chi", by default measure), loglikelihood ("log"), mutual information ("mi"),  symmetrical conditional probability ("scp"), simple co-occurrences ("cooc").
+
+* Keyword extraction (flag "key"): It extracts keywords (lexemes and proper names) from PoS tagged text and ranked them using a reference corpus and chisquare. 
 
 * Sentiment analysis (flag "sent"): It returns POSITIVE, NONE or NEGATIVE, using a polarity lexicon and a classifier trained from annotated tweets. The input should be a sentence or a small paragraph.
 
@@ -60,6 +63,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       'dep'     dependency syntactic analysis
       'tagger'  part-of-speech tagging
       'mwe'     multiword extraction
+      'key'     keyword extraction
       'recog'   language recognition
       'sent'    sentiment analysis
       'tok'     tokenizer
