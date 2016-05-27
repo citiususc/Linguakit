@@ -9,6 +9,7 @@ A linguistic tool containing:
  * Sentiment analysis
  * Multiword extraction
  * Keyword extraction
+ * Relation extraction
  * Language recognition
  * Tokenizer
  * Keyword in context
@@ -25,6 +26,8 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 * Keyword extraction (flag "key"): It extracts keywords (lexemes and proper names) from PoS tagged text and ranked them using a reference corpus and chisquare. 
 
 * Sentiment analysis (flag "sent"): It returns POSITIVE, NONE or NEGATIVE, using a polarity lexicon and a classifier trained from annotated tweets. The input should be a sentence or a small paragraph.
+
+* Relation extraction (flag "rel"): It returns triples SUBJECT - RELATION - OBJECT using methods based on Open Information Extraction. 
 
 * Language recognition (flag "recog"): It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
 
@@ -57,7 +60,7 @@ Pay attention: do not install the package in a directory whose name contains bla
  linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent, tok, kwic
+      module = dep, tagger, mwe, recog, sent, rel, tok, kwic
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -66,6 +69,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       'key'     keyword extraction
       'recog'   language recognition
       'sent'    sentiment analysis
+      'rel'     relation extraction
       'tok'     tokenizer
       'kwic'    keyword in context (concordances)
 
@@ -111,15 +115,21 @@ This returns a sentiment value:
 ./linguakit en sent "I don't like the film" -s
 ```
 
-This identifies the language of the input text and then makes multiword extraction ranked with mutual information:
+This identifies the language of the input text and then makes multiword extraction ranked with chi-square:
 ```
-./linguakit none mw tests/pt.txt -mi
+./linguakit none mw tests/pt.txt -chi
 ```
 
 This generates the context in tokens of the keyword "presidente" (concordances or keyword in context). 
 ```
 ./linguakit none kwic tests/pt.txt -tokens "presidente"
 ```
+
+This returns triples (relations):
+```
+./linguakit en rel tests/en.txt
+```
+
 
 ## Input file
 
@@ -179,7 +189,7 @@ For more information: http://gramatica.usc.es/pln/tools/CitiusSentiment.html
 ## Multiword Extraction
 For more information: http://gramatica.usc.es/~gamallo/gale-extra/index2.1.htm
 
-## Language identification:
+## Language identification
 It returns the language of the input text: en, es, pt, gl, gz (agal galician variety), fr, eu, ca, bn (bengali), ur (urdu), hi (hindi), ta (tamil). This module is also used to recognize the language of a text before being processed by another module (only for the four languages that can be processed: pt, en, es, gl).
 
 For more information: http://gramatica.usc.es/~gamallo/quelingua/QueLingua.htm
@@ -187,7 +197,7 @@ For more information: http://gramatica.usc.es/~gamallo/quelingua/QueLingua.htm
 ## Documentation and bibliography
 More information on the modules can be found in papers you'll find in directory ".docs".
 
-### References:
+### References
 
 * Dependency analysis:
 
@@ -214,3 +224,11 @@ Gamallo, P., Garcia, M. and Fernández-Lanza, S. (2013). TASS: A Naive-Bayes str
 * Multiword extraction:
 
 Barcala M., E. Domínguez-Noya, P. Gamallo, M.López, E. Moscoso, G. Rojo, P. Santalla, S. Sotelo. (2007) A Corpus and Lexical Resources for Multi-word Terminology Extraction in the Field of Economy, 3rd Language & Technology Conference(LeTC'2007), Poznan, Poland (355-359). 
+
+* Relation extraction:
+
+Gamallo, P. and Marcos Garcia (2015). Multilingual Open Information Extraction, Lecture Notes in Computer Science, 9273, Berlin: Springer-Verlag: 711-722. ISNN: 0302-9743. 
+
+Gamallo, P. 2014. An Overview of Open Information Extraction, In Proceedings of the Third Symposium on Languages, Applications and Technologies (SLATE-2014), Bragança, Portugal: 13-16. 
+
+Gamallo, P., Garcia, M. Fernández-Lanza, S. 2012. Dependency-Based Open Information Extraction, In Joint Workshop on Unsupervised and Semi-Supervised Learning in NLP (ROBUS-UNSUP 2012), at the 13th Conference of the European Chapter of the Association for Computational Linguistics (EACL 2012). Avignon. 
