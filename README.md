@@ -142,6 +142,7 @@ This generates the context in tokens of the keyword "presidente" (concordances o
 This returns triples (relations):
 ```
 ./linguakit en rel tests/en.txt
+```
 
 This returns an abstract or summary of the input text (50%):
 ```
