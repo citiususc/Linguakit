@@ -70,7 +70,7 @@ help()
       -sort    'tok' option: tokenization with tokens sorted by frequency
 
       -tokens  'kwic' option: contexts are tokens
-               This option requires another argument: the keyword to be searched
+               The kwic option is mandatory and also requires another argument: the keyword to be searched
 
       -json   'link' option: json output format of entity linking (by default)
       -xml    'link' option: xml output format of entity linking

@@ -102,7 +102,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       -sort    'tok' option: tokenization with tokens sorted by frequency
  
       -tokens  'kwic' option: contexts are tokens
-               This option requires another argument: the keyword to be searched
+               *The kwic option is mandatory and also requires another argument: the keyword to be searched
 
       -json   'link' option: json output format of entity linking (by default)
       -xml    'link' option: xml output format of entity linking
@@ -142,8 +142,11 @@ This generates the context in tokens of the keyword "presidente" (concordances o
 This returns triples (relations):
 ```
 ./linguakit en rel tests/en.txt
-```
 
+This returns an abstract or summary of the input text (50%):
+```
+./linguakit en sum tests/pt.txt 50
+```
 
 ## Input file
 
@@ -156,8 +159,6 @@ Lexicons (electronic dictionaries) are in tagger/$lang/lexicon/dicc.src files (w
 ```
 sh lexicon_compiler.sh
 ```
-(Remember you need the *Storalbe* Perl package)
-
 
 ## Dependency parser 
 
@@ -170,7 +171,7 @@ sh lexicon_compiler.sh
 
 (relation;head_lemma;dependent_lemma)
 
-For instance, the sentence "I am a man." generates the following output:
+For instance, the sentence "I am a man." generates the following -a output:
 
 ```
 SENT::<I_PRO_0_<number:0|lemma:I|possessor:0|case:0|genre:0|person:0|politeness:0|type:P|token:I|> am_VERB_1_<number:0|mode:0|lemma:be|genre:0|tense:0|person:0|type:S|token:am|> a_DT_2_<number:0|lemma:a|possessor:0|genre:0|person:0|type:0|token:a|> man_NOUN_3_<number:S|lemma:man|genre:0|person:3|type:C|token:man|> ._SENT>
@@ -209,7 +210,7 @@ It returns the language of the input text: en, es, pt, gl, gz (agal galician var
 For more information: http://gramatica.usc.es/~gamallo/quelingua/QueLingua.htm
 
 ## Entity linking
-This module read the input thext and returns three types of terms and concepts: 
+This module reads the input text and returns three types of terms and concepts: 
 
 * MAIN_TERM is a term occurring in the text that is linked to a Wikipedia concept. 
 * NEW_TERM is a Wikipedia concept which does not occur in the text but is semantically related to some of the MAIN_TERMS. 
