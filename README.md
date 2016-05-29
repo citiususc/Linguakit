@@ -14,6 +14,7 @@ A linguistic tool containing:
  * Tokenizer
  * Keyword in context
  * Entity linking and semantic annotation
+ * Summarizer
 
 ## Description
 The command 'linguakit' is able to process 4 languages (Portuguese, English, Spanish, Galician), and allows you to run the following linguistic tools:
@@ -37,6 +38,8 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 * Keyword in context (flag "kwic"): It returns a target word in context (window: 10 tokens). Option -tokens returns tokens as context. This module requires another argument: the keyword to be searched. 
 
 * Entity linking (flag "link"): It returns a list of terms which represent Wikipedia entities. Besides, the input text is annotated with those terms and their links to Wikipedia. This module requires Internet conection since the search is done via a Web server. The output can be in two formats: json and xml.
+
+* Summarizer (flag "sum"): It returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. 
 
 ## Requirements
 * GNU/LINUX (bash + perl)
@@ -63,7 +66,7 @@ Pay attention: do not install the package in a directory whose name contains bla
  linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent, rel, tok, kwic, link
+      module = dep, tagger, mwe, recog, sent, rel, tok, kwic, link, sum
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -76,6 +79,7 @@ Pay attention: do not install the package in a directory whose name contains bla
       'tok'     tokenizer
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
+      'sum'     text summarizer
 
       Available command-line options:
 
@@ -102,6 +106,8 @@ Pay attention: do not install the package in a directory whose name contains bla
 
       -json   'link' option: json output format of entity linking (by default)
       -xml    'link' option: xml output format of entity linking
+
+      1-100   'sum' option: percentage of the input text that will be summarized (by default 10%)
 
       -s       'sent' and 'recog' options: if <input> is a string and not a file   
 ```
@@ -202,6 +208,16 @@ It returns the language of the input text: en, es, pt, gl, gz (agal galician var
 
 For more information: http://gramatica.usc.es/~gamallo/quelingua/QueLingua.htm
 
+## Entity linking
+This module read the input thext and returns three types of terms and concepts: 
+
+* MAIN_TERM is a term occurring in the text that is linked to a Wikipedia concept. 
+* NEW_TERM is a Wikipedia concept which does not occur in the text but is semantically related to some of the MAIN_TERMS. 
+* CATEGORY is a Wikipedia category used to categorize and classify the text. 
+
+For more information, you can look up our paper:
+Gamallo, Pablo and Marcos Garcia (2016) "Entity Linking with Distributional Semantics", PROPOR 2016, LNAI 9727.
+
 ## Documentation and bibliography
 More information on the modules can be found in papers you'll find in directory ".docs".
 
@@ -240,3 +256,7 @@ Gamallo, P. and Marcos Garcia (2015). Multilingual Open Information Extraction, 
 Gamallo, P. 2014. An Overview of Open Information Extraction, In Proceedings of the Third Symposium on Languages, Applications and Technologies (SLATE-2014), Bragança, Portugal: 13-16. 
 
 Gamallo, P., Garcia, M. Fernández-Lanza, S. 2012. Dependency-Based Open Information Extraction, In Joint Workshop on Unsupervised and Semi-Supervised Learning in NLP (ROBUS-UNSUP 2012), at the 13th Conference of the European Chapter of the Association for Computational Linguistics (EACL 2012). Avignon. 
+
+* Entity linking:
+
+Gamallo, Pablo and Marcos Garcia (2016). "Entity Linking with Distributional Semantics", PROPOR 2016, Lecture Notes in Computer Science,  9727. Berlin: Springer-Verlag, ISNN: 0302-9743.
