@@ -1,5 +1,6 @@
 #LINGUAKIT 
-### ProLNat@GE Group
+ProLNat@GE Group (http://gramatica.usc.es/pln/)
+University of Santiago de Compostela
 
 A linguistic tool containing:
  * dependency parser (DepPattern)
@@ -15,6 +16,9 @@ A linguistic tool containing:
  * Keyword in context
  * Entity linking and semantic annotation
  * Summarizer
+
+## Demo
+https://linguakit.com/
 
 ## Description
 The command 'linguakit' is able to process 4 languages (Portuguese, English, Spanish, Galician), and allows you to run the following linguistic tools:
