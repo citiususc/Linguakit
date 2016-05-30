@@ -221,6 +221,8 @@ This module reads the input text and returns three types of terms and concepts:
 * NEW_TERM is a Wikipedia concept which does not occur in the text but is semantically related to some of the MAIN_TERMS. 
 * CATEGORY is a Wikipedia category used to categorize and classify the text. 
 
+It also returns an annotated version of teh input text, namely the text is annotated with tags identifying the MAIN_TERMS. Each MAIN_TERM is enriched with a link to its corresponding concept in Wikipedia.
+ 
 For more information, you can look up our paper:
 Gamallo, Pablo and Marcos Garcia (2016) "Entity Linking with Distributional Semantics", PROPOR 2016, LNAI 9727.
 
