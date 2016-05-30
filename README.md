@@ -41,9 +41,9 @@ The command 'linguakit' is able to process 4 languages (Portuguese, English, Spa
 
 * Keyword in context (flag "kwic"): It returns a target word in context (window: 10 tokens). Option -tokens returns tokens as context. This module requires another argument: the keyword to be searched. 
 
-* Entity linking (flag "link"): It returns a list of terms which represent Wikipedia entities. Besides, the input text is annotated with those terms and their links to Wikipedia. This module requires Internet conection since the search is done via a Web server. The output can be in two formats: json and xml.
+* Entity linking (flag "link"): It returns a list of terms which represent Wikipedia entities. Besides, the input text is annotated with those terms and their links to Wikipedia. This module requires Internet conection since it runs via Web API service. The output can be in two formats: json and xml.
 
-* Summarizer (flag "sum"): It returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. 
+* Summarizer (flag "sum"): It returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. This module requires Internet conection since it runs using a Web API. The code was developed by Fernando Blanco Dosil when it was working in Cilenis Language Technology. 
 
 ## Requirements
 * GNU/LINUX (bash + perl)
