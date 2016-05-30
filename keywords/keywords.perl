@@ -130,7 +130,7 @@ foreach $line (@texto) {
   #print STDERR "LINE:#$line#\n";
   ($token, $lemma, $tag) = split(/ /, $line);
   $lemma = $token if ($tag =~ /^NP/ || $tag =~ /^NNP/);
-  next if ($token =~ /^($ErrosNP)(s?)$/ && $tag =~ /^NP/);
+  next if ($token =~ /^($ErrosNP)(s?)$/ && ($tag =~ /^NP/ || $tag =~ /^NNP/) );
   next if ($lemma =~ /^($Stopwords)$/);
   next if ($lemma =~ /([0-9]+)/) ;
   
@@ -151,7 +151,7 @@ foreach $line (@texto) {
     elsif ( $tag =~ /^NP00V00/) {
         $tag =~ s/^N[^ ]+$/MISC/;
     }
-    elsif ( $tag =~ /^NP00000/ ||  $tag =~ /^NP/) {
+    elsif ( $tag =~ /^NP00000/ ||  $tag =~ /^NP/ || $tag =~ /^NNP/ ) {
         $tag =~ s/^N[^ ]+$/ENTITY/;
     }
     else {
