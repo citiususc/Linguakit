@@ -58,9 +58,9 @@ cpan>install Storable
 git clone https://github.com/citiususc/Linguakit.git
 sh install-linguakit.sh
 ```
-* With zip version (download Linguistik-master.zip):
+* With zip version (download Linguakit-master.zip):
 ```
-unzip Linguistic-master.zip
+unzip Linguakit-master.zip
 sh install-linguakit.sh
 ```
 Pay attention: do not install the package in a directory whose name contains blank spaces!
