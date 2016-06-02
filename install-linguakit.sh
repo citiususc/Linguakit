@@ -45,4 +45,4 @@ echo "          cpan> install Storable"
 
 
 echo ''
-echo "Installation done!"
+echo "Installation done! You can run now `./linguakit` to see basic usage."
