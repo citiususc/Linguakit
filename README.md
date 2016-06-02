@@ -30,7 +30,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **PoS tagger** (parameter `tagger`): Provides the PoS tagger *CitiusTools*. It is provided with two submodules: **NER** (`-ner`) and **NEC** (`-nec`). The NEC module returns semantic tags for named entities: `NP0SP00` (Person), `NP00G00` (Location), `NP00O00` (Organization), `NP00V00` (Miscelaneous)
 
-* **Multiword extraction** (parameter `mwe`): Extracts multiwords from PoS tagged text. There are several optional parameters, each one being a specific lexical association measure for ranking the candidate terms: chi square (`chi` - default), loglikelihood (`log`), mutual information (`mi`),  symmetrical conditional probability (`scp`), simple co-occurrences (`cooc`).
+* **Multiword extraction** (parameter `mwe`): Extracts multiwords from PoS tagged text. There are several optional parameters, each one being a specific lexical association measure for ranking the candidate terms: chi square (`-chi`, default), loglikelihood (`-log`), mutual information (`-mi`),  symmetrical conditional probability (`-scp`), simple co-occurrences (`-cooc`).
 
 * **Keyword extraction** (parameter `key`): Extracts keywords (lexemes and proper names) from PoS tagged text and ranked them using a reference corpus and chisquare. 
 
