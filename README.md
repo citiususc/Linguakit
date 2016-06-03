@@ -15,6 +15,7 @@ LinguaKit is a linguistic multi-tool containing:
  * Relation extraction
  * Language recognition
  * Tokenizer
+ * Sentence segmentation
  * Keyword in context
  * Entity linking and semantic annotation
  * Summarizer
@@ -41,6 +42,8 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 * **Language recognition** (parameter `recog`): Returns the language of the input text: `en`, `es`, `pt`, `gl`, `gz` (agal galician variety), `fr`, `eu`, `ca`, `bn` (bengali), `ur` (urdu), `hi` (hindi), ta (tamil). This module is also used by other modules to recognize the language before processing  (only for the supported languages: `pt`, `en`, `es`, `gl`).
 
 * **Tokenizer** (parameter `tok`): Returns a tokenized text. Parameter `-split` splits word contractions and verb clitics. Parameter `-sort` ranks tokens by frequency. 
+
+* **Sentence segmentation** (parameter `seg`): Returns a sentence per line. Sentence segmentation is the problem of dividing a string of written language into its component sentences.
 
 * **Keyword in context** (parameter `kwic`): Returns a target word in context (window: 10 tokens). Option `-tokens` returns tokens as context. This module requires the keyword to be searched as an additional argument. 
 
@@ -83,7 +86,7 @@ Run `./linguakit` to see the basic usage:
  linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent, rel, tok, kwic, link, sum
+      module = dep, tagger, mwe, recog, sent, rel, tok, seg, kwic, link, sum
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -94,6 +97,7 @@ Run `./linguakit` to see the basic usage:
       'sent'    sentiment analysis
       'rel'     relation extraction
       'tok'     tokenizer
+      'seg'     sentence segmentation
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
       'sum'     text summarizer

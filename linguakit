@@ -45,6 +45,7 @@ help()
       'sent'    sentiment analysis
       'rel'     relation extraction
       'tok'     tokenizer
+      'seg'     sentence segmentation
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
@@ -133,7 +134,7 @@ QUELINGUA_LEX=__tmp
 
 KWIC=$MAIN_DIR"/kwic/kwic.perl"
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ]; then
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ]; then
   help;
   echo "help" ;
 fi
@@ -338,6 +339,14 @@ elif [ "$MOD" == "tok" ] && [ "$OPT" == "-sort" ] ; then
   zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | sort | uniq -c | sort -nr
  else 
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | sort | uniq -c | sort -nr
+ fi
+
+##segmentation
+elif [ "$MOD" == "seg" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT   
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  
  fi
 
 ##key word in context (kwic) or concordances with just tokens as context
