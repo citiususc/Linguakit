@@ -46,6 +46,7 @@ help()
       'rel'     relation extraction
       'tok'     tokenizer
       'seg'     sentence segmentation
+      'lem'     lemmatization
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
@@ -134,7 +135,7 @@ QUELINGUA_LEX=__tmp
 
 KWIC=$MAIN_DIR"/kwic/kwic.perl"
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ]; then
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ] && [ "$MOD" != "lem" ]; then
   help;
   echo "help" ;
 fi
@@ -347,6 +348,14 @@ elif [ "$MOD" == "seg" ] && [ "$OPT" == "" ] ; then
   zcat $FILE |tr -d '\015' | $SENT   
  else 
   cat  $FILE |tr -d '\015' | $SENT  
+ fi
+
+##lemmatizer and PoS tagging
+elif [ "$MOD" == "lem" ] && [ "$OPT" == "" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT |$TOK | $SPLIT | $LEMMA
+ else 
+  cat  $FILE |tr -d '\015' | $SENT |$TOK | $SPLIT | $LEMMA
  fi
 
 ##key word in context (kwic) or concordances with just tokens as context

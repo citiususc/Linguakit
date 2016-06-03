@@ -16,6 +16,7 @@ LinguaKit is a linguistic multi-tool containing:
  * Language recognition
  * Tokenizer
  * Sentence segmentation
+ * lemmatization
  * Keyword in context
  * Entity linking and semantic annotation
  * Summarizer
@@ -29,7 +30,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Dependency parser** (parameter `dep`): Runs parsers. The parsers are implemented in PERL and stored in the `parsers` file. The parsers were compiled from formal grammars ([more information](https://github.com/gamallo/DepPattern)). There are several parameters to control output: basic triplets (`-a`), triplets with morphological information (`-fa`), the same output as the input (`-c`) for correction purpose, and CoNLL format (`-conll`). These parameters are further explained in the section *Dependency Parser* below.
 
-* **PoS tagger** (parameter `tagger`): Provides the PoS tagger *CitiusTools*. It is provided with two submodules: **NER** (`-ner`) and **NEC** (`-nec`). The NEC module returns semantic tags for named entities: `NP0SP00` (Person), `NP00G00` (Location), `NP00O00` (Organization), `NP00V00` (Miscelaneous)
+* **PoS tagger** (parameter `tagger`): Provides the PoS tagger *CitiusTools*. It returns one PoS tag and one lemma per token. This is also known as PoS tagging disambiguation. The module is provided with two submodules: **NER** (`-ner`) and **NEC** (`-nec`). The NEC module returns semantic tags for named entities: `NP0SP00` (Person), `NP00G00` (Location), `NP00O00` (Organization), `NP00V00` (Miscelaneous)
 
 * **Multiword extraction** (parameter `mwe`): Extracts multiwords from PoS tagged text. There are several optional parameters, each one being a specific lexical association measure for ranking the candidate terms: chi square (`-chi`, default), loglikelihood (`-log`), mutual information (`-mi`),  symmetrical conditional probability (`-scp`), simple co-occurrences (`-cooc`).
 
@@ -44,6 +45,8 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 * **Tokenizer** (parameter `tok`): Returns a tokenized text. Parameter `-split` splits word contractions and verb clitics. Parameter `-sort` ranks tokens by frequency. 
 
 * **Sentence segmentation** (parameter `seg`): Returns a sentence per line. Sentence segmentation is the problem of dividing a string of written language into its component sentences.
+
+* **Lemmatization** (parameter `lem`): Returns all the lemmas of each token and all the morphological information (PoS tags) associated to each lemma. This is the process running before PoS tagging disambugation.
 
 * **Keyword in context** (parameter `kwic`): Returns a target word in context (window: 10 tokens). Option `-tokens` returns tokens as context. This module requires the keyword to be searched as an additional argument. 
 
@@ -98,6 +101,7 @@ Run `./linguakit` to see the basic usage:
       'rel'     relation extraction
       'tok'     tokenizer
       'seg'     sentence segmentation
+      'lem'     lemmatization
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
