@@ -16,7 +16,7 @@ LinguaKit is a linguistic multi-tool containing:
  * Language recognition
  * Tokenizer
  * Sentence segmentation
- * lemmatization
+ * Lemmatization
  * Keyword in context
  * Entity linking and semantic annotation
  * Summarizer
