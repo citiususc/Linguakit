@@ -46,7 +46,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Sentence segmentation** (parameter `seg`): Returns a sentence per line. Sentence segmentation is the problem of dividing a string of written language into its component sentences.
 
-* **Lemmatization** (parameter `lem`): Returns all the lemmas of each token and all the morphological information (PoS tags) associated to each lemma. This is the process running before PoS tagging disambugation.
+* **Lemmatization** (parameter `lem`): Returns all the lemmas of each token and all the morphological information (PoS tags) associated to each lemma. This is the process running before PoS tagging disambiguation.
 
 * **Keyword in context** (parameter `kwic`): Returns a target word in context (window: 10 tokens). Option `-tokens` returns tokens as context. This module requires the keyword to be searched as an additional argument. 
 
