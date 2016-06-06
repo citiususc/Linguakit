@@ -1,9 +1,9 @@
-#LINGUAKIT 
+#LINGUAKIT for NLP
 
 Made by the ProLNat@GE Group (http://gramatica.usc.es/pln/)
 University of Santiago de Compostela
 
-LinguaKit is a linguistic multi-tool containing:
+LinguaKit is a Natural Language Processing tool containing:
 
  * Dependency parser (DepPattern)
  * PoS tagger
