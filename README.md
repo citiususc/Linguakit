@@ -55,7 +55,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Summarizer** (parameter `sum`): Returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. This module requires Internet conection since it runs using a Web API. The code was developed by Fernando Blanco Dosil when it was working in Cilenis Language Technology. 
 
-* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. It works in three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`pe`), brasilian portuguese after the spelling agreement (`pb`),  european portuguese before the spelling agreement (`pen`), brasilian portuguese before the spelling agreement (`pbn`),
+* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. It works in three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`),
 
 ## Requirements
 * GNU/LINUX (bash + perl)
