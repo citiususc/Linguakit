@@ -55,7 +55,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Summarizer** (parameter `sum`): Returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. This module requires Internet conection since it runs using a Web API. The code was developed by Fernando Blanco Dosil when it was working in Cilenis Language Technology. 
 
-* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. It works in three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`),
+* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. Pay attention that the input is not a file but a string: the infinitive verb. The module is working for three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`). The output is in json format. This module requires Internet conection since it runs using a Web API.
 
 ## Requirements
 * GNU/LINUX (bash + perl)
@@ -108,6 +108,7 @@ Run `./linguakit` to see the basic usage:
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
+      'conj'    verb conjugator (the input is just a verb)
 
       Available command-line options:
 
@@ -180,6 +181,11 @@ Return triples (relations):
 Return an abstract or summary of the input text (50%):
 ```
 ./linguakit en sum tests/pt.txt 50
+```
+
+Return the european portuguese inflection of the input verb:
+```
+./linguakit pt conj fazer -pe
 ```
 
 ###  Input file
