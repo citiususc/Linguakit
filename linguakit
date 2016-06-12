@@ -34,7 +34,7 @@ help()
   echo "Syntax: linguakit <lang> <module> <input> [options]
       
       language = gl, es, en, pt
-      module = dep, tagger, mwe, key, recog, sent, rel, tok, kwic, link, sum
+      module = dep, tagger, mwe, key, recog, sent, rel, tok, kwic, link, sum, conj
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -50,6 +50,7 @@ help()
       'kwic'    keyword in context (concordances)
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
+      'conj'    verb conjugator
 
       Available command-line options:
 
@@ -78,7 +79,12 @@ help()
       -xml    'link' option: xml output format of entity linking
 
       1-100   'sum' option: percentage of the input text that will be summarized (by default 10%)
-  
+
+      -pe     'conj' option: the verb conjugator uses European Portuguese (by default)
+      -pb     'conj' option: the verb conjugator uses Brasilian Portuguese
+      -pen    'conj' option: the verb conjugator uses European Portuguese before the spell agreement
+      -pbn    'conj' option: the verb conjugator uses Brasilian Portuguese before the spell agreement
+
       -s      'sent' and 'recog' options: if <input> is a string and not a file 
 "
   exit
@@ -125,6 +131,7 @@ KEYWORD=$MAIN_DIR"/keywords/keywords_exe.perl"
 REL=$MAIN_DIR"/triples/triples_exe.perl"
 LINK=$MAIN_DIR"/linking/linking_exe.perl"
 SUM=$MAIN_DIR"/summarizer/summarizer_exe.perl"
+CONJ=$MAIN_DIR"/conjugator/conjugator_exe.perl"
 
 QUELINGUA=$MAIN_DIR"/lanrecog/lanrecog.perl"
 QUELINGUA_LEX=$MAIN_DIR"/lanrecog/lexicons"
@@ -135,13 +142,13 @@ QUELINGUA_LEX=__tmp
 
 KWIC=$MAIN_DIR"/kwic/kwic.perl"
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ] && [ "$MOD" != "lem" ]; then
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ] && [ "$MOD" != "lem" ] && [ "$MOD" != "conj" ]; then
   help;
   echo "help" ;
 fi
 
 
-if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ] && [ "$OPT" != "-tokens" ] && [ "$OPT" != "-xml" ] && [ "$OPT" != "-json" ] && ! [[ $OPT =~ [0-9][0-9]? ]] && [ "$OPT" != "" ] ; then
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ] && [ "$OPT" != "-tokens" ] && [ "$OPT" != "-xml" ] && [ "$OPT" != "-json" ] && ! [[ $OPT =~ [0-9][0-9]? ]]  && [ "$OPT" != "-pe" ] && [ "$OPT" != "-pb" ] && [ "$OPT" != "-pen" ]  && [ "$OPT" != "-pbn" ]&&  [ "$OPT" != "" ] ; then
 #if  [ "$OPT" != "-a" ] ; then
   help;
   echo "help" ;
@@ -402,6 +409,12 @@ elif [ "$MOD" == "sum" ] && [ "$OPT" != "" ] ; then
   cat  $FILE |tr -d '\015' | $SUM $LING $OPT
  fi
 
+##conjugator
+elif [ "$MOD" == "conj" ] && [ "$OPT" == "" ] ; then
+ echo $FILE | $CONJ $LING
+
+elif [ "$MOD" == "conj" ] && [ "$LING" == "pt" ] &&[ "$OPT" != "" ] ; then
+ echo $FILE | $CONJ $LING $OPT
 
 
 ##language recognition with a string as input

@@ -20,6 +20,7 @@ LinguaKit is a Natural Language Processing tool containing several NLP modules:
  * Keyword in context
  * Entity linking and semantic annotation
  * Summarizer
+ * Verb conjugator
 
 ## Demo
 
@@ -53,6 +54,8 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 * **Entity linking** (parameter `link`): Returns a list of terms which represent Wikipedia entities. Besides, the input text is annotated with those terms and their links to Wikipedia. Requires Internet conection since it runs via Web API service. The output can be in two formats: `json` (default) and `xml`.
 
 * **Summarizer** (parameter `sum`): Returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. This module requires Internet conection since it runs using a Web API. The code was developed by Fernando Blanco Dosil when it was working in Cilenis Language Technology. 
+
+* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. It works in three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`pe`), brasilian portuguese after the spelling agreement (`pb`),  european portuguese before the spelling agreement (`pen`), brasilian portuguese before the spelling agreement (`pbn`),
 
 ## Requirements
 * GNU/LINUX (bash + perl)
@@ -89,7 +92,7 @@ Run `./linguakit` to see the basic usage:
  linguakit <lang> <module> <input> [options]
     
       language = gl, es, en, pt, none
-      module = dep, tagger, mwe, recog, sent, rel, tok, seg, kwic, link, sum
+      module = dep, tagger, mwe, recog, sent, rel, tok, seg, kwic, link, sum, conj
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -133,6 +136,11 @@ Run `./linguakit` to see the basic usage:
       -xml    'link' option: xml output format of entity linking
 
       1-100   'sum' option: percentage of the input text that will be summarized (by default 10%)
+
+      -pe     'conj' option: the verb conjugator uses European Portuguese (by default)
+      -pb     'conj' option: the verb conjugator uses Brasilian Portuguese
+      -pen    'conj' option: the verb conjugator uses European Portuguese before the spell agreement
+      -pbn    'conj' option: the verb conjugator uses Brasilian Portuguese before the spell agreement
 
       -s       'sent' and 'recog' options: if <input> is a string and not a file   
 ```
