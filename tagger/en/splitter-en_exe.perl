@@ -4,7 +4,7 @@
 # autor: Grupo ProLNat@GE, CiTIUS
 # Universidade de Santiago de Compostela
 
-# Script que integra 2 funçoes perl: sentences e tokens
+## In English, nothing is done (some splitting was made in tokens.perl)
 
 use strict; 
 binmode STDIN, ':utf8';
@@ -16,11 +16,16 @@ use Cwd 'abs_path';
 use File::Basename;
 my $abs_path = dirname(abs_path($0));
 
-do $abs_path.'/Modules/splitter-en.perl';
+##para splitter:
+##########INFORMAÇAO DEPENDENTE DA LINGUA######
+#my $pron = "(ve|ll|s|re|m|d)";               # Antes do tagger só separa o genetivos dos nomes próprios        
+###############################################
+#my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
-#####EXECUTANDO AS FUNÇOES:
-my @tokens = <STDIN>;
-my @saida = splitter(@tokens);
-my $saida = join("\n",@saida);
-print "$saida";
-###########
+
+#sub splitter {
+while (my $token = <STDIN>) {
+   print $token;    
+ 
+} 
+
