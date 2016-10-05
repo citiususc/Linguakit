@@ -79,7 +79,7 @@ Download [Linguakit-master.zip](https://github.com/citiususc/Linguakit/archive/m
 
 ```bash
 unzip Linguakit-master.zip
-cd Linguakit
+cd Linguakit-master
 ./install-linguakit.sh
 ```
 Please, **do not** install the package in a path with blank spaces in any directory.
