@@ -57,11 +57,12 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. Pay attention that the input is not a file but a string: the infinitive verb. The module is working for three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`). The output is in json format. This module requires Internet conection since it runs using a Web API.
 
-## Requirements:
+## Requirements
 CPAN Perl modules may be required:
 * *LWP::UserAgent* Perl module.
 * *HTTP::Request::Common* Perl module.
 * *Storable* Perl module. 
+
 To install them, you may use the -MCPAN interface at the command line:
 ```
 sudo perl -MCPAN -e 'install (LWP::UserAgent)'
