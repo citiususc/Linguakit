@@ -32,7 +32,9 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Dependency parser** (parameter `dep`): Runs parsers. The parsers are implemented in PERL and stored in the `parsers` file. The parsers were compiled from formal grammars ([more information](https://github.com/gamallo/DepPattern)). There are several parameters to control output: basic triplets (`-a`), triplets with morphological information (`-fa`), the same output as the input (`-c`) for correction purpose, and CoNLL format (`-conll`). These parameters are further explained in the section *Dependency Parser* below.
 
-* **PoS tagger** (parameter `tagger`): Provides the PoS tagger *CitiusTools*. It returns one PoS tag and one lemma per token. This is also known as PoS tagging disambiguation. The module is provided with two submodules: **NER** (`-ner`) and **NEC** (`-nec`). The NEC module returns semantic tags for named entities: `NP0SP00` (Person), `NP00G00` (Location), `NP00O00` (Organization), `NP00V00` (Miscelaneous). Furthermore, **NEC** also provides another submodule: **COREF**, with two options (`-coref` and `-crnec`). **COREF** labels the different named entities of the text (identified by the **NER** and **NEC**) with a numeric id which represents the discourse entity they refer to (e.g., "Bob Marley NP00SP0 (1)", "Jimi Hendrix NP00SP0 (2)", "Marley NP00SP0 (1)", "Hendrix NP00SP0 (2)", etc.). The `cr-nec` option (experimental) relabels some named entities based on the results of the coreference analysis. Please note that the **COREF** modules may slow down the execution of the system when analyzing large texts. Also, remember that **COREF** is performed document by document, so it is not recommended to run it in a large corpus containing several documents.
+* **PoS tagger** (parameter `tagger`): Provides the PoS tagger *CitiusTools*. It returns one PoS tag and one lemma per token. This is also known as PoS tagging disambiguation. The module is provided with two submodules: **NER** (`-ner`) and **NEC** (`-nec`). The NEC module returns semantic tags for named entities: `NP0SP00` (Person), `NP00G00` (Location), `NP00O00` (Organization), `NP00V00` (Miscelaneous). 
+
+* **COREF** (parameter `-coref`) labels the different named entities of the text (identified by the **NER** and **NEC**) with a numeric id which represents the discourse entity they refer to (e.g., "Bob Marley NP00SP0 (1)", "Jimi Hendrix NP00SP0 (2)", "Marley NP00SP0 (1)", "Hendrix NP00SP0 (2)", etc.). **COREF** allows the `-crnec` option (experimental) which relabels some named entities based on the results of the coreference analysis. Please note that the **COREF** modules may slow down the execution of the system when analyzing large texts. Also, remember that **COREF** is performed document by document, so it is not recommended to run it in a large corpus containing several documents.
 
 * **Multiword extraction** (parameter `mwe`): Extracts multiwords from PoS tagged text. There are several optional parameters, each one being a specific lexical association measure for ranking the candidate terms: chi square (`-chi`, default), loglikelihood (`-log`), mutual information (`-mi`),  symmetrical conditional probability (`-scp`), simple co-occurrences (`-cooc`).
 
@@ -116,6 +118,7 @@ Run `./linguakit` to see the basic usage:
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
       'conj'    verb conjugator (the input is just a verb)
+      'coref'   named entity coreference solver
 
       Available command-line options:
 
@@ -127,8 +130,8 @@ Run `./linguakit` to see the basic usage:
       -noner   'tagger' option: no NER or NEC is processed (by default PoS tagger output)
       -ner     'tagger' option: PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
       -nec     'tagger' option: PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
-      -coref   'tagger' option: PoS tagger with NEC and NE Coreference Resolution (only with 'tagger' module)
-      -crnec   'coref' option: NE Coreference Resolution and NEC correction (only with 'tagger' module)
+
+      -crnec   'coref' option: NEC correction with NE Coreference Resolution
 
       -chi     'mwe' option: chi-square co-occurrence measure (by default)
       -log     'mwe' option: loglikelihood 

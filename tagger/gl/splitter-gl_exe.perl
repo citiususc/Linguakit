@@ -40,7 +40,7 @@ my $procl = "mas|mos|ma|mo|chos|chas|cho|cha|llo|lla|llos|llas|llelo|llela|llelo
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
-
+my $excep = "|podemos|";
 
 #sub splitter {
 # my (@text) = @_ ;
@@ -189,9 +189,9 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
   my $raiz_lower = lowercase ($raiz);
   my $raiz_lower_semtil = tirar_acentos ($raiz_lower);
   my $raiz_semtil = tirar_acentos ($raiz);
-
-   if ($Verb->{$raiz_lower} || ${$Verb}{$raiz_lower_semtil}) {
-
+ 
+   if ( ($Verb->{$raiz_lower} || ${$Verb}{$raiz_lower_semtil}) && $excep !~ /\|$token\|/i ) {
+    #print STDERR "OK:: $raiz - $sufixo -- $token\n"; 
      ##mudança de raiz: comémonolas -> comemos nos as
        if ($sufixo =~ /^monol[ao](s)?$/) {
 	   $raiz_semtil =~ s/s$/mos/;

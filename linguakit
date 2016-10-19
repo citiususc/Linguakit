@@ -34,7 +34,7 @@ help()
   echo "Syntax: linguakit <lang> <module> <input> [options]
       
       language = gl, es, en, pt
-      module = dep, tagger, mwe, key, recog, sent, rel, tok, kwic, link, sum, conj
+      module = dep, tagger, mwe, key, recog, sent, rel, tok, kwic, link, sum, conj, coref
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -51,6 +51,7 @@ help()
       'link'    entity linking and semantic annotation
       'sum'     text summarizer
       'conj'    verb conjugator
+      'coref'   named entity coreference solver
 
       Available command-line options:
 
@@ -63,6 +64,8 @@ help()
       -ner     'tagger' option: PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
       -nec     'tagger' option: PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
 
+      -crnec   'coref' option: NEC correction with NE Coreference Resolution
+      
       -chi     'mwe' option: chi-square co-occurrence measure (by default)
       -log     'mwe' option: loglikelihood 
       -scp     'mwe' option: symmetrical conditional probability
@@ -119,6 +122,8 @@ NER=$MAIN_DIR"/tagger/"$LING"/ner-"$LING"_exe.perl"
 TAGGER=$MAIN_DIR"/tagger/"$LING"/tagger-"$LING"_exe.perl" 
 NEC=$MAIN_DIR"/tagger/"$LING"/nec-"$LING"_exe.perl"
 
+COREF=$MAIN_DIR"/tagger/coref/coref_exe.perl"
+
 SENTIMENT=$MAIN_DIR"/sentiment/nbayes.perl"
 SENT_TRAIN=$MAIN_DIR"/sentiment/"$LING"/train_"$LING 
 SENT_LEX=$MAIN_DIR"/sentiment/"$LING"/lex_"$LING
@@ -142,20 +147,20 @@ QUELINGUA_LEX=__tmp
 
 KWIC=$MAIN_DIR"/kwic/kwic.perl"
 
-if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ] && [ "$MOD" != "lem" ] && [ "$MOD" != "conj" ]; then
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ] && [ "$MOD" != "lem" ] && [ "$MOD" != "conj" ] && [ "$MOD" != "coref" ]; then
   help;
   echo "help" ;
 fi
 
 
-if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] &&  [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ] && [ "$OPT" != "-tokens" ] && [ "$OPT" != "-xml" ] && [ "$OPT" != "-json" ] && ! [[ $OPT =~ [0-9][0-9]? ]]  && [ "$OPT" != "-pe" ] && [ "$OPT" != "-pb" ] && [ "$OPT" != "-pen" ]  && [ "$OPT" != "-pbn" ]&&  [ "$OPT" != "" ] ; then
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] && [ "$OPT" != "-coref" ] && [ "$OPT" != "-crnec" ] && [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-s" ]  && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ] && [ "$OPT" != "-tokens" ] && [ "$OPT" != "-xml" ] && [ "$OPT" != "-json" ] && ! [[ $OPT =~ [0-9][0-9]? ]]  && [ "$OPT" != "-pe" ] && [ "$OPT" != "-pb" ] && [ "$OPT" != "-pen" ]  && [ "$OPT" != "-pbn" ]  && [ "$OPT" != "-crnec" ] &&  [ "$OPT" != "" ] ; then
 #if  [ "$OPT" != "-a" ] ; then
   help;
   echo "help" ;
 fi
 
 #if [[ $OPT != '^[0-9]+$' ]] ; then
- # help;
+# help;
 #  echo "help"
 #fi
 
@@ -200,6 +205,7 @@ if [ "$MOD" != "recog" ] && [ "$LING_back" == "none" ] ; then
  NER=$MAIN_DIR"/tagger/"$LING"/ner-"$LING"_exe.perl"
  TAGGER=$MAIN_DIR"/tagger/"$LING"/tagger-"$LING"_exe.perl" 
  NEC=$MAIN_DIR"/tagger/"$LING"/nec-"$LING"_exe.perl"
+ COREF=$MAIN_DIR"/tagger/coref/coref_exe.perl"
 
  SENTIMENT=$MAIN_DIR"/sentiment/nbayes.perl"
  SENT_TRAIN=$MAIN_DIR"/sentiment/"$LING"/train_"$LING 
@@ -268,7 +274,7 @@ elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-ner" ] ; then
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER
  fi
 
-##PoS tagging with ner
+##PoS tagging with nec
 elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-nec" ] ; then
  if [ "$ZIP" == "zip" ] ; then
   zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC
@@ -277,6 +283,21 @@ elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-nec" ] ; then
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC
  fi
 
+##PoS tagging with Coreference Resolution
+elif [ "$MOD" == "coref" ]  ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -c 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -c
+ fi
+    
+##PoS tagging with Coreference Resolution and NEC correction
+elif [ "$MOD" == "coref" ] && [ "$OPT" == "-crnec" ] ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -n 
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -n
+ fi
 
 ##multiword extraction
 elif [ "$MOD" == "mwe" ] && [ "$OPT" == "" ] ; then
@@ -298,10 +319,10 @@ elif [ "$MOD" == "mwe" ] && [ "$OPT" != "" ] ; then
 ##keyword extraction
 elif [ "$MOD" == "key" ] && [ "$OPT" == "" ] ; then
  if [ "$ZIP" == "zip" ] ; then
-  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $KEYWORD $LING
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER | $KEYWORD $LING
   
  else
-  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $KEYWORD $LING
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER | $KEYWORD $LING
  fi
 
 
