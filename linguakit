@@ -298,10 +298,10 @@ elif [ "$MOD" == "mwe" ] && [ "$OPT" != "" ] ; then
 ##keyword extraction
 elif [ "$MOD" == "key" ] && [ "$OPT" == "" ] ; then
  if [ "$ZIP" == "zip" ] ; then
-  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER | $KEYWORD $LING
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $KEYWORD $LING
   
  else
-  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $LEMMA | $TAGGER | $KEYWORD $LING
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $KEYWORD $LING
  fi
 
 

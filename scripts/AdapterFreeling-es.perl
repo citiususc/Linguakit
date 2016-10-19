@@ -27,7 +27,7 @@ while (<>) {
      s/\_/\@/g ;
 
      ($token, $lemma, $tag) = split(" ", $_);
-
+     if (!$token || !$lemma || !$tag) {next}
      ## reiniciar valor de FoundFinal
      if ($Pos==0) {
         $FoundFinal=0;

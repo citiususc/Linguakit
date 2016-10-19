@@ -171,7 +171,7 @@ foreach my $line (@lines){
          
 
 	   elsif ($Lex{$lemma} && $tag =~ /(^N|^AQ|^JJ)/ && $previous =~ /^($neg_noun)$/) { ##no bonito
-                print STDERR "LEM:#$lemma# - #$lemma_orig# #Previous: #$previous#\n";
+               # print STDERR "LEM:#$lemma# - #$lemma_orig# #Previous: #$previous#\n";
                $lemma = $previous . "_" . $lemma;
                $PriorProb{$Lex_contr{$lemma_orig}}{$lemma} =  $PriorProb{$Lex{$lemma_orig}}{$lemma_orig}  if ($Lex{$lemma_orig});
                $PriorProb{$Lex{$lemma_orig}}{$lemma} =  0 if ($Lex{$lemma_orig});
@@ -250,7 +250,7 @@ foreach $cat (keys %PriorProb) {
 $found=0;
 foreach $c (keys %PostProb) {
    #print STDERR "$c - #$PostProb{$c}#\n" if ($c);
-   $PostProb{$c} = $PostProb{$c} / $Normalizer;
+   $PostProb{$c} = $PostProb{$c} / $Normalizer if ($Normalizer);
    $found=1 if ($found{$c});
 }
 my $First=0;
