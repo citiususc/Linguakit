@@ -94,7 +94,7 @@ help()
 }
 
 
-# Par·metros obrigatorios
+# Par√°metros obrigatorios
 [ $# -lt 3 ] && help
 LING=$1
 MOD=$2
@@ -106,7 +106,7 @@ if [ "$LING" == "none" ]  ; then
 fi
 
 
-# Par·metros opcionais
+# Par√°metros opcionais
 OPT=""
 [ "$4" != "" ] && OPT=$4
 
@@ -283,21 +283,21 @@ elif [ "$MOD" == "tagger" ] && [ "$OPT" == "-nec" ] ; then
   cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC
  fi
 
-##PoS tagging with Coreference Resolution
-elif [ "$MOD" == "coref" ]  ; then
- if [ "$ZIP" == "zip" ] ; then
-  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -c 
- else 
-  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -c
- fi
-    
 ##PoS tagging with Coreference Resolution and NEC correction
 elif [ "$MOD" == "coref" ] && [ "$OPT" == "-crnec" ] ; then
  if [ "$ZIP" == "zip" ] ; then
-  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -n 
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF "-n"
  else 
-  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF -n
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF "-n"
  fi
+
+##PoS tagging with Coreference Resolution
+elif [ "$MOD" == "coref" ]  ; then
+ if [ "$ZIP" == "zip" ] ; then
+  zcat $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF "-c"
+ else 
+  cat  $FILE |tr -d '\015' | $SENT  | $TOK | $SPLIT | $NER | $TAGGER | $NEC | $COREF "-c"
+ fi    
 
 ##multiword extraction
 elif [ "$MOD" == "mwe" ] && [ "$OPT" == "" ] ; then
