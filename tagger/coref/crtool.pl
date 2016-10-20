@@ -16,9 +16,9 @@ use utf8;
 my $path = "./tagger/coref";
 
 # Number of mentions to look backwards for candidates
-my $limit = $ARGV[1]; #100;
+my $limit = $ARGV[1]; #1000;
 if ($limit == 0) {
-    $limit = 1000;
+    $limit = 500;
 }
 #-----------------------------------------------
 # Options:
@@ -104,7 +104,7 @@ sub coref {
     }
     # First Step: Mention Identification
     #-----------------------------------
-    # %Mentions{mention} = X (no entity)
+    # %Mentions{mention} = 0 (no entity)
     # %MentionsPos{mention} = position
     # %MentionsForm{mention} = token(s)
     ####################################
@@ -128,7 +128,7 @@ sub coref {
     #############
     # Starts in second mention and looks backwards for candidates
     foreach my $m(sort {$a <=> $b} keys %Mentions) {
-	if ($m ne "1") {
+	if ($m != 1) {
 	    my $i = $m - 1;
 	    while ($i >= 1 && ($m-$i <= $limit)) {
 		if (($MentionsPos{$m} != $MentionsPos{$i}) && ($m != $i)) {
@@ -153,8 +153,8 @@ sub coref {
     # When selecting a mention (m), it should be
     # a singleton or the first mention of its entity
     foreach my $m(sort {$a <=> $b} keys %Mentions) {
-	if ( ($m ne "1") &&
-	     ( ($Mentions{$m} ne "X" && $Mentions{$m}[0] == $m) || ($Mentions{$m} eq "X") ) ) {
+	if ( ($m != 1) &&
+	     ( ($Mentions{$m} != 0 && $Mentions{$m}[0] == $m) || ($Mentions{$m} == 0) ) ) {
 	    my $i = $m - 1;
 	    while ($i >= 1 && ($m-$i <= $limit)) {
 		if (defined $Mentions{$i}) {
@@ -182,8 +182,8 @@ sub coref {
     # When selecting a mention (m), it should be
     # a singleton or the first mention of its entity
     foreach my $m(sort {$a <=> $b} keys %Mentions) {
-	if ( ($m ne "1") &&
-	     ( ($Mentions{$m} ne "X" && $Mentions{$m}[0] == $m) || ($Mentions{$m} eq "X") ) ) {
+	if ( ($m != 1) &&
+	     ( ($Mentions{$m} != 0 && $Mentions{$m}[0] == $m) || ($Mentions{$m} == 0) ) ) {
 	    my $i = $m - 1;
 	    while ($i >= 1 && ($m-$i <= $limit)) {
 		if (defined $Mentions{$i}) {
@@ -212,7 +212,7 @@ sub coref {
     # Singletons
     #-----------
     foreach my $m(sort {$a <=> $b} keys %Mentions) {
-	if ($Mentions{$m} =~ /^X$/) {
+	if ($Mentions{$m} == 0) {
 	    # Default feats
 	    $id_entity++;
 	    $Mentions{$m} = $id_entity;
@@ -338,7 +338,7 @@ sub MentionIdentify_f{
 
 	    # Personal names
 	    if ($tag =~ /^NP/) {
-		$Input{$linha} =~ s/$/ (X)/;
+		$Input{$linha} =~ s/$/ (0)/;
 	    }
 	    #else {
 	    #$Input{$linha} =~ s/$/ _/;
@@ -366,9 +366,9 @@ sub MentionExtract{
 	    $token = "\L$token";
 
 	    # Single mentions
-	    if ($coref && $coref eq "(X)") {
+	    if ($coref && $coref eq "(0)") {
 		$num_mention++;
-		$Mentions{$num_mention} = "X";
+		$Mentions{$num_mention} = 0;
 		$MentionsForm{$num_mention} = $token;
 		$MentionsPos{$num_mention} = $cont_line;
 		$MentionsSent{$num_mention} = $num_sentence;
@@ -469,7 +469,7 @@ sub SelectTag {
 
     # Get tag from mention/entity
     # First (m)
-    if ($Mentions{$m} eq "X") {
+    if ($Mentions{$m} == 0) {
 	$Tag_m = $Tag{$m};
 	$count_m = 1;
     } else {
@@ -496,7 +496,7 @@ sub SelectTag {
     }
 
     # Second (i)
-    if ($Mentions{$i} eq "X") {
+    if ($Mentions{$i} == 0) {
 	$Tag_i = $Tag{$i};
 	$count_i = 1;
     } else {
@@ -528,9 +528,9 @@ sub SelectTag {
     # (1º: tag of entity_i; 2º: tag of mention_i)
 
     #
-    if ($Mentions{$m} eq "X" && $MentionsForm{$m} =~ /_/ && $MentionsForm{$i} !~ /_/) {
+    if ($Mentions{$m} == 0 && $MentionsForm{$m} =~ /_/ && $MentionsForm{$i} !~ /_/) {
 	$final_tag = $Tag_m;
-    } elsif ($Mentions{$i} eq "X" && $MentionsForm{$i} =~ /_/ && $MentionsForm{$m} !~ /_/) {
+    } elsif ($Mentions{$i} == 0 && $MentionsForm{$i} =~ /_/ && $MentionsForm{$m} !~ /_/) {
 	$final_tag = $Tag_i;
     }
     #
@@ -566,7 +566,7 @@ sub Merge {
     my ($Mentions, $m, $i) = @_;
     my %Mentions = %$Mentions;
     # New ID (both mentions without entity)
-    if ($Mentions{$m} eq "X" && $Mentions{$i} eq "X") {
+    if ($Mentions{$m} == 0 && $Mentions{$i} == 0) {
 	$id_entity++;
 
 	$Mentions{$m} = $id_entity;
@@ -580,7 +580,7 @@ sub Merge {
 	push(@{$FullNPEnt{$id_entity}}, $FullNP{$i});
     } else {
 	# One of them doesn't have entity
-	if ($Mentions{$m} eq "X") {
+	if ($Mentions{$m} == 0) {
 	    my $new_id = $Mentions{$i};
 	    $Mentions{$m} = $new_id;
 	    push(@$new_id, $m);
@@ -589,7 +589,7 @@ sub Merge {
 	    
 	    push(@{$FullNPEnt{$new_id}}, $FullNP{$m});
 	    push(@{$FullNPEnt{$new_id}}, $FullNP{$i});
-	} elsif ($Mentions{$i} eq "X") {
+	} elsif ($Mentions{$i} == 0) {
 	    my $new_id = $Mentions{$m};
 	    $Mentions{$i} = $new_id;
 	    push(@$new_id, $i);
@@ -620,7 +620,7 @@ sub Merge {
     # Sort the mentions in the entity array
     # (Only the first is chosen in further modules)
     foreach my $e(sort {$a <=> $b} values %Mentions) {
-	if ($e ne "X") {
+	if ($e != 0) {
 	    @$e = sort {$a <=> $b} (@$e);
 	}
     }
@@ -836,12 +836,12 @@ sub CompareGN {
     my $Gen_m = ();
     my $Gen_i = ();
 
-    if ($Mentions{$m} eq "X") {
+    if ($Mentions{$m} == 0) {
 	$Gen_m = $Gender{$m};
     } else {
 	$Gen_m = $GenderEnt{$Mentions{$m}};
     }
-    if ($Mentions{$i} eq "X") {
+    if ($Mentions{$i} == 0) {
 	$Gen_i = $Gender{$i};
     } else {
 	$Gen_i = $GenderEnt{$Mentions{$i}};
@@ -936,7 +936,7 @@ sub MergeEntities {
 
     # Every mention of the entities are merged (same entity id)
     foreach my $m(sort {$a <=> $b} keys %Mentions) {
-	if ($Mentions{$m} !~ /^X$/) {
+	if ($Mentions{$m} != 0) {
 	    if ($Mentions{$m} == $old_id) {
 		$Mentions{$m} = $new_id;
 
