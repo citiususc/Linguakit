@@ -217,20 +217,20 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
       $sufixo =~ s/\bchevolo\b/che vos o/g;
       $sufixo =~ s/\bchevolos\b/che vos os/g;
       $sufixo =~ s/\bchellela\b/che lles a/g;
-      $sufixo =~ s/\bchellelass\b/che lles as/g;
+      $sufixo =~ s/\bchellelas\b/che lles as/g;
       $sufixo =~ s/\bchellelo\b/che lles o/g;
       $sufixo =~ s/\bchellelos\b/che lles os/g;
      }
      elsif ($sufixo =~ /^$pron2$/) {
       ##separar cliticos compostos: mo, mos, to, tos, lho, lhos..
       $sufixo =~ s/\bmo\b/me o/g;
-      $sufixo =~ s/\bmos\b/me os/g;
+      $sufixo =~ s/\bmos\b/me os/g; # "Ambíguo": pode separar incorrectamente cousas como "Queremos" > quere+me+os
       $sufixo =~ s/\bma\b/me a/g;
       $sufixo =~ s/\bmas\b/me as/g; #AMBIGUO?
-      $sufixo =~ s/\bllo\b/lhe o/g;
-      $sufixo =~ s/\bllos\b/lhe os/g;
-      $sufixo =~ s/\blla\b/lhe a/g;
-      $sufixo =~ s/\bllas\b/lhe as/g;
+      $sufixo =~ s/\bllo\b/lle o/g;
+      $sufixo =~ s/\bllos\b/lle os/g;
+      $sufixo =~ s/\blla\b/lle a/g;
+      $sufixo =~ s/\bllas\b/lle as/g;
       $sufixo =~ s/\bcho\b/che o/g;
       $sufixo =~ s/\bchos\b/che os/g;
       $sufixo =~ s/\bcha\b/che a/g;
@@ -282,10 +282,10 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
       $token =~ s/\bmos\b/me os/g;
       $token =~ s/\bma\b/me a/g;
       $token =~ s/\bmas\b/me as/g; #AMBIGUO?
-      $token =~ s/\bllo\b/lhe o/g;
-      $token =~ s/\bllos\b/lhe os/g;
-      $token =~ s/\blla\b/lhe a/g;
-      $token =~ s/\bllas\b/lhe as/g;
+      $token =~ s/\bllo\b/lle o/g;
+      $token =~ s/\bllos\b/lle os/g;
+      $token =~ s/\blla\b/lle a/g;
+      $token =~ s/\bllas\b/lle as/g;
       $token =~ s/\bcho\b/che o/g;
       $token =~ s/\bchos\b/che os/g;
       $token =~ s/\bcha\b/che a/g;
@@ -332,7 +332,7 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
  # $token =~ s/\bcoas([\s])/com as$1/g;
 
   #do(s), da(s)
-   $token =~ s/^do$/de o/g;
+  $token =~ s/^do$/de o/g;
   $token =~ s/^dos$/de os/g;
   $token =~ s/^da$/de a/g;
   $token =~ s/^das$/de as/g;
@@ -350,16 +350,16 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
   $token =~ s/\bdelas\b/de elas/g;
 
   #deste(s), desta(s), desse(s), dessa(s), daquele(s), daquela(s), disto, disso, daquilo
-  #$token =~ s/([\W\s])deste([\W\s])/$1 de este$2/g; FORMA AMBIGUA
- # $token =~ s/\bdestes\b/de estes/g; FORMA AMBIGUA
+  #$token =~ s/([\W\s])deste([\W\s])/$1 de este$2/g; # FORMA AMBIGUA
+  $token =~ s/\bdeste\b/de este/g;
   $token =~ s/\bdesta\b/de esta/g;
   $token =~ s/\bdestas\b/de estas/g;
   $token =~ s/\bdisto\b/de isto/g;
   #$token =~ s/\bdesse\b/de esse/g;  FORMA AMBIGUA
   #$token =~ s/\bdesses\b/de esses/g; FORMA AMBIGUA
-  $token =~ s/\bdessa\b/de essa/g;
-  $token =~ s/\bdessas\b/de essas/g;
-  $token =~ s/\bdisso\b/de isso/g;
+  $token =~ s/\bdesa\b/de esa/g;
+  $token =~ s/\bdesas\b/de esas/g;
+  $token =~ s/\bdiso\b/de iso/g;
   $token =~ s/\bdaquele\b/de aquele/g;
   $token =~ s/\bdaquela\b/de aquela/g; ##em galego deveria ser ambigua (adverbio)
   $token =~ s/\bdaqueles\b/de aqueles/g;
@@ -367,7 +367,7 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
   $token =~ s/\bdaquilo\b/de aquilo/g;
 
   #daqui, daí, ali, acolá, donde, doutro(s), doutra(s)
-  $token =~ s/\bdaqui\b/de aqui/g;
+  $token =~ s/\bdaquí\b/de aquí/g;
   $token =~ s/\bdaí\b/de aí/g; ##em galego deveria ser ambigua (adverbio)
   $token =~ s/\bdacolá\b/de acolá/g;
   $token =~ s/\bdonde\b/de onde/g;
@@ -390,10 +390,10 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
   $token =~ s/\bnunhas$/en unhas/g;
    
   #cun(ns), cunha(s)
-  $token =~ s/\bcun$/en un/g;
-  $token =~ s/\bcuns$/en uns/g;
-  $token =~ s/\bcunha$/en unha/g;
-  $token =~ s/\bcunas$/en unhas/g;
+  $token =~ s/\bcun$/con un/g;
+  $token =~ s/\bcuns$/con uns/g;
+  $token =~ s/\bcunha$/con unha/g;
+  $token =~ s/\bcunas$/con unhas/g;
    
   #nele(s)
  # $token =~ s/\bnele\b/en ele/g;
@@ -405,12 +405,12 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
   $token =~ s/\bnesta\b/en esta/g;
   $token =~ s/\bnestas\b/en estas/g;
   $token =~ s/\bnisto\b/en isto/g;
-  $token =~ s/\bnesse\b/en esse/g;  
-  $token =~ s/\bnesses\b/en esses/g; 
-  $token =~ s/\bnessa\b/en essa/g;
-  $token =~ s/\bnessas\b/en essas/g;
-  $token =~ s/\bnisso\b/en isso/g;
-  $token =~ s/\bnaquele\b/en aquele/g;
+  $token =~ s/\bnese\b/en ese/g;  
+  $token =~ s/\bneses\b/en eses/g; 
+  $token =~ s/\bnesa\b/en esa/g;
+  $token =~ s/\bnesas\b/en esas/g;
+  $token =~ s/\bniso\b/en iso/g;
+  $token =~ s/\bnaquel\b/en aquel/g;
   $token =~ s/\bnaquela\b/en aquela/g; 
   $token =~ s/\bnaqueles\b/en aqueles/g;
   $token =~ s/\bnaquelas\b/en aquelas/g;
@@ -436,15 +436,40 @@ if (!$NonVerb->{$token} && !$Verb->{$token}) {  ##se o token está no dicionario
   $token =~ s/\baqueloutros\b/aqueles outros/g;
   $token =~ s/\baqueloutra\b/aquela outra/g; 
   $token =~ s/\baqueloutras\b/aquelas outras/g; 
-  $token =~ s/\bessoutro\b/esse outro/g; 
-  $token =~ s/\bessoutros\b/esses outros/g;
-  $token =~ s/\bessoutra\b/essa outra/g; 
-  $token =~ s/\bessoutras\b/esse outras/g; 
+  $token =~ s/\besoutro\b/ese outro/g; 
+  $token =~ s/\besoutros\b/eses outros/g;
+  $token =~ s/\besoutra\b/esa outra/g; 
+  $token =~ s/\besoutras\b/esas outras/g; 
   $token =~ s/\bestoutro\b/este outro/g;  
   $token =~ s/\bestoutros\b/estes outros/g;  
   $token =~ s/\bestoutra\b/esta outra/g;
-  $token =~ s/\bestoutra\b/este outra/g;    
+  $token =~ s/\bestoutra\b/este outra/g;
 
+  $token =~ s/\bdaqueloutro\b/de aquele outro/g;
+  $token =~ s/\bdaqueloutros\b/de aqueles outros/g;
+  $token =~ s/\bdaqueloutra\b/de aquela outra/g; 
+  $token =~ s/\bdaqueloutras\b/de aquelas outras/g; 
+  $token =~ s/\bdesoutro\b/de ese outro/g; 
+  $token =~ s/\bdesoutros\b/de eses outros/g;
+  $token =~ s/\bdesoutra\b/de esa outra/g; 
+  $token =~ s/\bdesoutras\b/de esas outras/g; 
+  $token =~ s/\bdestoutro\b/de este outro/g;  
+  $token =~ s/\bdestoutros\b/de estes outros/g;  
+  $token =~ s/\bdestoutra\b/de esta outra/g;
+  $token =~ s/\bdestoutra\b/de este outra/g;
+
+  $token =~ s/\bnaqueloutro\b/en aquele outro/g;
+  $token =~ s/\bnaqueloutros\b/en aqueles outros/g;
+  $token =~ s/\bnaqueloutra\b/en aquela outra/g; 
+  $token =~ s/\bnaqueloutras\b/en aquelas outras/g; 
+  $token =~ s/\bnesoutro\b/en ese outro/g; 
+  $token =~ s/\bnesoutros\b/en eses outros/g;
+  $token =~ s/\bnesoutra\b/en esa outra/g; 
+  $token =~ s/\bnesoutras\b/en esas outras/g; 
+  $token =~ s/\bnestoutro\b/en este outro/g;  
+  $token =~ s/\bnestoutros\b/en estes outros/g;  
+  $token =~ s/\bnestoutra\b/en esta outra/g;
+  $token =~ s/\bnestoutra\b/en este outra/g;
   
   ##splitting tokens:
    if ($token =~ / / ) {
