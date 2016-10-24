@@ -34,7 +34,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **PoS tagger** (parameter `tagger`): Provides the PoS tagger *CitiusTools*. It returns one PoS tag and one lemma per token. This is also known as PoS tagging disambiguation. The module is provided with two submodules: **NER** (`-ner`) and **NEC** (`-nec`). The NEC module returns semantic tags for named entities: `NP0SP00` (Person), `NP00G00` (Location), `NP00O00` (Organization), `NP00V00` (Miscelaneous). 
 
-* **COREF** (parameter `-coref`) labels the different named entities of the text (identified by the **NER** and **NEC**) with a numeric id which represents the discourse entity they refer to (e.g., "Bob Marley NP00SP0 (1)", "Jimi Hendrix NP00SP0 (2)", "Marley NP00SP0 (1)", "Hendrix NP00SP0 (2)", etc.). **COREF** allows the `-crnec` option (experimental) which relabels some named entities based on the results of the coreference analysis. Please note that the **COREF** modules may slow down the execution of the system when analyzing large texts. Also, remember that **COREF** is performed document by document, so it is not recommended to run it in a large corpus containing several documents.
+* **COREF** (parameter `coref`) labels the different named entities of the text (identified by the **NER** and **NEC**) with a numeric id which represents the discourse entity they refer to (e.g., "Bob Marley NP00SP0 (1)", "Jimi Hendrix NP00SP0 (2)", "Marley NP00SP0 (1)", "Hendrix NP00SP0 (2)", etc.). **COREF** allows the `-crnec` option (experimental) which relabels some named entities based on the results of the coreference analysis. Please note that the **COREF** modules may slow down the execution of the system when analyzing large texts. Also, remember that **COREF** is performed document by document, so it is not recommended to run it in a large corpus containing several documents.
 
 * **Multiword extraction** (parameter `mwe`): Extracts multiwords from PoS tagged text. There are several optional parameters, each one being a specific lexical association measure for ranking the candidate terms: chi square (`-chi`, default), loglikelihood (`-log`), mutual information (`-mi`),  symmetrical conditional probability (`-scp`), simple co-occurrences (`-cooc`).
 
@@ -170,6 +170,11 @@ Return the PoS tags with NEC information for named entities:
  ./linguakit en tagger tests/en.txt -nec
 ```
 
+Return the PoS tags with NEC information for named entities and Coreference Resolution:
+```
+ ./linguakit en coref tests/en.txt
+```
+
 Return a sentiment value:
 ```
 ./linguakit en sent "I don't like the film" -s
@@ -243,6 +248,10 @@ Parameter `-conll`  gets an output file with the format defined by CoNLL-X, insp
 [The EAGLES convention](https://talp-upc.gitbooks.io/freeling-user-manual/content/tagsets.html) is being followed.
 
 [More Information »](http://gramatica.usc.es/pln/tools/CitiusTools.html)
+
+### Coreference Resolution
+
+[More information »](http://stel.ub.edu/semeval2010-coref/)
 
 ### Sentiment analysis
 The input can be either a file (by default) or a string (option -e). The output is POSITIVE, NONE, OR NEGATIVE, and a score between 0 and 1. 
