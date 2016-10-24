@@ -31,64 +31,81 @@ DIRPARSER=$MAIN_DIR"/parsers"
 
 help()
 {
-  echo "Syntax: linguakit <lang> <module> <input> [options]
+  echo "Syntax: linguakit <language> <module> <input-file> [options]
       
-      language = gl, es, en, pt
-      module = dep, tagger, mwe, key, recog, sent, rel, tok, kwic, link, sum, conj, coref
-      input = path of the input (by default a txt file or gz/zip) 
+  Available Languages:
+    gl       Galician
+    es       Spanish
+    en       English
+    pt       Portuguese
 
-      'dep'     dependency syntactic analysis
-      'tagger'  part-of-speech tagging
-      'mwe'     multiword extraction
-      'key'     keyword extraction
-      'recog'   language recognition
-      'sent'    sentiment analysis
-      'rel'     relation extraction
-      'tok'     tokenizer
-      'seg'     sentence segmentation
-      'lem'     lemmatization
-      'kwic'    keyword in context (concordances)
-      'link'    entity linking and semantic annotation
-      'sum'     text summarizer
-      'conj'    verb conjugator
-      'coref'   named entity coreference solver
+  Available Modules:
+    dep      Dependency syntactic analysis
+    tagger   Part-of-speech tagging
+    coref    Named entity coreference solver
+    mwe      Multiword extraction
+    key      Keyword extraction
+    recog    Language recognition
+    sent     Sentiment analysis
+    rel      Relation extraction
+    tok      Tokenizer
+    seg      Sentence segmentation
+    lem      Lemmatization
+    kwic     Keyword in context (concordances)
+    link     Entity linking and semantic annotation
+    sum      Text summarizer
+    conj     Verb conjugator
+    coref    Named entity coreference solver
 
-      Available command-line options:
+  Supported input file formats:
+    Plain text
+    Gzipped plain text (mandatory .gz extension)
+    Zipped plain text (mandatory .zip extension)
 
-      -a       'dep' option: simple dependency analysis (by default syntactic output)
-      -fa      'dep' option: full dependency analysis
-      -c       'dep' option: tagged text with syntactic information (for correction rules)
-      -conll   'dep' option: CoNLL output style
+  Options for specific modules:
+    'dep' module:
+      -a       Simple dependency analysis (default)
+      -fa      Full dependency analysis
+      -c       Tagged text with syntactic information (for correction rules)
+      -conll   CoNLL output style
 
-      -noner   'tagger' option: no NER or NEC is processed (by default PoS tagger output)
-      -ner     'tagger' option: PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
-      -nec     'tagger' option: PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
+    'tagger' module:
+      -noner   No NER or NEC is processed (default)
+      -ner     PoS tagger with Named Entity Recognition - NER
+      -nec     PoS tagger with Named Entity Classification - NEC
 
-      -crnec   'coref' option: NEC correction with NE Coreference Resolution
-      
-      -chi     'mwe' option: chi-square co-occurrence measure (by default)
-      -log     'mwe' option: loglikelihood 
-      -scp     'mwe' option: symmetrical conditional probability
-      -mi      'mwe' option: mutual information 
-      -cooc    'mwe' option: co-occurrence counting
-     
-      -split   'tok' option: tokenization with splitting
-      -sort    'tok' option: tokenization with tokens sorted by frequency
+    'coref' module:
+      -crnec   NEC correction with NE Coreference Resolution
 
-      -tokens  'kwic' option: contexts are tokens
-               The kwic option is mandatory and also requires another argument: the keyword to be searched
+    'mwe' module:
+      -chi     Chi-square co-occurrence measure (default)
+      -log     Loglikelihood
+      -scp     Symmetrical conditional probability
+      -mi      Mutual information
+      -cooc    Co-occurrence counting
 
-      -json   'link' option: json output format of entity linking (by default)
-      -xml    'link' option: xml output format of entity linking
+    'recog' and 'sent' modules:
+      -s       The <input> is a string instead of a file
 
-      1-100   'sum' option: percentage of the input text that will be summarized (by default 10%)
+    'tok' module:
+      -split   Tokenization with splitting
+      -sort    Tokenization with tokens sorted by frequency
 
-      -pe     'conj' option: the verb conjugator uses European Portuguese (by default)
-      -pb     'conj' option: the verb conjugator uses Brasilian Portuguese
-      -pen    'conj' option: the verb conjugator uses European Portuguese before the spell agreement
-      -pbn    'conj' option: the verb conjugator uses Brasilian Portuguese before the spell agreement
+    'kwic' module:
+      -tokens <keyword>  Mandatory option to specify the keyword to be used
 
-      -s      'sent' and 'recog' options: if <input> is a string and not a file 
+    'link' module:
+      -json    JSON output format of entity linking (default)
+      -xml     XML output format of entity linking
+
+    'sum' module:
+      <1-100>  Percentage of the input text that will be summarized (10% by default)
+
+    'conj' module:
+      -pe      Use European Portuguese in the verb conjugator (default)
+      -pb      Use Brasilian Portuguese in the verb conjugator
+      -pen     Use European Portuguese before the spell agreement
+      -pbn     Use Brasilian Portuguese before the spell agreement
 "
   exit
 }
