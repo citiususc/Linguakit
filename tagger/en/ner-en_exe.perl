@@ -277,14 +277,14 @@ while (my $text = <STDIN>) {
 	    $token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: euros=euro...
 	    $Tag{$tokens[$i]} = "Zm"; 
 	    $adiantar=1;	        
-	    print STDERR "OK1: #$tokens[$i]# #$tokens[$i+1]#\n";
+	   # print STDERR "OK1: #$tokens[$i]# #$tokens[$i+1]#\n";
 	}
 	elsif ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^\$$/i) {
 	    $tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1];
 	    $token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: euros=euro...
 	    $Tag{$tokens[$i]} = "Zm"; 
 	    $adiantar=1;	        
-	    print STDERR "OK2: #$tokens[$i]# #$tokens[$i+1]#\n";
+	    #print STDERR "OK2: #$tokens[$i]# #$tokens[$i+1]#\n";
 	}
 	elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^$quant$/i && $tokens[$i+2] =~ /^de$/i && $tokens[$i+3] =~ /^$currency$/i) {
 	    $tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] ;
