@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #ProLNat Sentiment Analysis 
 #autor: Grupo ProLNat@GE, CITIUS

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # ProLNat NER 
 # autor: Grupo ProLNat@GE, CiTIUS

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #IDENTIFICA SE UM TEXTO E ESPANHOL OU GALEGO 
 

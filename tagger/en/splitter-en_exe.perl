@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # ProLNat Tokenizer (provided with Sentence Identifier)
 # autor: Grupo ProLNat@GE, CiTIUS

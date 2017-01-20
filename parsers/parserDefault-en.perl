@@ -1,4 +1,4 @@
-#!/usr/bin/perl -X
+#!/usr/bin/env perl
 
 ##flag -a=analisador -c=corrector
 $flag = shift(@ARGV);

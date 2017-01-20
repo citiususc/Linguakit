@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #A PARTIR DA SAIDA ESTANDAR DO PARSER, GERA A SAIDA FORMATO MINIPAR
 

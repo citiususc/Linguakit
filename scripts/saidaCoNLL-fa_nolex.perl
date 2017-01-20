@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #A PARTIR DA SAIDA -fa DO PARSER, GERA A SAIDA FORMATO CONLL
 

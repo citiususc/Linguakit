@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 ##Entrada: saida do Freeling
 ##Saida: entrada do parser

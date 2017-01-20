@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #GERA UMA LISTA DE TRIGRAMAS "EXPR VALUE PADRAO" 
 #lê um ficheiro com N-gramas etiquetados e filtrados 

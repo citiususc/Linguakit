@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # O GERADOR DE 6-GRAMAS
 #lê um texto taggeado com TreeTagger

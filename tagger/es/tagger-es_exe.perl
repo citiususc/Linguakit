@@ -1,5 +1,4 @@
-#!/usr/bin/perl
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #PoS tagger
 #autor: Pablo Gamallo

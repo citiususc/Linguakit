@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # ProLNat NEC (provided with Sentence Identifier, Tokenizer, Splitter, NER, Tagger)
 # autor: Grupo ProLNat@GE, CiTIUS

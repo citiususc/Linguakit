@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 ##Entrada: saida do etiquetador de DepPattern
 ##Saida: formato Freeling

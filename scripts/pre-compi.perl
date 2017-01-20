@@ -1,4 +1,4 @@
-#!/usr/bin/perl -X
+#!/usr/bin/env perl
 
 ##IT TAKES THE GRAMMAR AS INPUT AND PROCESS SOME CHANGES BEFORE COMPILING
 

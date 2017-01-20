@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #GERA OS CONTEXTOS, AS PALAVRAS E AS FREQUENCIAS 
 #lê o resultado do parsing: dependencias. 

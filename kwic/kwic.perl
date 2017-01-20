@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 # program: kwic.perl
 # This is a very simple "key words in context" concordancer written in perl. 

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #Separador de frases
 #autor: Pablo Gamallo
