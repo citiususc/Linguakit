@@ -124,7 +124,10 @@ while (my $line = <STDIN>) {
 
          # ($Tag[$pos]) = $tag =~ /([A-Z][A-Z][A-Z]?)/ if ($tag =~ /^[VN]/);
          # ($Tag[$pos]) = $tag =~ /([A-Z][A-Z0-9]?)/ if ($tag !~ /^[VN]/);
-          if ($tag =~ /^V/ || $tag =~ /^NNP/ ||  $tag =~ /^PRP/) {
+           if ($tag =~ /^VBZb/) {
+	       $Tag[$pos] = "VB";
+           } 
+          elsif ($tag =~ /^V/ || $tag =~ /^NNP/ ||  $tag =~ /^PRP/) {
             ($Tag[$pos]) = $tag =~ /([A-Z][A-Z][A-Z]?[A-Za-z\$]?)/;
           }
           else {
@@ -424,14 +427,14 @@ sub classif {
   foreach $feat_restr (@F) {
        
        ($feat) = $feat_restr =~ /^[a-z]+\_[0-9]+\_[0-9]\_([RL]\_[^ ]+)/;
-       #print STDERR "FEAT: #$cat# - #$feat#\n";
-       
+      # print STDERR "FEAT: #$cat# - #$feat#\n";
+        
        if (!$featFreq{$feat}) { 
           #print STDERR "NOFREQ----#$cat# - #$feat#\n" ;
            next;
        }    
        
-       
+        
         $PriorProb{$cat}{$feat}  = $smooth if ($PriorProb{$cat}{$feat}  ==0 ) ; 
         if (rules_neg ($cat, $feat)) {
           $PriorProb{$cat}{$feat}  = 0;  
@@ -454,7 +457,7 @@ sub classif {
   $PostProb{$cat} = 0 if (!$found{$cat});  
   
   #$Normalizer +=   $PostProb{$cat} 
-  #print STDERR "----#$cat# $PostProb{$cat} \n";
+  #print STDERR "----#$cat# cat=#$ProbCat{$cat}# $PostProb{$cat} \n";
  }
 
  my $First=0;
@@ -463,7 +466,7 @@ sub classif {
                       keys %PostProb ) {
     if (!$First) {
          my $score = $PostProb{$c};
-	  # print STDERR "$c\t$score\n";
+	  #print STDERR "$c\t$score\n";
 	  $result = "$c";
           $First=1;
     }
@@ -500,7 +503,11 @@ sub rules_pos {    #regras lexico-sintacticas positivas
     my ($cat, $feat) = @_ ;
     my $result;
 
-   
+    ##se 'is' vai diante dum gerundio
+    if ($cat =~ /^VBG/   && $feat =~ /L_VB/  ) {
+     $result = 1;
+    }
+
     ##se hai um adverbio negativo diante dum verbo
     #if ($cat =~ /^RN/   && $feat =~ /R_V/  ) {
     # $result = 1;
