@@ -145,6 +145,11 @@ while (my $text = <STDIN>) {
 		$tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula e nao vai a principio de frase
 	    $Tag{$tokens[$i]} = "NNP";
 	}
+        elsif ( ($tokens[$i] =~ /^$UpperCase/) && $Ambig{$lowercase} && 
+			  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&
+			  $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula ambigua, e nao vai a principio de frase
+                               $Tag{$tokens[$i]} = "NNP";
+        }
 	elsif ( ($tokens[$i] =~ /^$UpperCase/ && !$StopWords->{$lowercase} &&
 		 $tokens[$k] =~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/) || ($i==0) ) { ##começa por maiúscula e vai a principio de frase 
            #print STDERR "OKKKK- #$tokens[$i]#\n";

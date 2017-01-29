@@ -77,7 +77,9 @@ while (my $texto = <STDIN>) {
     $texto =~ s/($mark_sigla$UpperCase)\.($UpperCase)/$1$mark_sigla$2/g;
     
     $texto =~ s/($mark_sigla$UpperCase)\.([\s]+)($LowerCase)/$1$mark_sigla$2$3/g; ##o P.P. está ....
-    
+
+   ##conversom commas
+   $texto =~ s/\’s/\'s/g;    
     #print STDERR "2#$texto#";
     
     #$texto =~ s/\./\.\n/g; ##resto de pontos: final de frase 
