@@ -95,7 +95,8 @@ elsif ($lang eq "en") {
    @stop = @stop_en; 
 }
 
-
+my $logger = Dancer::Logger::Console->new;
+ #  $logger -> debug("REF: #@ref# -- #$lang#");
 ####Reading file with stopwords and NP errors
 
 chomp $stop[0];
