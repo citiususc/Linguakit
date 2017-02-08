@@ -1,6 +1,10 @@
 #!/bin/sh
 
-
+rm ./tagger/en/lexicon/lex_stored
+rm ./tagger/es/lexicon/lex_stored
+rm ./tagger/gl/lexicon/lex_stored
+rm ./tagger/pt/lexicon/lex_stored
+rm ./tagger/gl/lexicon/split_stored
 
 echo "Compiling lexicons"
 echo "english lexicon"

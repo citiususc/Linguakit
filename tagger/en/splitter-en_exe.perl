@@ -5,16 +5,17 @@
 # Universidade de Santiago de Compostela
 
 ## In English, nothing is done (some splitting was made in tokens.perl)
+package Splitter;
 
+#<ignore-block>
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
 use utf8;
+#<ignore-block>
 
-# Absolute path 
-use Cwd 'abs_path';
-use File::Basename;
-my $abs_path = dirname(abs_path($0));
+# Pipe
+my $pipe = !defined (caller);#<ignore-line> 
 
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA######
@@ -22,10 +23,15 @@ my $abs_path = dirname(abs_path($0));
 ###############################################
 #my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
+sub splitter {
+	return @_;
+}
 
-#sub splitter {
-while (my $token = <STDIN>) {
-   print $token;    
- 
-} 
+#<ignore-block>
+if($pipe){
+	while (my $token = <STDIN>) {
+		print $token; 
+	} 
+}
+#<ignore-block>
 

@@ -22,9 +22,11 @@ chmod 0755 sentiment/en/*
 chmod 0755 sentiment/es/*
 chmod 0755 sentiment/pt/*
 chmod 0755 sentiment/gl/*
+chmod 0755 sentiment/*.perl
 chmod 0755 kwic/*
-chmod 0755 keywords/*
-chmod 0755 triples/*
+chmod 0755 keywords/*.perl
+chmod 0755 mwe/*.perl
+chmod 0755 triples/*.perl
 
 echo "Permissions of execution, done!"
 

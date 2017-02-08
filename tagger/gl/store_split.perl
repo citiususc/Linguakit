@@ -5,45 +5,60 @@
 #Universidade de Santiago de Compostela
 
 
-# Script que armazena dous hashes no ficheiro comprimido ./lexicon/lex_store
+# Script que armazena dous hashes no ficheiro comprimido ./lexicon/split_store
+package StoreSplit;
 
-
+#<ignore-block>
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
 use utf8;
 use Storable qw(store retrieve freeze thaw dclone);
+#<ignore-block>
 
 # Absolute path 
-use Cwd 'abs_path';
-use File::Basename;
-my $abs_path = dirname(abs_path($0));
+use Cwd 'abs_path';#<ignore-line>
+use File::Basename;#<ignore-line>
+my $abs_path = ".";#<string>
+$abs_path = dirname(abs_path($0));#<ignore-line>
 
-
-
-##ficheiros de recursos
-open (LEX, $abs_path."/lexicon/dicc.src") or die "O ficheiro não pode ser aberto: $!\n";
-binmode LEX,  ':utf8';
-
-my $output = $abs_path."/lexicon/split_stored";
-
-
+my $split = $abs_path."/lexicon/split_stored";#<ignore-line>
 
 ###########################################################
 
+my %Verb=();#<hash><boolean>
+my $Verb;#<ref><hash><boolean>
+my %NonVerb=();#<hash><boolean>
+my $NonVerb;#<ref><hash><boolean>
 
+#<ignore-block>
+if (-e $split) {
+	my $arrayref = retrieve($split); 
+	$NonVerb = $arrayref->[0];
+	$Verb = $arrayref->[1];
+}else{
+#<ignore-block>
 
-my %Verb;
-my %NonVerb;
-while (my $line = <LEX>) {
-    chomp $line;
-    my ($forma) = ($line =~ /^([^ ]+)/);
-    if ($line =~ /V[MSA]/) {
-     $Verb{$forma}++;
-    }
-    else {
-     $NonVerb{$forma}++;
-    }
- }
+	##ficheiros de recursos
+	my $LEX;#<file>
+	open ($LEX, $abs_path."/lexicon/dicc.src") or die "O ficheiro dicc não pode ser aberto: $!\n";
+	binmode $LEX,  ':utf8';#<ignore-line>
 
-store [\%NonVerb, \%Verb],  $output;
+	while (my $line = <$LEX>) {#<string>
+		chomp $line;
+		my ($forma) = ($line =~ /^([^ ]+)/);#<string>
+		if ($line =~ /V[MSA]/) {
+			$Verb{$forma} = 1;
+		}else {
+			$NonVerb{$forma} = 1;
+		}
+	}
+	close $LEX;
+	$Verb = \%Verb;
+	$NonVerb = \%NonVerb;
+	store [$NonVerb, $Verb],  $split;#<ignore-line>
+}#<ignore-line>
+
+sub read{
+	return($NonVerb, $Verb);
+}
