@@ -19,7 +19,7 @@
 # Config
 ############################
 
-MAIN_DIR="./Linguakit"
+MAIN_DIR="/home/gamallo/CitiusTools/devel/Linguakit"
 PROGS=$MAIN_DIR"/scripts"
 DIRPARSER=$MAIN_DIR"/parsers"
 

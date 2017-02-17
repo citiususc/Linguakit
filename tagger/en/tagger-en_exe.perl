@@ -152,12 +152,12 @@ sub tagger {
 			if  ($unk[$pos] && $Token[$pos] =~ /[\w]+ly$/) { ##se a forma e desconhecida acabada em -mente, RG
 				my  $cat = "RB";#<string>
 				$Tag{$pos}{$cat} = $cat;
-				$Lema{$pos}{$cat} = $Lema[$pos] ;
+				$Lema{$pos}{$Tag{$pos}{$cat}} = $Lema[$pos] ;
 				$unk[$pos]=0;
 			}elsif  ($unk[$pos] && $Token[$pos] =~ /[\w]+ing$/) { ##se a forma e desconhecida acabada em -ando, VMG
 				my  $cat = "VB";#<string>
 				$Tag{$pos}{$cat} = "VBG";
-				$Lema{$pos}{$cat} = $Lema[$pos] ; 
+				$Lema{$pos}{$Tag{$pos}{$cat}} = $Lema[$pos] ; 
 				$unk[$pos]=0;
 			}
 			#elsif  ($unk[$pos] && $Token[$pos] !~ /[áéíóú]/ && $Token[$pos] =~ /[\w]+[ai]d[ao](s)?$/) { ##se a forma e desconhecida acabada em -ado/ido, VMP
