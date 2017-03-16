@@ -82,13 +82,18 @@ sub ner {
 	#my $linhaFinal;
 	my $token;#<string>
 	my $adiantar;#<integer>
-    
-	my ($lines) = @_;#<ref><list><string>
-
-	foreach my $text (@{$lines}){
-		my @tokens = split ('\n', $text);#<array><string>
 	
-		for (my $i=0; $i<=$#tokens; $i++) {#<integer>
+	my ($text, $buffer) ;
+	#my ($lines) = @_;#<ref><list><string>
+        if (sysread(STDIN,$text,1048576) > 0) { #<ref><list><string>
+	#foreach my $text (@{$lines}){
+	#while (sysread(STDIN, $text, 1048576) > 0){
+	    print STDERR "--#$text#\n";
+	     $buffer .= $text ;
+	     my @tokens = split ('\n', $buffer);#<array><string>
+	     $buffer = ${^POSTMATCH} ; # Eliminamos a subcadea inicial já consumida
+
+	     for (my $i=0; $i<=$#tokens; $i++) {#<integer>
 			chomp $tokens[$i];
 
 			##marcar fim de frase
