@@ -9,6 +9,7 @@ package Nbayes;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
 #<ignore-block>
 
 {#<main>
@@ -16,10 +17,12 @@ binmode STDOUT, ':utf8';
 	my $train = shift(@ARGV);#<string>
 	my $TRAIN;#<file>
 	open ($TRAIN, $train) or die "O ficheiro não pode ser aberto: $! ".$train."\n";
+	binmode TRAIN,  ':utf8';#<ignore-line>
 
 	my $lex = shift(@ARGV);#<string>
 	my $LEX;#<file>
 	open ($LEX, $lex) or die "O ficheiro não pode ser aberto: $! ".$lex."\n";
+	binmode LEX,  ':utf8';#<ignore-line>
 
 	my %Lex=();#<hash><string>
 	my %Lex_contr=();#<hash><string>
