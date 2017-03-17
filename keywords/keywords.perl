@@ -14,6 +14,7 @@ use Dancer::Logger::Console;
 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
 
 ##Portuguese resources
 my $ref = $abs_path."/recursos/ref_pt";

@@ -32,7 +32,7 @@ while (<>) {
      if ($Pos==0) {
         $FoundFinal=0;
       }
-   ##correcçoes ad hoc de problemas de etiquetaçao:
+   ##correcÃ§oes ad hoc de problemas de etiquetaÃ§ao:
 
    if ( ($lemma =~ /^pol[oa](s?)$/) && ($tag =~ /^SP/) ) {
            $lemma = "por"
@@ -243,7 +243,7 @@ while (<>) {
       $Exp{"tag"} =  $tag;
      }
 
-   ##Colocar a posiçao em todos:
+   ##Colocar a posiÃ§ao em todos:
      if  ($tag !~ /^Fp$|^Fit$|^Fat$/)  {
        $Exp{"pos"} =  $Pos;
        $Pos++; 
@@ -268,4 +268,4 @@ while (<>) {
 }
 
 
-##as conjunçoes seguem a ser CS (subord) e CC (coordenada)
+##as conjunÃ§oes seguem a ser CS (subord) e CC (coordenada)

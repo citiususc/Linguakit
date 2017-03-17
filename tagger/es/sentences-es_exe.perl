@@ -12,6 +12,7 @@ package Sentences;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 

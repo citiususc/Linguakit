@@ -1,15 +1,15 @@
 #!/usr/bin/perl
 
 # O GERADOR DE 6-GRAMAS
-#lê um texto taggeado com TreeTagger
-#escreve quatro lemas taggeados por linha (4gramas)
+#lê um texto taggeado
+#escreve seis lemas taggeados por linha (6gramas)
 package SixTokens;
 
 use strict;#<ignore-line> 
-#$ling = shift(@ARGV);
+binmode STDIN, ':utf8';
+binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
 
-#open (INPUT, "tokens.txt") or die "O ficheiro não pode ser aberto: $!\n";
-#open (OUTPUT, ">bigramas.txt");
 {#<main>
 	my $prev1 = "#";#<string>
 	my $prev2 = "#";#<string>

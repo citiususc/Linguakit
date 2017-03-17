@@ -7,7 +7,7 @@
 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-
+use open qw(:std :utf8);
 
 my $lexicon = shift(@ARGV);
 open (L, $lexicon) or die "O ficheiro não pode ser aberto: $!\n";

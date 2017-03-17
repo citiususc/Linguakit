@@ -1,5 +1,4 @@
 #!/usr/bin/env perl
-#!/usr/bin/env perl
 
 #PoS tagger
 #autor: Pablo Gamallo
@@ -14,6 +13,7 @@ package Tagger;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 

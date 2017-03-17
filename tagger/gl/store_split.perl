@@ -12,6 +12,7 @@ package StoreSplit;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
 use utf8;
 use Storable qw(store retrieve freeze thaw dclone);
 #<ignore-block>

@@ -6,7 +6,7 @@
 
 ## Lexemas gramaticais especiais:
 $AUX="(have|avoir|ter|haber|haver)";
-$COP="(be|être|ser)";
+$COP="(be|Ãªtre|ser)";
 
 
 $Pos=0;
@@ -35,7 +35,7 @@ while (<>) {
      if ($Pos==0) {
         $FoundFinal=0;
      }
-   ##correcçoes ad hoc de problemas de etiquetaçao:
+   ##correcÃ§oes ad hoc de problemas de etiquetaÃ§ao:
 
    if ( ($lemma =~ /^pol[oa](s?)$/) && ($tag =~ /^SP/) ) {
            $lemma = "por"
@@ -43,7 +43,7 @@ while (<>) {
 
 
     #se temos um NP (nome proprio), colocar a forma no lema (para conservar a maiuscula)
-     #se temos um possível nome próprio (desconhecido ou composto), colocar a forma no lemma (para conservar a maiuscula)
+     #se temos um possÃ­vel nome prÃ³prio (desconhecido ou composto), colocar a forma no lemma (para conservar a maiuscula)
    if ( ($token =~ /\&/) || ($tag =~ /^NP/) ) {
          $lemma = $token;
    }
@@ -288,7 +288,7 @@ while (<>) {
   #     $Exp{"tag"} =  "Fat";
  #  }
 
-   elsif  ($token eq "¡")  {
+   elsif  ($token eq "Â¡")  {
        
        $Exp{"lemma"} = $lemma;
        $Exp{"token"} = $token;
@@ -337,7 +337,7 @@ while (<>) {
        $Exp{"token"} = $token;
        $Exp{"tag"} =  "Fh";
    }
-   elsif  ($token eq "¿")  {
+   elsif  ($token eq "Â¿")  {
        
        $Exp{"lemma"} = $lemma;
        $Exp{"token"} = $token;
@@ -373,13 +373,13 @@ while (<>) {
        $Exp{"token"} = $token;
        $Exp{"tag"} =  "Fpt";
    } 
-   elsif  ($token eq "\«")  {
+   elsif  ($token eq "\Â«")  {
        
        $Exp{"lemma"} = $lemma;
        $Exp{"token"} = $token;
        $Exp{"tag"} =  "Fra";
    } 
-   elsif  ($token eq "\»")  {
+   elsif  ($token eq "\Â»")  {
        
        $Exp{"lemma"} = $lemma;
        $Exp{"token"} = $token;

@@ -1,9 +1,13 @@
 #!/usr/bin/perl -w
 
-##Toma como entrada a saída do FreeLing e devolve um texto etiquetado com algumas modificaçoes: verbos compostos, elimina determinantes e pronomes, etc.
+##Toma como entrada a saída do PoS tagger e devolve um texto etiquetado com algumas modificaçoes: verbos compostos, elimina determinantes e pronomes, etc.
 package FiltroGalExtra;
 
 use strict;#<ignore-line> 
+binmode STDIN, ':utf8';
+binmode STDOUT, ':utf8';
+use open qw(:std :utf8);
+
 {#<main>
 	while (my $line = <STDIN>) {#<string>
 		chomp($line);
