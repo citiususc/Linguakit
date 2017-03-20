@@ -56,6 +56,7 @@ my $found=0;
 while (my $line = <STDIN>) {
    chomp $line;
    my $token = $line;
+   $token = norm ($token);
    ##change uppercase to lowercase:
    $token = lc ($token);
    if ($token !~ /$Separador/) {
@@ -102,7 +103,12 @@ else {
  }
 }
 
-   
+sub norm {  
+  my ($str) = $_[0];
+  $str =~ s/^jaja[j]*.*/jaja/ ;
+
+  return $str
+}
 
 
 
