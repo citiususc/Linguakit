@@ -20,10 +20,9 @@ use utf8;
 my $pipe = !defined (caller);#<ignore-line> 
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 
 sub normalizer {

@@ -12,7 +12,6 @@ package Tokens;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
@@ -20,10 +19,9 @@ use utf8;
 my $pipe = !defined (caller);#<ignore-line> 
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 ##variaveis globais
 ##para sentences e tokens:
@@ -78,9 +76,9 @@ sub tokens {
 		$sentence =~ s/(^| )([A-Z][a-z]+)'s/$1$2 GENs/g; #### Se se comenta isto, "John's" não splitea
 		$sentence =~ s/([Ia-z])\'(ve|ll|s|re|m|d|t)/$1APOTEMP$2/g; ### Se se comenta isto, "they're" splitea
 
-		$sentence =~ s/([0-9]+)\.([0-9]+)/$1$dot_quant$2 /g ;
-		$sentence =~ s/([0-9]+)\,([0-9]+)/$1$comma_quant$2 /g ;
-		$sentence =~ s/([0-9]+)\'([0-9]+)/$1$quote_quant$2 /g ;
+		$sentence =~ s/([0-9]+)\.([0-9]+)/${1}$dot_quant$2 /g ;
+		$sentence =~ s/([0-9]+)\,([0-9]+)/${1}$comma_quant$2 /g ;
+		$sentence =~ s/([0-9]+)\'([0-9]+)/${1}$quote_quant$2 /g ;
 
 		#print STDERR "#$sentence#\n";
 		$sentence =~ s/($Punct)/ $1 /g ;
@@ -118,38 +116,38 @@ sub tokens {
 			# Reconstrução da forma contraida ('ve > have)
 			# (e a vezes da principal: don't > do + not)
 			if ($token =~ /APOTEMPt$/) {
-			if ($token =~ /^([Cc]a|[Ww]o)nAPOTEMP/) {
-			$token =~ s/^(.)anAPOTEMPt/$1an\nnot/;
-			$token =~ s/^(.)onAPOTEMPt/$1ill\nnot/;
-			} elsif ($token =~ /nAPOTEMP/) { # e.g. hadn't
-			$token =~ s/nAPOTEMPt/\nnot/;
-			} else {
-			$token =~ s/([a-z])APOTEMP([a-z])/$1\nnot/g;
-			}
+				if ($token =~ /^([Cc]a|[Ww]o)nAPOTEMP/) {
+					$token =~ s/^(.)anAPOTEMPt/$1an\nnot/;
+					$token =~ s/^(.)onAPOTEMPt/$1ill\nnot/;
+				} elsif ($token =~ /nAPOTEMP/) { # e.g. hadn't
+					$token =~ s/nAPOTEMPt/\nnot/;
+				} else {
+					$token =~ s/([a-z])APOTEMP([a-z])/$1\nnot/g;
+				}
 			} elsif ($token =~ /APOTEMPve$/) {
-			$token =~ s/APOTEMPve/\nhave/g;
+				$token =~ s/APOTEMPve/\nhave/g;
 			} elsif ($token =~ /APOTEMPre$/) {
-			$token =~ s/APOTEMPre/\nare/g;
+				$token =~ s/APOTEMPre/\nare/g;
 			} elsif ($token =~ /APOTEMPll$/) {
-			$token =~ s/APOTEMPll/\nwill/g; ## SHALL??
+				$token =~ s/APOTEMPll/\nwill/g; ## SHALL??
 			} elsif ($token =~ /APOTEMPm$/) {
-			$token =~ s/APOTEMPm/\nam/;
+				$token =~ s/APOTEMPm/\nam/;
 			}
 			# Contracções sem apóstrofo (mais: http://en.wikipedia.org/wiki/Relaxed_pronunciation)
 			elsif ($token =~ /^[Ww]anna$/) {
-			$token =~ s/^(.).+$/\1ant\nto/;
+				$token =~ s/^(.).+$/\1ant\nto/;
 			} elsif ($token =~ /^[Cc]annot$/) {
-			$token =~ s/^(.).+$/$1an\nnot/;
+				$token =~ s/^(.).+$/$1an\nnot/;
 			} elsif ($token =~ /^[Gg]onna$/) {
-			$token =~ s/^(.).+$/$1oing\nto/;
+				$token =~ s/^(.).+$/$1oing\nto/;
 			} elsif ($token =~ /^[Gg]otta$/) { # Have got to?
-			$token =~ s/^(.).+$/$1ot\nto/;
+				$token =~ s/^(.).+$/$1ot\nto/;
 			} elsif ($token =~ /^[Hh]afta$/) {
-			$token =~ s/^(.).+$/$1ave\nto/;
+				$token =~ s/^(.).+$/$1ave\nto/;
 			} elsif ($token =~ /^([Cc]oulda|[Ss]houlda|[Ww]oulda|[Mm]usta)$/) {
-			$token =~ s/^(.+)a$/$1\nhave/;
+				$token =~ s/^(.+)a$/$1\nhave/;
 			} else {
-			$token =~ s/([a-z])APOTEMP([a-z])/$1\n\'\2/g; # Com isto splitea tudo (mas mantém 'tok numa linha)
+				$token =~ s/([a-z])APOTEMP([a-z])/$1\n\'\2/g; # Com isto splitea tudo (mas mantém 'tok numa linha)
 			}
 		
 			if($pipe){#<ignore-line>
@@ -162,7 +160,7 @@ sub tokens {
 		if($pipe){#<ignore-line>
 			print "\n";#<ignore-line>
 		}else{#<ignore-line>
-			push (@saida, "\n");
+			push (@saida, "");
 		}#<ignore-line>
 	}
 	

@@ -12,15 +12,13 @@ package Splitter;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 # Pipe
 my $pipe = !defined (caller);#<ignore-line> 

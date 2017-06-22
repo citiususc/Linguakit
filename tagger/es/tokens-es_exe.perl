@@ -12,7 +12,6 @@ package Tokens;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
@@ -20,10 +19,9 @@ use utf8;
 my $pipe = !defined (caller);#<ignore-line> 
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 ##variaveis globais
 ##para sentences e tokens:
@@ -35,8 +33,6 @@ my $Punct_urls = qr/[\:\/\~]/;#<string>
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
 #my $pron = "(me|te|se|le|les|la|lo|las|los|nos|os)";
-# Formas que não se separam do 's (e sim os nomes próprios) so ingles
-my $contr = "([Hh]e|[Hh]ere|[Hh]ow|[Ii]t|[Ss]he|[Tt]hat|[Tt]here|[Ww]hat|[Ww]hen|[Ww]here|[Ww]ho|[Ww]hy)";#<string>
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
@@ -56,13 +52,11 @@ sub tokens {
 	my $comma_quant = "44COMMQUANT77";#<string>
 	my $quote_quant = "44QUOTQUANT77";#<string>
 
-	#(my @sentences) = split ('\n', $texto);
-
 	my @saida = ();#<list><string>
-	
+
 	foreach my $sentence (@{$sentences}) {
-	
 		chomp $sentence;
+
 		#substituir puntuaçoes 
 
 		$sentence =~ s/[ ]*$//;
@@ -72,9 +66,9 @@ sub tokens {
 		$sentence =~ s/\'\'/ $duplo3 /g ;
 		$sentence =~ s/\`\`/ $duplo4 /g ;
 
-		$sentence =~ s/([0-9]+)\.([0-9]+)/$1$dot_quant$2 /g ;
-		$sentence =~ s/([0-9]+)\,([0-9]+)/$1$comma_quant$2 /g ;
-		$sentence =~ s/([0-9]+)\'([0-9]+)/$1$quote_quant$2 /g ;
+		$sentence =~ s/([0-9]+)\.([0-9]+)/${1}$dot_quant$2 /g ;
+		$sentence =~ s/([0-9]+)\,([0-9]+)/${1}$comma_quant$2 /g ;
+		$sentence =~ s/([0-9]+)\'([0-9]+)/${1}$quote_quant$2 /g ;
 
 		#print STDERR "#$sentence#\n";
 		$sentence =~ s/($Punct)/ $1 /g ;
@@ -115,7 +109,7 @@ sub tokens {
 		if($pipe){#<ignore-line>
 			print "\n";#<ignore-line>
 		}else{#<ignore-line>
-			push (@saida, "\n");
+			push (@saida, "");
 		}#<ignore-line>
 	}
 	

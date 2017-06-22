@@ -10,7 +10,7 @@ package Keywords;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
+use utf8;
 #<ignore-block>
 
 # Pipe
@@ -20,66 +20,40 @@ my $pipe = !defined (caller);#<ignore-line>
 use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
-##Portuguese resources
-my ($REF_PT, $STOP_PT);#<file>
-open ($REF_PT, $abs_path."/recursos/ref_pt") or die "O ficheiro ref_pt não pode ser aberto: $!\n";
-binmode $REF_PT, ':utf8';#<ignore-line>
-open ($STOP_PT, $abs_path."/recursos/stopwords_pt") or die "O ficheiro stopwords_pt não pode ser aberto: $!\n";
-binmode $STOP_PT, ':utf8';#<ignore-line>
 
-my @ref_pt = <$REF_PT>;#<array><string>
-my @stop_pt = <$STOP_PT>;#<array><string>
+my @ref;#<array><string>
+my @stop;#<array><string>
 
-##Spanish resources
-my ($REF_ES, $STOP_ES);#<file>
-open ($REF_ES, $abs_path."/recursos/ref_es") or die "O ficheiro ref_es não pode ser aberto: $!\n";
-binmode $REF_ES, ':utf8';#<ignore-line>
-open ($STOP_ES, $abs_path."/recursos/stopwords_es") or die "O ficheiro stopwords_es não pode ser aberto: $!\n";
-binmode $STOP_ES, ':utf8';#<ignore-line>
+sub load{
+	my ($lang) = @_;
 
-my @ref_es = <$REF_ES>;#<array><string>
-my @stop_es = <$STOP_ES>;#<array><string>
+	##Language resources
+	my ($REF, $STOP);#<file>
+	open ($REF, $abs_path."/recursos/ref_$lang") or die "O ficheiro ref_$lang não pode ser aberto: $!\n";
+	binmode $REF, ':utf8';#<ignore-line>
 
-##Galician resources
-my ($REF_GL, $STOP_GL);#<file>
-open ($REF_GL, $abs_path."/recursos/ref_gl") or die "O ficheiro ref_gl não pode ser aberto: $!\n";
-binmode $REF_GL, ':utf8';#<ignore-line>
-open ($STOP_GL, $abs_path."/recursos/stopwords_gl") or die "O ficheiro stopwords_gl não pode ser aberto: $!\n";
-binmode $STOP_GL, ':utf8';#<ignore-line>
+	open ($STOP, $abs_path."/recursos/stopwords_$lang") or die "O ficheiro stopwords_$lang não pode ser aberto: $!\n";
+	binmode $STOP, ':utf8';#<ignore-line>
 
-my @ref_gl = <$REF_GL>;#<array><string>
-my @stop_gl = <$STOP_GL>;#<array><string>
+	@ref = <$REF>;#<array><string>
+	@stop = <$STOP>;#<array><string>
 
-##English resources
-my ($REF_EN, $STOP_EN);#<file>
-open ($REF_EN, $abs_path."/recursos/ref_en") or die "O ficheiro ref_en não pode ser aberto: $!\n";
-binmode $REF_EN, ':utf8';#<ignore-line>
-open ($STOP_EN, $abs_path."/recursos/stopwords_en") or die "O ficheiro stopwords_en não pode ser aberto: $!\n";
-binmode $STOP_EN, ':utf8';#<ignore-line>
-
-my @ref_en = <$REF_EN>;#<array><string>
-my @stop_en = <$STOP_EN>;#<array><string>
-
-#<ignore-block>
-if($pipe){
-	my $lang=shift(@ARGV);
-	my $th=100;
-	my @tagged = <STDIN>;
-	keywords($lang, $th, \@tagged);
 }
-#<ignore-block> 
+
 
 sub keywords {
 
-	my $lang = $_ [0];#<string>
-	my $th = $_ [1];#<string>
-	my $texto = $_ [2];#<ref><array><string>
+	my $texto = $_ [0];#<ref><array><string>
+	my $lang = $_ [1];#<string>
+	my $th = 100;#<integer>
+
+	if (@_ > 2 && $_[2]){
+		$th = $_[2];
+	}
 
 	my @saida=();#<list><string>
-	my $ref;#<ref><array><string>
-	my $stop;#<ref><array><string>
 	my %POS=();#<hash><hash><integer>
 	my %NEG=();#<hash><hash><integer>
 	my %Keys=();#<hash><double>
@@ -88,34 +62,20 @@ sub keywords {
 	my $N=0;#<integer>
 	my %TOKEN;#<ignore-line>
 
-	if ($lang eq "pt") {
-		$ref = \@ref_pt;
-		$stop = \@stop_pt; 
-	}elsif ($lang eq "es") {
-		$ref = \@ref_es;
-		$stop = \@stop_es; 
-	}elsif ($lang eq "gl") {
-		$ref = \@ref_gl;
-		$stop = \@stop_gl; 
-	}elsif ($lang eq "en") {
-		$ref = \@ref_en;
-		$stop = \@stop_en; 
-	}
-
 	####Reading file with stopwords and NP errors
 
-	chomp $stop->[0];
-	my ($tmp, $ErrosNP) = split ('\t', $stop->[0]);#<string>
+	chomp $stop[0];
+	my ($tmp, $ErrosNP) = split ('\t', $stop[0]);#<string>
 	$ErrosNP =~ s/ /\|/g;
 	#print STDERR "#$ErrosNP#\n";
 
-	chomp $stop->[1];
-	my ($tmp, $Stopwords) = split ('\t', $stop->[1]);#<string>
+	chomp $stop[1];
+	my ($tmp, $Stopwords) = split ('\t', $stop[1]);#<string>
 	$Stopwords =~ s/ /\|/g;
 
 	####Reading file with reference or language model
 
-	foreach my $line (@{$ref}) {
+	foreach my $line (@ref) {
 		chomp $line;
 		my ($lemma, $cat, $freq) = split(qr/ /, $line);#<string>
 		$cat =~ s/^J$/A/;
@@ -205,6 +165,16 @@ sub keywords {
 	}
 	return \@saida;
 }
+
+#<ignore-block>
+if($pipe){
+	my $lang = shift(@ARGV);
+	my $th = shift(@ARGV);
+	load($lang);
+	my @tagged = <STDIN>;
+	keywords(\@tagged, $lang, $th);
+}
+#<ignore-block> 
 
 sub trim {    #remove all leading and trailing spaces
 	my $str = $_[0];#<string>

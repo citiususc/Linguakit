@@ -1,35 +1,44 @@
 #!/usr/bin/env perl
 
+package Linking;
 
-use  HTTP::Request::Common qw(POST);
+use strict; 
+use utf8;
+binmode STDIN, ':utf8';
+binmode STDOUT, ':utf8';
+use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 
-$ua = LWP::UserAgent->new;
-$ua->timeout(2000);
+# Pipe
+my $pipe = !defined (caller);
 
-my $lang = shift(@ARGV); ### es, gl, pt, en
-my $format = shift(@ARGV); ## -json, -xml;
+sub linking{
 
-my $module = "semantic_annotator";
-my $size = 50; ##number of keywords
+	my $input = $_[0];
+	my $lang = $_[1]; ### es, gl, pt, en
+	my $format = $_[2]; ## -json, -xml;
 
-my @input =  <STDIN>;
-my $input = join("\n",@input);
+	my $ua = LWP::UserAgent->new;
+	$ua->timeout(2000);
 
-if (!$size) {
-    $size = 50;
+	my $module = "semantic_annotator";
+	my $size = 50; ##number of keywords
+
+	$format =~ s/^\-//;
+
+	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
+
+	return $ua->request($req)->content;
 }
-if (!$lang) {
-    $lang = en;
+
+
+if($pipe){
+	my $lang = shift(@ARGV); 
+	my $format = shift(@ARGV); 
+	my @lines=<STDIN>;
+	for my $line (@lines){
+		my $result = linking($line, $lang, $format);
+		print "$result\n";
+	}
 }
-$format =~ s/^\-//;
-#print STDERR "$input\n";
-my $req = POST "http://fegalaz.usc.es/nlpapi/$module",
-              [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
- 
-print $ua->request($req)->as_string;
-
-
-
-
 

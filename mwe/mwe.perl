@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #GERA UMA LISTA DE TRIGRAMAS "EXPR VALUE PADRAO" 
 #lê um ficheiro com N-gramas etiquetados e filtrados 
@@ -11,16 +11,22 @@
 package Mwe;
 
 #<ignore-block>
-use strict;
+use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
+use utf8;
 #<ignore-block>
 
+# Pipe
+my $pipe = !defined (caller);#<ignore-line> 
 my $sep = " ";#<string>
-{#<main>
-	my $measure = shift(@ARGV);#<string>
-	my $fr = shift(@ARGV);#<string>
+
+sub mwe{
+
+	my @saida=();#<list><string>
+	my ($lines, #<ref><list><string>
+	  $measure, #<string>
+	  $fr) = @_;#<float>
 
 	my %Dico=();#<hash><double>
 	my %Wfreq=();#<hash><integer>
@@ -33,7 +39,7 @@ my $sep = " ";#<string>
 
 	my $CountLines=0;#<integer>
 	my $N=0;#<integer>
-	while (my $line = <STDIN>) {#<string>
+	for my $line (@{$lines}){
 		my %IsPrep=();#<hash><boolean>
 		my %IsName=();#<hash><boolean>
 		my %IsMod=();#<hash><boolean>
@@ -214,15 +220,30 @@ my $sep = " ";#<string>
 		foreach my $expr (sort {$Dico{$b} <=> $Dico{$a} or $a cmp $b} keys %Dico ) {
 				my ($mw, $cat) =  split ("_", $expr);#<string>
 				$mw =~ s/@/ /g;
-				print "$mw\t$Dico{$expr}\t$cat\n";
+				if($pipe){#<ignore-line>
+					print ("$mw\t$Dico{$expr}\t$cat\n");#<ignore-line>
+				}else{#<ignore-line>
+					push(@saida, "$mw\t$Dico{$expr}\t$cat");
+				}#<ignore-line>
 		}
 	}
+	return \@saida;
 }
+
+#<ignore-block>
+if($pipe){
+	my $measure = shift(@ARGV);#<string>
+	my $fr = shift(@ARGV);#<string>
+	
+	my @lines=<STDIN>;
+	mwe(\@lines, $measure, $fr);
+}
+#<ignore-block>
 
 sub measure{
 	my $Dico = $_[0];#<ref><hash><double>
 	my $measure = $_[1];#<string>
-	my $fr = $_[2];#<string>
+	my $fr = $_[2];#<float>
 	my $N = $_[3];#<integer>
 	my $name = $_[4];#<string>
 	my $hash = $_[5];#<ref><hash><integer>

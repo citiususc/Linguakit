@@ -7,125 +7,122 @@
 # by Jon Fernquest:
 #  http://www.geocities.com/SoHo/Square/3472/program.html#scripts
 
+package Kwic;
 
+#<ignore-block>
+use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
+use utf8;
+#<ignore-block>
 
-# Absolute path 
-use Cwd 'abs_path';
-use File::Basename;
-my $abs_path = dirname(abs_path($0));
+# Pipe
+my $pipe = !defined (caller);#<ignore-line> 
 
-my $word = shift(@ARGV);
+#<ignore-block>
+if($pipe){
+	my $word = shift(@ARGV);
+	my @lines=<STDIN>;
+	kwic(\@lines, $word);
+}
+#<ignore-block>
 
-while (my $texto = <STDIN>) {
-  my $window = 10;
-  my @saida;
-  my $saida;
-  my %words;
-  my @collocates;
-  my @contexts3;
+sub kwic{
 
-  my @texto = split ('\n', $texto);
-  $lines = join("",@texto);
-  $lines =~ s/\n/ /g;
-  $lines =~ s/\r/ /g;
+	my $lines = $_[0];#<ref><list><string>
+	my $w = $_[1];#<string>
+	my @saida = ();#<list><string>
 
-#transform multi-word keys
-  $word =~ s/ $//;
-  
-  if ($word =~ / /) {
-   $tmp = $word;
-   
-   $tmp =~ s/[\$\^]//g;
-   
-   @user_words = ($lines =~ /($tmp)/g);
-   foreach $user_word (@user_words) {
-      $modif_word = $user_word;
-      $modif_word  =~ s/ /_/g;
-      $lines =~ s/$user_word/$modif_word/g;
-   }
-   $word =~ s/ /_/g;
-  
- }
+	my $window = 10;#<integer>
+	my @collocates;#<list><string>
+	my @contexts3=();#<list><array><string>
 
- @words = ($lines =~ /(\S+)\s+/gi) ;
+	$w =~ s/ $//;#transform multi-word keys
+	for my $line (@{$lines}){
+		chomp $line;
+		my $word = $w;#<string>
 
+		if ($word =~ / /) {
+			my $tmp = $word;#<string>
 
- if (!defined $window) {$window = 10}
+			$tmp =~ s/[\$\^]//g;
 
- my $max = 0;
- for ($i = 0; $i < @words; $i++) {
-   ## just the entire keyword
-   #if ($words[$i] =~ /^$word[\W]*$/) {
-    if ($words[$i] =~ /$word/) {
-      @collocates = ();
-      for ($j = -$window; $j <= -1; $j++) {
+			my @user_words = ($line =~ /($tmp)/g);#<array><string>
+			foreach my $user_word (@user_words) {
+				my $modif_word = $user_word;#<string>
+				$modif_word  =~ s/ /_/g;
+				$line =~ s/$user_word/$modif_word/g;
+			}
+			$word =~ s/ /_/g;
+		}
 
-         push(@collocates,collocate(\@words,$i,$j));
-      }
+		my @words = ($line =~ /(\S+)\s+/gi);#<array><string>
 
-      push(@collocates,collocate(\@words,$i,0));
+		my $max = 0;#<integer>
+		for (my $i = 0; $i < @words; $i++) {#<integer>
+			## just the entire keyword
+			#if ($words[$i] =~ /^$word[\W]*$/) {
+			if ($words[$i] =~ /$word/) {
+				@collocates = ();
+				for (my $j = -$window; $j <= -1; $j++) {#<integer>
+					push(@collocates,collocate(\@words,$i,$j));
+				}
+				push(@collocates,collocate(\@words,$i,0));
+				for (my $j = 1; $j <= $window; $j++) {#<integer>
+					push(@collocates,collocate(\@words,$i, $j));
+				}
+				my $left   = join(" ", splice(@collocates,0,$window));#<string>
+				my $middle = splice(@collocates,0,1);#<string>
+				my $right  = join(" ", splice(@collocates,0,$window));#<string>
+				my @tmp = ($left,$middle,$right);#<array><string>
+				push(@contexts3,\@tmp);
+				$max = (length($left) > $max) ? length($left) : $max;
+			}
+		}
 
-      for ($j = 1; $j <= $window; $j++) {
+		# create a string filled with blanks equal to the max left context
+		my $dummy = "";#<string>
+		for (my $i=1; $i < $max; $i++) {#<integer>
+			$dummy .= " ";
+		} 
 
-         push(@collocates,collocate(\@words,$i, $j));
-      }
+		# |<-----$remainder------->|<---------------$lenleft----------->|
+		# |<---------------------------$max---------------------------->|
 
-      $left   = join(" ", splice(@collocates,0,$window));
-      $middle = splice(@collocates,0,1);
-      $right  = join(" ", splice(@collocates,0,$window));
-      @tmp = ($left,$middle,$right);
-      push(@contexts3,[ @tmp ]);
-      $max = (length($left) > $max) ? length($left) : $max;
-   }
+		foreach my $context (@contexts3) {
+			my $lenleft = length($context->[0]);#<integer>
+			my $remainder = $max - $lenleft;#<integer>
+			my $spacer = $dummy;#<string>
+			substr($spacer,$remainder,$lenleft) = substr($context->[0],0,$lenleft);
+			$context->[1] =~ s/_/ /g;
 
- }
-
-
-
-
-
-
-
-# create a string filled with blanks equal to the max left context
- my $dummy = "";
- for ($i=1; $i < $max; $i++) { 
-   $dummy .= " ";
- } 
-
-# |<-----$remainder------->|<---------------$lenleft----------->|
-# |<---------------------------$max---------------------------->|
-
- foreach $context (@contexts3) {
-   $lenleft = length($context->[0]);
-   $remainder = $max - $lenleft;
-   $spacer = $dummy;
-   substr($spacer,$remainder,$lenleft) = substr($context->[0],0,$lenleft);
-   $context->[1] =~ s/_/ /g;
-   print "$spacer   $context->[1]   $context->[2]\n";
- 
- }
+			if($pipe){#<ignore-line>
+				print "$spacer   $context->[1]   $context->[2]\n";#<ignore-line>
+			}else{#<ignore-line>
+				push(@saida,"$spacer   $context->[1]   $context->[2]");
+			}#<ignore-line>
+		}
+	}
+	return \@saida;
 }
 
-
 sub collocate {
-   my($words,$i,$delta) = @_;
-   
-   my($target);
+	my($words,#<ref><array><string>
+	  $i,$delta) = @_;#<integer>
 
-   # check bounds
-   $target = $i + $delta;
-    
-   if (($target < 0) || ($target > @words - 1)) {
-      #print "out of bounds\n";
-     # print STDERR "W: #$target# #@words#\n";
-      return "";
-   } 
-   
-   #print "in bounds: $words->[$target]\n";
-   return $words->[$target];
+	my $target;#<integer>
+
+	# check bounds
+	$target = $i + $delta;#<integer>
+
+	if (($target < 0) || ($target > @{$words} - 1)) {
+		#print "out of bounds\n";
+		# print STDERR "W: #$target# #@words#\n";
+		return "";
+	} 
+
+	#print "in bounds: $words->[$target]\n";
+	return $words->[$target];
 }
 
 

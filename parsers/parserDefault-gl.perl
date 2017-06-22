@@ -1,10 +1,18 @@
-#!/usr/bin/perl -X
+#!/usr/bin/env perl
+package Parser;
 
 use strict;#<ignore-line>
-use warnings;#<ignore-line>
+binmode STDIN, ':utf8';#<ignore-line>
+binmode STDOUT, ':utf8';#<ignore-line>
+binmode STDERR, ':utf8';#<ignore-line>
+use utf8;#<ignore-line>
+  
+# Pipe
+my $pipe = !defined (caller);#<ignore-line>   
   
 #fronteira de frase:
 my $Border="SENT";#<string>
+
 #identificar nomes de dependencias lexicais (idiomaticas)
 my $DepLex = "^<\$|^>\$|lex\$";#<string>
 
@@ -61,14 +69,13 @@ my $CCord  = "(?:and\|or\|nor\|y\|ni\|e\|nin\|nem\|et\|o\|ou\|)";#<string>
 my $Partitive  = "(?:de\|of\|)";#<string>
 my $PrepLocs  = "(?:a\|de\|por\|par\|by\|to\|)";#<string>
 my $PrepRA  = "(?:de\|com\|con\|sobre\|sem\|sen\|sin\|entre\|of\|with\|about\|without\|between\|on\|avec\|sûr\|)";#<string>
-my $PrepMA  = "(?:hasta\|até\|hacia\|desde\|em\|en\|para\|since\|until\|at\|in\|for\|to\|jusqu
-\|depuis\|pour\|dans\|)";#<string>
-my $cliticopers  = "(?:lo\|la\|los\|las\|le\|les\|nos\|os\|me\|te\|se\|Lo\|La\|Las\|Le\|Les\|Nos\|Me\|Te\|Se\|lle\|lles\|lhe\|lhes\|Lles\|Lhes\|Lle\|Lhe\|che\|ches\|Che\|Ches\|o\|O\|a\|A\|os\|Os\|as\|As\|him\|her\|me\|us\|you\|them\|lui\|leur\|leurs\|)";#<string>
+my $PrepMA  = "(?:hasta\|até\|hacia\|desde\|em\|en\|para\|since\|until\|at\|in\|for\|to\|jusqu\'\|depuis\|pour\|dans\|)";#<string>
+my $cliticopers  = "(?:lo\|la\|los\|las\|le\|les\|nos\|vos\|os\|me\|te\|se\|Lo\|La\|Las\|Le\|Les\|Vos\|Nos\|Me\|Te\|Se\|lle\|lles\|lhe\|lhes\|Lles\|Lhes\|Lle\|Lhe\|che\|ches\|Che\|Ches\|o\|O\|a\|A\|os\|Os\|as\|As\|him\|her\|me\|us\|you\|them\|lui\|leur\|leurs\|)";#<string>
 my $cliticoind  = "(?:le\|les\|nos\|me\|te\|Le\|Les\|Nos\|Me\|Te\|)";#<string>
 my $PROperssuj = "(?:yo\|tú\|usted\|él\|ella\|nosotros\|vosotros\|ellos\|ellas\|ustedes\|eu\|ti\|tu\|vostede\|você\|ele\|ela\|nós\|vós\|eles\|elas\|vostedes\|vocês\|eles\|elas\|you\|i\|we\|they\|he\|she\|je\|il\|elle\|ils\|elles\|nous\|vous\|)";#<string>
 my $PROsujgz = "(?:eu\|ti\|tu\|vostede\|você\|el\|ele\|ela\|nós\|vós\|eles\|elas\|vostedes\|vocês\|eles\|elas\|)";#<string>
-my $VModalEs  = "(?:poder\|dever\|deber\|)";#<string>
 my $VModalEN  = "(?:can\|cannot\|should\|must\|shall\|will\|would\|may\|might\|)";#<string>
+my $VModalES   = "(?:poder\|deber\|)";#<string>
 my $Vpass  = "(?:ser\|be\|être\|)";#<string>
 my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
 my $NincSp  = "(?:alusión\|comentario\|referencia\|llamamiento\|mención\|observación\|declaración\|propuesta\|pregunta\|)";#<string>
@@ -113,24 +120,26 @@ my %TagStr=();#<map><integer>
 my %IDF=();#<map><string>
 my %Ordenar=();#<map><integer>
 
-{#<main>
-
-	##flag -a=analisador -c=corrector
-	my $flag = shift(@ARGV);#<string>
+sub parse{
+	my $lines = $_[0];#<ref><list><string>
+	my @saida=();#<list><string>
 
 	## -a por defeito
-	if (!defined $flag) {
-		$flag = "-a";
+	my $flag = "-a"; #<string>
+
+	##flag -a=analisador -c=corrector
+	if(@_>1){
+		$flag = $_[1];
 	}
 
 	my $j=0;#<integer>
-	while (my $line = <>) {#<string>
+	foreach my $line (@{$lines}) {
 		chop($line);
 
 		(my $token, $info) = split(" ", $line);#<string>
 
 		if ( ($CountLines % 100) == 0) {;
-			printf  STDERR "- - - processar linha:(%6d) - - -\r",$CountLines;
+			printf  STDERR "- - - processar linha:(%6d) - - -\n",$CountLines;
 		}
 		$CountLines++;
 
@@ -707,12 +716,12 @@ my %Ordenar=();#<map><integer>
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 					Add("DepHead","type:perfect",\@temp);
 
-					# VSpecL: VERB<lemma:$VModalEs> [ADV]* VERB<mode:N>
+					# VSpecL: VERB<lemma:$VModalES> [ADV]* VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:$VModalEs\|${r})(?:$ADV$a2)*($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:$VModalES\|${r})(?:$ADV$a2)*($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$VModalEs\|${r})($ADV$a2)*($VERB${l}mode:N\|${r})/$2$3/g;
+					$listTags =~ s/($VERB${l}lemma:$VModalES\|${r})($ADV$a2)*($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
 					# VSpecLocL: VERB<lemma:ter|haver> [ADV]* PRP<lemma:de>|CONJ<lemma:que&type:S> [ADV]* VERB<mode:N>
@@ -2076,16 +2085,20 @@ my %Ordenar=();#<map><integer>
 #########SAIDA CORRECTOR TAGGER
 			if ($flag eq "-c") {    
 				for($i=0;$i<=$#Token;$i++) {
-					print "$Token[$i]\t";
+					my $saida = "$Token[$i]\t";#<string>
 					my %OrdTags=();#<map><string>
 					$OrdTags{"tag"} = $Tag[$i]; 
 					foreach my $feat (keys %{$ATTR[$i]}) {
 						$OrdTags{$feat} = $ATTR[$i]{$feat};
 					}
 					foreach my $feat (sort keys %OrdTags) {
-						print "$feat:$OrdTags{$feat}|";
+						$saida .= "$feat:$OrdTags{$feat}|";
 					}
-					print "\n";
+					if($pipe){#<ignore-line>
+						print "$saida\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,$saida);
+					}#<ignore-line>
 				}
 				##Colocar a zero os vectores de cada oraçao
 				@Token=();
@@ -2097,7 +2110,11 @@ my %Ordenar=();#<map><integer>
 #########SAIDA STANDARD DO ANALISADOR 
 			elsif ($flag eq "-a") {
 				##Escrever a oraçao que vai ser analisada:
-				print "SENT::$seq\n";
+				if($pipe){#<ignore-line>
+					print "SENT::$seq\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"SENT::$seq");
+				}#<ignore-line>
 				#print STDERR "LIST:: $listTags\n";
 				####imprimir Hash de dependencias ordenado:
 				foreach my $triplet (sort {$Ordenar{$a} <=> $Ordenar{$b} } keys %Ordenar ) {
@@ -2111,22 +2128,33 @@ my %Ordenar=();#<map><integer>
 						$de = $Lemma[$pos2];
 						$triplet = "$re;$he\_$ta1\_$pos1;$de\_$ta2\_$pos2" ;
 					}
-					print "($triplet)\n";
+					if($pipe){#<ignore-line>
+						print "($triplet)\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"($triplet)");
+					}#<ignore-line>
 				}
 				##final de analise de frase:
-				print "---\n";
+				if($pipe){#<ignore-line>
+					print "---\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"---");
+				}#<ignore-line>
 			}
 ###SAIDA ANALISADOR COM ESTRUTURA ATRIBUTO-VALOR (full analysis)
 			elsif ($flag eq "-fa") {
 				##Escrever a oraçao que vai ser analisada:
-				print "SENT::$seq\n";
+				if($pipe){#<ignore-line>
+					print "SENT::$seq\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"SENT::$seq");
+				}#<ignore-line>
 				#print STDERR "LIST:: $listTags\n";
 				####imprimir Hash de dependencias ordenado:
 				my $re="";#<string>
 				foreach my $triplet (sort {$Ordenar{$a} <=>
 					$Ordenar{$b} }
 					keys %Ordenar ) {
-					# print "$triplet\n";
 					$triplet =~ s/^\(//;
 					$triplet =~ s/\)$//;
 					($re, my $he,my $de) =  split (";", $triplet);#<string>
@@ -2138,38 +2166,60 @@ my %Ordenar=();#<map><integer>
 						$de2 = $Lemma[$pos2];
 						$triplet = "$re;$he1\_$ta1\_$pos1;$de2\_$ta2\_$pos2";
 					}
-					print "($triplet)\n";
+					if($pipe){#<ignore-line>
+						print "($triplet)\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"($triplet)");
+					}#<ignore-line>
+
 					($he, my $ta, my $pos) = split ("_", $he);#<string>
-					print "HEAD::$he\_$ta\_$pos<";
+					my $saida = "HEAD::$he\_$ta\_$pos<";#<string>
 					$ATTR[$pos]{"lemma"} = $Lemma[$pos];
 					$ATTR[$pos]{"token"} = $Token[$pos];
 					foreach my $feat (sort keys %{$ATTR[$pos]}) {
-						print "$feat:$ATTR[$pos]{$feat}|" ;
+						$saida .= "$feat:$ATTR[$pos]{$feat}|";
 					}
-					print ">\n";
+					if($pipe){#<ignore-line>
+						print "$saida>\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"$saida>");
+					}#<ignore-line>
+
 					($de, $ta, $pos) = split ("_", $de);#<string>
-					print "DEP::$de\_$ta\_$pos<";
+					$saida = "DEP::$de\_$ta\_$pos<";
 					$ATTR[$pos]{"lemma"} = $Lemma[$pos];
 					$ATTR[$pos]{"token"} = $Token[$pos];
 					foreach my $feat (sort keys %{$ATTR[$pos]}) {
-						print "$feat:$ATTR[$pos]{$feat}|" ;
+						$saida .= "$feat:$ATTR[$pos]{$feat}|" ;
 					}
-					print ">\n";
+					if($pipe){#<ignore-line>
+						print "$saida>\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"$saida>");
+					}#<ignore-line>
 
 					if ($re =~ /\//) {
 						my ($depName, $reUnit) = split ('\/', $re);#<string>
 						(my $reLex, $ta, $pos) = split ("_", $reUnit);#<string>
-						print "REL::$reLex\_$ta\_$pos<";
+						$saida =  "REL::$reLex\_$ta\_$pos<";
 						$ATTR[$pos]{"lemma"} = $Lemma[$pos];
 						$ATTR[$pos]{"token"} = $Token[$pos];
 						foreach my $feat (sort keys %{$ATTR[$pos]}) {
-							print "$feat:$ATTR[$pos]{$feat}|" ;
+							$saida .= "$feat:$ATTR[$pos]{$feat}|" ;
 						}
-						print ">\n";
+						if($pipe){#<ignore-line>
+							print "$saida>\n";#<ignore-line>
+						}else{#<ignore-line>
+							push (@saida,"$saida>");
+						}#<ignore-line>
 					}
 				}
 				##final de analise de frase:
-				print "---\n";
+				if($pipe){#<ignore-line>
+					print "---\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"---");
+				}#<ignore-line>
 			}
     
 			##Colocar numa lista vazia os strings com os tags (listTags) e a oraçao (seq)
@@ -2191,7 +2241,7 @@ my %Ordenar=();#<map><integer>
 	}
 
 	#print "\n";
-	print STDERR "Fim do parsing...\n";
+	return \@saida;
 }
 
 
@@ -3723,3 +3773,10 @@ sub ReConvertChar {
 	$Token[$z] =~ s/\*$y\*/$x/g;
 	$Lemma[$z] =~ s/\*$y\*/$x/g;
 }
+
+#<ignore-block>
+if($pipe){
+	my @lines=<STDIN>;
+	parse(\@lines, shift(@ARGV));
+}
+#<ignore-block>

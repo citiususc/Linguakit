@@ -1,35 +1,43 @@
 #!/usr/bin/env perl
 
+package Summarizer;
 
-use  HTTP::Request::Common qw(POST);
+use strict; 
+use utf8;
+binmode STDIN, ':utf8';
+binmode STDOUT, ':utf8';
+use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 
-$ua = LWP::UserAgent->new;
-$ua->timeout(2000);
+# Pipe
+my $pipe = !defined (caller);
 
-my $lang = shift(@ARGV); ### es, gl, pt, en
-my $size = shift(@ARGV); ##percentage of the abstract
-my $module = "summarizer";
-my $format = "xml";
+sub summarizer{
 
-my @input =  <STDIN>;
-my $input = join("\n",@input);
+	my $input = $_[0];
+	my $lang = $_[1]; ### es, gl, pt, en
+	my $size =  $_[2]; ##percentage of the abstract
 
-if (!$size) {
-    $size = 10;
+	my $ua = LWP::UserAgent->new;
+	$ua->timeout(2000);
+
+	my $module = "summarizer";
+	my $format = "xml";
+
+
+	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
+
+	return $ua->request($req)->content;
 }
-if (!$lang) {
-    $lang = en;
+
+
+if($pipe){
+	my $lang = shift(@ARGV); 
+	my $size = shift(@ARGV); 
+	my @lines=<STDIN>;
+	for my $line (@lines){
+		my $result = summarizer($line, $lang, $size);
+		print "$result\n";
+	}
 }
-#print STDERR "#$input#\n";
-#http://0.0.0.0:3000/
-#fegalaz.usc.es/nlpapi
-my $req = POST "http://fegalaz.usc.es/nlpapi/$module",
-              [ text => $input, lang_input =>$lang,format=>$format,output_size=>$size];
- 
-print $ua->request($req)->as_string;
-
-
-
-
 

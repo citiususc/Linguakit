@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+#!/usr/bin/env perl
 
 #PoS tagger
 #autor: Pablo Gamallo
@@ -13,7 +14,6 @@ package Tagger;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
@@ -22,14 +22,13 @@ use utf8;
 my $pipe = !defined (caller);#<ignore-line> 
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 my $MODEL;#<file>
 open ($MODEL, $abs_path."/model/train-pt") or die "O ficheiro train-pt não pode ser aberto: $!\n";
-binmode MODEL,  ':utf8';#<ignore-line>
+binmode $MODEL,  ':utf8';#<ignore-line>
 
 ##variabeis globais
 my $w=1; #<string>#mesma janela/window que no treino
@@ -79,11 +78,12 @@ while (my $line = <$MODEL>) {  #<string>#leitura treino
 	#printf STDERR "<%7d>\r",$cont if ($cont++ % 100 == 0);
    
 }
+close $MODEL;
 
 sub tagger {
 
-	my @text=@{$_[0]};#<list><string>
 	my @saida=();#<list><string>
+	my ($text) = @_;#<ref><list><string>
 
 	my $pos=0;#<integer>
 	my $s=0;#<integer> numero de frases
@@ -104,7 +104,7 @@ sub tagger {
 	#                             #
 	###############################
 
-	foreach my $line (@text) {
+	foreach my $line (@{$text}) {
 		if ($line !~ /\w/ || $line =~ /^[ ]$/) {
 			next;
 		}
@@ -190,7 +190,7 @@ sub tagger {
 					if($pipe){#<ignore-line>
 						print "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]}."\n";#<ignore-line>
 					}else{#<ignore-line>
-						push (@saida, "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]}."\n");
+						push (@saida, "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]});
 					}#<ignore-line>
 				}else {
 					if (!$unk[$pos]) { #se a forma e ambigua mas conhecida, utilizamos a lista de tags atribuida a forma
@@ -320,7 +320,7 @@ sub tagger {
 					if($pipe){#<ignore-line>
 						print "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n";#<ignore-line>
 					}else{#<ignore-line>
-						push (@saida, "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n"); 
+						push (@saida, "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]"); 
 					}#<ignore-line>
 
 					##eliminar tags nao selecionados do token resultante para proximos processos
@@ -335,9 +335,10 @@ sub tagger {
 			}
 			###RESULTADO:
 			if($pipe){#<ignore-line>
-				print "$last_entry\n";#<ignore-line>
+				print "$last_entry\n\n";#<ignore-line>
 			}else{#<ignore-line>
 				push (@saida, "$last_entry");
+				push (@saida, "");
 			}#<ignore-line>  
     
 			for ($pos=0;$pos<=$#Tag;$pos++) {

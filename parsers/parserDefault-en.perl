@@ -1,10 +1,18 @@
-#!/usr/bin/perl -X
+#!/usr/bin/env perl
+package Parser;
 
 use strict;#<ignore-line>
-use warnings;#<ignore-line>
+binmode STDIN, ':utf8';#<ignore-line>
+binmode STDOUT, ':utf8';#<ignore-line>
+binmode STDERR, ':utf8';#<ignore-line>
+use utf8;#<ignore-line>
+  
+# Pipe
+my $pipe = !defined (caller);#<ignore-line>   
   
 #fronteira de frase:
 my $Border="SENT";#<string>
+
 #identificar nomes de dependencias lexicais (idiomaticas)
 my $DepLex = "^<\$|^>\$|lex\$";#<string>
 
@@ -54,21 +62,19 @@ my $PUNCT = "F[a-z]+_[0-9]+";#<string>
 
 #################################### LEXICAL CLASSES #####################################
 my $Quant  = "(?:very\|more\|less\|least\|most\|quite\|as\|muy\|mucho\|bastante\|bien\|casi\|tan\|muy\|bem\|ben\|menos\|poco\|mui\|moi\|muito\|tão\|más\|mais\|máis\|pouco\|peu\|assez\|plus\|moins\|aussi\|)";#<string>
-my $temporal  = "(?:day\|week\|month\|year\|)";#<string>
 my $Partitive  = "(?:de\|of\|)";#<string>
 my $PrepLocs  = "(?:a\|de\|por\|par\|by\|to\|)";#<string>
 my $PrepRA  = "(?:de\|com\|con\|sobre\|sem\|sen\|entre\|of\|with\|about\|without\|between\|on\|avec\|sûr\|)";#<string>
-my $PrepMA  = "(?:hasta\|até\|hacia\|desde\|em\|en\|para\|since\|until\|at\|in\|for\|to\|jusqu
-\|depuis\|pour\|dans\|)";#<string>
+my $PrepMA  = "(?:hasta\|até\|hacia\|desde\|em\|en\|para\|since\|until\|at\|in\|for\|to\|jusqu\'\|depuis\|pour\|dans\|)";#<string>
 my $cliticopers  = "(?:lo\|la\|los\|las\|le\|les\|nos\|os\|me\|te\|se\|Lo\|La\|Las\|Le\|Les\|Nos\|Os\|Me\|Te\|Se\|lle\|lles\|lhe\|lhes\|Lles\|Lhes\|Lle\|Lhe\|che\|ches\|Che\|Ches\|o\|O\|a\|A\|him\|her\|me\|us\|you\|them\|lui\|leur\|leurs\|)";#<string>
 my $PROperssuj = "(?:yo\|tú\|usted\|él\|ella\|nosotros\|vosotros\|ellos\|ellas\|ustedes\|eu\|ti\|tu\|vostede\|você\|ele\|ela\|nós\|vós\|eles\|elas\|vostedes\|vocês\|eles\|elas\|you\|i\|we\|they\|he\|she\|je\|il\|elle\|ils\|elles\|nous\|vous\|)";#<string>
 my $PROsujgz = "(?:eu\|ti\|tu\|vostede\|você\|el\|ele\|ela\|nós\|vós\|eles\|elas\|vostedes\|vocês\|eles\|elas\|)";#<string>
 my $VModalEN  = "(?:can\|cannot\|should\|must\|shall\|will\|would\|may\|might\|)";#<string>
 my $Vpass  = "(?:ser\|be\|être\|)";#<string>
 my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
-my $VTwoObj  = "(?:give\|lend\|offer\|pass\|post\|read\|sell\|send\|show\|promise\|tell\|bring\|buy\|cost\|get\|leave\|make\|owe\|pay\|play\|read\|refuse\|show\|sing\|take\|teach\|wish\|write\|)";#<string>
-my $PCLE  = "(?:down\|up\|off\|on\|back\|over\|)";#<string>
-my $VerbsPCLE  = "(?:account\|act\|add\|adhere\|advise\|agree\|aim\|allow\|allude\|answer\|appeal\|apply\|arrive\|ask\|associate\|attach\|attend\|auction\|average\|back\|bail\|bank\|base\|be\|bear\|beat\|become\|beef\|bend\|bet\|bite\|black\|blow\|border\|bow\|break\|breathe\|brighten\|bring\|brush\|buckle\|bugger\|build\|bump\|burn\|butt\|butter\|buy\|call\|calm\|care\|carry\|catch\|cater\|change\|charge\|chase\|chat\|cheat\|check\|cheer\|chip\|chop\|clean\|clear\|clibm\|climb\|close\|come\|count\|cover\|crack\|cross\|cry\|curl\|cut\|date\|dawn\|deal\|decide\|delight\|delve\|depend\|deter\|devote\|die\|dig\|dip\|dish\|dispose\|divide\|do\|doze\|drag\|draw\|dream\|dress\|drive\|drop\|drum\|dry\|dumb\|dwell\|dying\|ease\|eat\|egg\|embark\|empty\|end\|engage\|enter\|entitle\|entrust\|even\|face\|factor\|fade\|fall\|feel\|fight\|figure\|fill\|find\|findo\|finish\|fire\|fit\|fix\|fizzle\|flare\|flick\|flood\|fob\|focus\|follow\|fool\|forge\|freak\|free\|freshen\|frighten\|frown\|function\|fuss\|gather\|get\|give\|go\|grow\|hammer\|hand\|hang\|have\|head\|hear\|heat\|help\|hem\|hide\|hit\|hold\|hook\|hunt\|hurry\|identify\|impose\|improve\|indulge\|insist\|instil\|interest\|interfere\|invest\|iron\|itching\|jack\|jam\|jazz\|jerk\|join\|jot\|juice\|jumble\|jump\|jut\|keel\|keep\|key\|kick\|kid\|kill\|kneel\|knock\|knuckle\|lash\|laugh\|launch\|lay\|laze\|lead\|learn\|leave\|let\|level\|lie\|lift\|light\|lighten\|line\|live\|lock\|log\|long\|look\|lose\|mail\|major\|make\|map\|mark\|match\|max\|measure\|meet\|melt\|mess\|miss\|mix\|mock\|mop\|mount\|mouth\|move\|muck\|muddle\|mull\|muscle\|nag\|nail\|name\|narrow\|nibble\|nip\|nod\|nose\|notch\|note\|number\|object\|occur\|offer\|open\|opt\|order\|owe\|own\|pan\|pass\|pay\|pick\|pitch\|point\|pull\|put\|quarrel\|queue\|quieten\|rake\|rally\|reach\|read\|refer\|reflect\|rely\|remind\|resign\|resort\|result\|return\|revert\|ride\|ring\|rip\|roll\|root\|rope\|rough\|round\|rub\|rule\|run\|rush\|save\|scope\|screw\|seal\|see\|sell\|send\|set\|settle\|shake\|shoot\|shop\|show\|shut\|sign\|sit\|size\|sleep\|slip\|slow\|smell\|snap\|sober\|sort\|speak\|speed\|spell\|spread\|stamp\|stand\|start\|stay\|step\|stick\|stir\|stock\|stop\|storm\|sum\|switch\|tail\|take\|talk\|tear\|tell\|think\|throw\|tick\|tidy\|tie\|tip\|top\|touch\|track\|try\|turn\|urge\|use\|usher\|veg\|verge\|vie\|vote\|vouch\|wait\|wake\|walk\|want\|ward\|warm\|wash\|waste\|watch\|water\|wean\|wear\|weed\|weigh\|whip\|win\|wind\|wipe\|wise\|work\|wrap\|wrestle\|write\|yank\|yearn\|yell\|zero\|zip\|zoom\|)";#<string>
+my $NincSp  = "(?:alusión\|comentario\|referencia\|llamamiento\|mención\|observación\|declaración\|propuesta\|pregunta\|)";#<string>
+my $NincExp  = "(?:afecto\|alegría\|amparo\|angustia\|ánimo\|cariño\|cobardía\|comprensión\|consuelo\|corte\|daño\|disgusto\|duda\|escándalo\|fobia\|gana\|gracias\|gusto\|inquietud\|)";#<string>
+my $PTa  = "(?:aceder\|acostumar\|acudir\|adaptar\|comprometer\|chegar\|cheirar\|dar\|dedicar\|equivaler\|ir\|olhar\|negar\|pertencer\|recorrer\|referir\|regressar\|renunciar\|subir\|sustrair\|unir\|vincular\|voltar\|acostumbrar\|llegar\|oler\|mirar\|pertenecer\|recurrir\|sustraer\|volver\|)";#<string>
 
 
 ####################################END CODE BY COMPI################################################
@@ -90,24 +96,26 @@ my %TagStr=();#<map><integer>
 my %IDF=();#<map><string>
 my %Ordenar=();#<map><integer>
 
-{#<main>
-
-	##flag -a=analisador -c=corrector
-	my $flag = shift(@ARGV);#<string>
+sub parse{
+	my $lines = $_[0];#<ref><list><string>
+	my @saida=();#<list><string>
 
 	## -a por defeito
-	if (!defined $flag) {
-		$flag = "-a";
+	my $flag = "-a"; #<string>
+
+	##flag -a=analisador -c=corrector
+	if(@_>1){
+		$flag = $_[1];
 	}
 
 	my $j=0;#<integer>
-	while (my $line = <>) {#<string>
+	foreach my $line (@{$lines}) {
 		chop($line);
 
 		(my $token, $info) = split(" ", $line);#<string>
 
 		if ( ($CountLines % 100) == 0) {;
-			printf  STDERR "- - - processar linha:(%6d) - - -\r",$CountLines;
+			printf  STDERR "- - - processar linha:(%6d) - - -\n",$CountLines;
 		}
 		$CountLines++;
 
@@ -191,44 +199,20 @@ my %Ordenar=();#<map><integer>
 				my $Rel;#<string>
 ###########################BEGIN GRAMMAR#############################################
 				{#<function>
-					# Single: [X] CONJ<lemma:and|or|y|e|et|o|ou>
-					# Add: coord:no
-					@temp = ($listTags =~ /(?:$X$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($X$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})/$1$2/g;
-					Add("Head","coord:no",\@temp);
-
-					# Single: PRP<lemma:so|because|though|if|whether|while> [X]?
+					# Single: PRP<lemma:so|because|though|if> [X]?
 					# Corr: tag:CONJ, type:S
-					@temp = ($listTags =~ /($PRP${l}lemma:(?:so|because|though|if|whether|while)\|${r})(?:$X$a2)?/g);
+					@temp = ($listTags =~ /($PRP${l}lemma:(?:so|because|though|if)\|${r})(?:$X$a2)?/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
-					$listTags =~ s/($PRP${l}lemma:(?:so|because|though|if|whether|while)\|${r})($X$a2)?/$1$2/g;
+					$listTags =~ s/($PRP${l}lemma:(?:so|because|though|if)\|${r})($X$a2)?/$1$2/g;
 					Corr("Head","tag:CONJ,type:S",\@temp);
 
-					# Single: ADV<lemma:however> [X]?
-					# Corr: tag:CONJ, type:S
-					@temp = ($listTags =~ /($ADV${l}lemma:however\|${r})(?:$X$a2)?/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($ADV${l}lemma:however\|${r})($X$a2)?/$1$2/g;
-					Corr("Head","tag:CONJ,type:S",\@temp);
-
-					# Single: PRO<lemma:i|we|he|she|they>
-					# Corr: type:S
-					@temp = ($listTags =~ /($PRO${l}lemma:(?:i|we|he|she|they)\|${r})/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($PRO${l}lemma:(?:i|we|he|she|they)\|${r})/$1/g;
-					Corr("Head","type:S",\@temp);
-
-					# Single: [NOUN] [Fc]? CONJ<lemma:that|which> [NOUN|PRO<type:D|P|I|X>] [VERB]
+					# Single: [NOUN] [Fc]? CONJ<type:S> [NOUN|PRO<type:D|P|I|X>] [VERB]
 					# Corr: tag:PRO, type:W
-					@temp = ($listTags =~ /(?:$NOUN$a2)(?:$Fc$a2)?($CONJ${l}lemma:(?:that|which)\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2)(?:$Fc$a2)?($CONJ${l}type:S\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2)($Fc$a2)?($CONJ${l}lemma:(?:that|which)\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2)/$1$2$3$4$5/g;
+					$listTags =~ s/($NOUN$a2)($Fc$a2)?($CONJ${l}type:S\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2)/$1$2$3$4$5/g;
 					Corr("Head","tag:PRO,type:W",\@temp);
 
 					# Single: [PRO<lemma:it|there>] [VERB<lemma:be>] [NOUN] PRO<lemma:that>
@@ -238,38 +222,6 @@ my %Ordenar=();#<map><integer>
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($PRO${l}lemma:(?:it|there)\|${r})($VERB${l}lemma:be\|${r})($NOUN$a2)($PRO${l}lemma:that\|${r})/$1$2$3$4/g;
 					Corr("Head","tag:CONJ,type:S",\@temp);
-
-					# Single: [DET] VERB [NOUN]
-					# Corr: tag:ADJ type:Q
-					@temp = ($listTags =~ /(?:$DET$a2)($VERB$a2)(?:$NOUN$a2)/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($DET$a2)($VERB$a2)($NOUN$a2)/$1$2$3/g;
-					Corr("Head","tag:ADJ,type:Q",\@temp);
-
-					# Single: [NOUN] VERB<mode:P>
-					# Corr: mode:0
-					@temp = ($listTags =~ /(?:$NOUN$a2)($VERB${l}mode:P\|${r})/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2)($VERB${l}mode:P\|${r})/$1$2/g;
-					Corr("Head","mode:0",\@temp);
-
-					# Single: PRO<type:X> [ADJ]? [NOUN]
-					# Corr: tag:DT, type:P
-					@temp = ($listTags =~ /($PRO${l}type:X\|${r})(?:$ADJ$a2)?(?:$NOUN$a2)/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($PRO${l}type:X\|${r})($ADJ$a2)?($NOUN$a2)/$1$2$3/g;
-					Corr("Head","tag:DT,type:P",\@temp);
-
-					# Single: X<token:a|an> [NOUN|ADJ|ADV]
-					# Corr: tag:DT, type:I, lemma:=token
-					@temp = ($listTags =~ /($X${l}token:(?:a|an)\|${r})(?:$NOUN$a2|$ADJ$a2|ADV)/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($X${l}token:(?:a|an)\|${r})($NOUN$a2|$ADJ$a2|ADV)/$1$2/g;
-					Corr("Head","tag:DT,type:I,lemma:=token",\@temp);
 
 					# PunctR: X Fz|Fe
 					@temp = ($listTags =~ /($X$a2)($Fz$a2|$Fe$a2)/g);
@@ -282,6 +234,20 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fz$a2|$Fe$a2)($X$a2)/$2/g;
+
+					# >: VERB<lemma:take|have> NOUN<number:S> [PRP]
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:take|have)\|${r})($NOUN${l}number:S\|${r})(?:$PRP$a2)/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:(?:take|have)\|${r})($NOUN${l}number:S\|${r})($PRP$a2)/$1$3/g;
+					LEX();
+
+					# >: VERB<lemma:be> ADJ [PRP]
+					@temp = ($listTags =~ /($VERB${l}lemma:be\|${r})($ADJ$a2)(?:$PRP$a2)/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:be\|${r})($ADJ$a2)($PRP$a2)/$1$3/g;
+					LEX();
 
 					# <: [VERB<lemma:be|become>] ADV<lemma:$Quant> ADJ [PRP<lemma:than|as>]
 					# NEXT
@@ -312,36 +278,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "<";
 					DepHead_lex($Rel,"",\@temp);
 					$listTags =~ s/($PRP${l}lemma:in\|${r})($X${l}lemma:order\|${r})($PRP${l}lemma:to\|${r})/$3/g;
-					LEX();
-
-					# <:  [NOUN|VERB|PRP] X<lemma:next|last|this> NOUN<lemma:$temporal>
-					# Add: date:yes
-					@temp = ($listTags =~ /(?:$NOUN$a2|$VERB$a2|PRP)($X${l}lemma:(?:next|last|this)\|${r})($NOUN${l}lemma:$temporal\|${r})/g);
-					$Rel =  "<";
-					DepHead_lex($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2|$VERB$a2|PRP)($X${l}lemma:(?:next|last|this)\|${r})($NOUN${l}lemma:$temporal\|${r})/$1$3/g;
-					LEX();
-					Add("DepHead_lex","date:yes",\@temp);
-
-					# Single: [NOUN|VERB|PRP] NOUN<date:yes>
-					# Corr: tag:DATE
-					@temp = ($listTags =~ /(?:$NOUN$a2|$VERB$a2|PRP)($NOUN${l}date:yes\|${r})/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2|$VERB$a2|PRP)($NOUN${l}date:yes\|${r})/$1$2/g;
-					Corr("Head","tag:DATE",\@temp);
-
-					# <: CARD CARD
-					# Recursivity: 1
-					@temp = ($listTags =~ /($CARD$a2)($CARD$a2)/g);
-					$Rel =  "<";
-					DepHead_lex($Rel,"",\@temp);
-					$listTags =~ s/($CARD$a2)($CARD$a2)/$2/g;
-					LEX();
-					@temp = ($listTags =~ /($CARD$a2)($CARD$a2)/g);
-					$Rel =  "<";
-					DepHead_lex($Rel,"",\@temp);
-					$listTags =~ s/($CARD$a2)($CARD$a2)/$2/g;
 					LEX();
 
 					# AdjnL: ADV<lemma:$Quant> ADV|ADJ
@@ -412,120 +348,107 @@ my %Ordenar=();#<map><integer>
 					Inherit("HeadDep","gender,number",\@temp);
 					Add("HeadDep","coord:adj",\@temp);
 
-					# CoordL: ADJ [Fc] [ADJ] [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
+					# CoordL: ADJ [Fc] [ADJ] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
 					# NEXT
-					# PunctL:  [ADJ] Fc [ADJ] [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
+					# PunctL:  [ADJ] Fc [ADJ] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
 					# Recursivity: 10
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3$4$5$6/g;
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3$4$5$6/g;
 
 					# PunctL: [ADJ] Fc CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
 					# NEXT
-					# CoordL: ADJ [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
+					# CoordL: ADJ [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [ADJ]
 					# NEXT
-					# CoordR:  [ADJ] [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> ADJ
+					# CoordR:  [ADJ] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> ADJ
 					# Add: coord:adj
 					# Inherit: gender, number
 					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$ADJ$a2)/g);
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$ADJ$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($ADJ$a2)/$3/g;
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($ADJ$a2)/$3/g;
 					Inherit("HeadDep","gender,number",\@temp);
 					Add("HeadDep","coord:adj",\@temp);
-
-					# PunctL: [ADJ] Fc CONJ<coord:adj&lemma:and|or|y|e|et|o|ou>
-					# NEXT
-					# CoordL: ADJ [Fc] CONJ<coord:adj&lemma:and|or|y|e|et|o|ou>
-					# Inherit: gender, number
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)($CONJ${l}coord:adj\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})/g);
-					$Rel =  "PunctL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)($CONJ${l}coord:adj\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})/g);
-					$Rel =  "CoordL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($CONJ${l}coord:adj\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})/$3/g;
-					Inherit("DepHead","gender,number",\@temp);
 
 					# CoordL: ADJ  CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
 					# NEXT
@@ -540,71 +463,58 @@ my %Ordenar=();#<map><integer>
 					$listTags =~ s/($ADJ$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)($NOUN$a2)/$2$4/g;
 					Add("HeadDep","coord:adj",\@temp);
 
-					# CoordL: ADJ [Fc] [ADJ] [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
+					# CoordL: ADJ [Fc] [ADJ] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
 					# NEXT
-					# PunctL:  [ADJ] Fc [ADJ] [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
+					# PunctL:  [ADJ] Fc [ADJ] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
 					# Recursivity: 3
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)($NOUN$a2)/$3$4$5$6$7/g;
 
-					# CoordL: ADJ [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
+					# CoordL: ADJ [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
 					# NEXT
 					# PunctL: [ADJ] Fc CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN] [NOUN]
 					# NEXT
-					# CoordR:  [ADJ] [Fc]? CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> NOUN [NOUN]
+					# CoordR:  [ADJ] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> NOUN [NOUN]
 					# Add: coord:adj
 					# Inherit: gender, number
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
 					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADJ$a2)(?:$Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($NOUN$a2)(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$ADJ$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)(?:$NOUN$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)?($CONJ${l}(type:(?:C)|(lemma:and|or|y|e|et|o|ou))\|${r})($NOUN$a2)($NOUN$a2)/$3$5/g;
+					$listTags =~ s/($ADJ$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)($NOUN$a2)/$3$5/g;
 					Inherit("HeadDep","gender,number",\@temp);
 					Add("HeadDep","coord:adj",\@temp);
-
-					# PunctL: [ADJ] Fc CONJ<coord:adj&lemma:and|or|y|e|et|o|ou>
-					# NEXT
-					# CoordL: ADJ [Fc] CONJ<coord:adj&lemma:and|or|y|e|et|o|ou>
-					# Inherit: gender, number
-					@temp = ($listTags =~ /(?:$ADJ$a2)($Fc$a2)($CONJ${l}coord:adj\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})/g);
-					$Rel =  "PunctL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($ADJ$a2)(?:$Fc$a2)($CONJ${l}coord:adj\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})/g);
-					$Rel =  "CoordL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2)($Fc$a2)($CONJ${l}coord:adj\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})/$3/g;
-					Inherit("DepHead","gender,number",\@temp);
 
 					# AdjnL: NOUN NOUN
 					# Recursivity: 1
@@ -616,13 +526,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "AdjnL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($NOUN$a2)/$2/g;
-
-					# AdjnL: CARD NOUN
-					# Recursivity 1
-					@temp = ($listTags =~ /($CARD$a2)($NOUN$a2)/g);
-					$Rel =  "AdjnL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($CARD$a2)($NOUN$a2)/$2/g;
 
 					# CprepL: NOUN POS NOUN
 					@temp = ($listTags =~ /($NOUN$a2)($POS$a2)($NOUN$a2)/g);
@@ -683,6 +586,23 @@ my %Ordenar=();#<map><integer>
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($DET$a2)($NOUN$a2|$PRO$a2)/$2/g;
 
+					# SpecL: PRO<lemma:what> NOUN
+					@temp = ($listTags =~ /($PRO${l}lemma:what\|${r})($NOUN$a2)/g);
+					$Rel =  "SpecL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($PRO${l}lemma:what\|${r})($NOUN$a2)/$2/g;
+
+					# ClitL: PRO<token:$cliticopers> VERB
+					# Recursivity: 1
+					@temp = ($listTags =~ /($PRO${l}token:$cliticopers\|${r})($VERB$a2)/g);
+					$Rel =  "ClitL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($PRO${l}token:$cliticopers\|${r})($VERB$a2)/$2/g;
+					@temp = ($listTags =~ /($PRO${l}token:$cliticopers\|${r})($VERB$a2)/g);
+					$Rel =  "ClitL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($PRO${l}token:$cliticopers\|${r})($VERB$a2)/$2/g;
+
 					# ClitR: VERB PRO<token:$cliticopers>
 					# Recursivity: 1
 					@temp = ($listTags =~ /($VERB$a2)($PRO${l}token:$cliticopers\|${r})/g);
@@ -693,13 +613,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "ClitR";
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($PRO${l}token:$cliticopers\|${r})/$1/g;
-
-					# >: VERB PCLE
-					@temp = ($listTags =~ /($VERB$a2)($PCLE$a2)/g);
-					$Rel =  ">";
-					HeadDep_lex($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($PCLE$a2)/$1/g;
-					LEX();
 
 					# VSpecL: VERB<type:S> [ADV]* VERB<mode:P>
 					# Add: voice:passive
@@ -747,41 +660,6 @@ my %Ordenar=();#<map><integer>
 					$listTags =~ s/($VERB${l}lemma:$VModalEN\|${r})($ADV$a2)*($VERB$a2)/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
-					# VSpecL: VERB<lemma:be> [ADV]* VERB<mode:G>
-					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:be\|${r})(?:$ADV$a2)*($VERB${l}mode:G\|${r})/g);
-					$Rel =  "VSpecL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:be\|${r})($ADV$a2)*($VERB${l}mode:G\|${r})/$2$3/g;
-					Inherit("DepHead","mode,person,tense,number",\@temp);
-
-					# VSpecL: [VERB] [ADV]* PRP<lemma:$PrepLocs> [ADV]* VERB
-					# NEXT
-					# VSpecL: VERB [ADV]* [PRP<lemma:$PrepLocs>] [ADV]* VERB
-					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$ADV$a2)*($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)*($VERB$a2)/g);
-					$Rel =  "VSpecL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$ADV$a2)*(?:$PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)*($VERB$a2)/g);
-					$Rel =  "VSpecL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($ADV$a2)*($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)*($VERB$a2)/$2$4$5/g;
-					Inherit("DepHead","mode,person,tense,number",\@temp);
-
-					# >: VERB [NOUN]? PCLE
-					@temp = ($listTags =~ /($VERB$a2)(?:$NOUN$a2)?($PCLE$a2)/g);
-					$Rel =  ">";
-					HeadDep_lex($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($NOUN$a2)?($PCLE$a2)/$1$2/g;
-					LEX();
-
-					# >: VERB<lemma:$VerbsPCLE> [NOUN]? X<lemma:$PCLE>
-					@temp = ($listTags =~ /($VERB${l}lemma:$VerbsPCLE\|${r})(?:$NOUN$a2)?($X${l}lemma:$PCLE\|${r})/g);
-					$Rel =  ">";
-					HeadDep_lex($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$VerbsPCLE\|${r})($NOUN$a2)?($X${l}lemma:$PCLE\|${r})/$1$2/g;
-					LEX();
-
 					# VSpecL: VERB [ADV]* VERB<mode:G>
 					# Inherit: mode, person, tense, number
 					@temp = ($listTags =~ /($VERB$a2)(?:$ADV$a2)*($VERB${l}mode:G\|${r})/g);
@@ -789,6 +667,14 @@ my %Ordenar=();#<map><integer>
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($ADV$a2)*($VERB${l}mode:G\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
+
+					# VSpecLocL: VERB [ADV]* PRP<lemma:$PrepLocs> [ADV]* VERB
+					# Inherit: mode, person, tense, number
+					@temp = ($listTags =~ /($VERB$a2)(?:$ADV$a2)*($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)*($VERB$a2)/g);
+					$Rel =  "VSpecLocL";
+					DepRelHead($Rel,"",\@temp);
+					$listTags =~ s/($VERB$a2)($ADV$a2)*($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)*($VERB$a2)/$2$4$5/g;
+					Inherit("DepRelHead","mode,person,tense,number",\@temp);
 
 					# PunctL: [ADV<pos:0>] Fc VERB
 					# NEXT
@@ -801,37 +687,37 @@ my %Ordenar=();#<map><integer>
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($ADV${l}pos:0\|${r})($Fc$a2)($VERB$a2)/$3/g;
 
-					# PunctL: Fc [ADV] [Fc] VERB
+					# PunctL: Fc [ADV] [Fc]? VERB
 					# NEXT
 					# PunctL: [Fc] [ADV] Fc VERB
 					# NEXT
-					# AdjnL: [Fc] ADV [Fc] VERB
-					@temp = ($listTags =~ /($Fc$a2)(?:$ADV$a2)(?:$Fc$a2)($VERB$a2)/g);
+					# AdjnL: [Fc] ADV [Fc]? VERB
+					@temp = ($listTags =~ /($Fc$a2)(?:$ADV$a2)(?:$Fc$a2)?($VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					@temp = ($listTags =~ /(?:$Fc$a2)(?:$ADV$a2)($Fc$a2)($VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$Fc$a2)($ADV$a2)(?:$Fc$a2)($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$Fc$a2)($ADV$a2)(?:$Fc$a2)?($VERB$a2)/g);
 					$Rel =  "AdjnL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($Fc$a2)($ADV$a2)($Fc$a2)($VERB$a2)/$4/g;
+					$listTags =~ s/($Fc$a2)($ADV$a2)($Fc$a2)?($VERB$a2)/$4/g;
 
-					# PunctR:  VERB [Fc] [ADV] Fc
+					# PunctR:  VERB [Fc]? [ADV] Fc
 					# NEXT
 					# PunctR: VERB Fc [ADV] [Fc]
 					# NEXT
-					# AdjnR: VERB [Fc] ADV [Fc]
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$ADV$a2)($Fc$a2)/g);
+					# AdjnR: VERB [Fc]? ADV [Fc]
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)?(?:$ADV$a2)($Fc$a2)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
 					@temp = ($listTags =~ /($VERB$a2)($Fc$a2)(?:$ADV$a2)(?:$Fc$a2)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($ADV$a2)(?:$Fc$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)?($ADV$a2)(?:$Fc$a2)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($ADV$a2)($Fc$a2)/$1/g;
+					$listTags =~ s/($VERB$a2)($Fc$a2)?($ADV$a2)($Fc$a2)/$1/g;
 
 					# AdjnL:  ADV  VERB
 					# Recursivity: 1
@@ -854,6 +740,13 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($ADV$a2)/$1$2/g;
+
+					# >: VERB [NOUN]? PCLE
+					@temp = ($listTags =~ /($VERB$a2)(?:$NOUN$a2)?($PCLE$a2)/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB$a2)($NOUN$a2)?($PCLE$a2)/$1$2/g;
+					LEX();
 
 					# CoordL: PRP [NOUN] CONJ<lemma:and|or|y|e|et|o|ou> [PRP] [NOUN]
 					# NEXT
@@ -971,8 +864,6 @@ my %Ordenar=();#<map><integer>
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:$PrepRA\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5/g;
 
-					}
-{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:$PrepRA> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:$PrepRA\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -993,12 +884,6 @@ my %Ordenar=();#<map><integer>
 					$listTags =~ s/($CARD${l}lemma:(?:uno|one|un|um)\|${r})($PRP$a2)($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 					Add("HeadRelDep","tag:PRO",\@temp);
 
-					# CprepR: NOUNSINGLE PRP<lemma:$PrepRA> VERB<mode:G>
-					@temp = ($listTags =~ /($NOUNSINGLE$a2)($PRP${l}lemma:$PrepRA\|${r})($VERB${l}mode:G\|${r})/g);
-					$Rel =  "CprepR";
-					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNSINGLE$a2)($PRP${l}lemma:$PrepRA\|${r})($VERB${l}mode:G\|${r})/$1/g;
-
 					# CoordL: NOUN CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN]
 					# NEXT
 					# CoordR: [NOUN]  CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> NOUN
@@ -1015,7 +900,6 @@ my %Ordenar=();#<map><integer>
 					# CoordL: NOUN [Fc] [NOUN] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN]
 					# NEXT
 					# PunctL:  [NOUN] Fc [NOUN] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN]
-					# Add: coord:yes
 					# Recursivity: 10
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
@@ -1024,7 +908,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1032,7 +915,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1040,7 +922,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1048,7 +929,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1056,7 +936,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1064,7 +943,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1072,7 +950,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1080,7 +957,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1088,7 +964,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1096,7 +971,6 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
@@ -1104,64 +978,63 @@ my %Ordenar=();#<map><integer>
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:yes",\@temp);
 
-					# CoordL: NOUN [Fc] CONJ<coord:yes&lemma:and|or|y|e|et|o|ou> [NOUN]
+					# CoordL: NOUN [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN]
 					# NEXT
-					# PunctL: [NOUN] Fc CONJ<coord:yes&lemma:and|or|y|e|et|o|ou> [NOUN]
+					# PunctL: [NOUN] Fc CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [NOUN]
 					# NEXT
-					# CoordR:  [NOUN] [Fc] CONJ<coord:yes&lemma:and|or|y|e|et|o|ou> NOUN
+					# CoordR:  [NOUN] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> NOUN
 					# Add: coord:noun
-					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)($CONJ${l}coord:yes\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUN$a2)($Fc$a2)($CONJ${l}coord:yes\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$NOUN$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}coord:yes\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2)($Fc$a2)($CONJ${l}coord:yes\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3/g;
+					$listTags =~ s/($NOUN$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($NOUN$a2)/$3/g;
 					Add("HeadDep","coord:noun",\@temp);
 
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|S>] Fc|Fpa|Fca NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
+					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa|Fca NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|S>] [Fc|Fpa|Fca] NOUNCOORD|PRO<type:D|P|I|X>|CARD Fc|Fpt|Fct
+					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc|Fpa|Fca] NOUNCOORD|PRO<type:D|P|I|X>|CARD Fc|Fpt|Fct
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|S> [Fc|Fpa|Fca] NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc|Fpa|Fca] NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/$1/g;
+					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/$1/g;
 
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|S>] Fc|Fpa|Fca [PRP] NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
+					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa|Fca [PRP] NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|S>] [Fc|Fpa|Fca] [PRP] NOUNCOORD|PRO<type:D|P|I|X>|CARD Fc|Fpt|Fct
+					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc|Fpa|Fca] [PRP] NOUNCOORD|PRO<type:D|P|I|X>|CARD Fc|Fpt|Fct
 					# NEXT
-					# CprepR: NOUNCOORD|PRO<type:D|P|I|S> [Fc|Fpa|Fca] PRP NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2|Fca)(?:$PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					# CprepR: NOUNCOORD|PRO<type:D|P|I|X> [Fc|Fpa|Fca] PRP NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)(?:$PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)(?:$PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)(?:$PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "CprepR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2|Fca)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/$1/g;
+					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/$1/g;
 
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|S> [Fc|Fpa|Fca] VERB<mode:P> [X]* [Fc|Fpt|Fct]
+					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc|Fpa|Fca] VERB<mode:P> [X]* [Fc|Fpt|Fct]
 					# NoUniq
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($VERB${l}mode:P\|${r})(?:$X$a2)*(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($VERB${l}mode:P\|${r})(?:$X$a2)*(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2|Fca)($VERB${l}mode:P\|${r})($X$a2)*($Fc$a2|$Fpt$a2|Fct)/$1$2$3$4$5/g;
+					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($VERB${l}mode:P\|${r})($X$a2)*($Fc$a2|$Fpt$a2|Fct)/$1$2$3$4$5/g;
 
 					# SubjL: [NOUNCOORD] PRO<type:R|W> VERB|CONJ<coord:verb>
 					# NEXT
@@ -1175,17 +1048,17 @@ my %Ordenar=();#<map><integer>
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3/g;
 
-					# DobjL: [NOUNCOORD] PRO<type:R|W> [NOUNCOORD|PRO<type:D|P|I|S>] VERB|CONJ<coord:verb>
+					# DobjL: [NOUNCOORD] PRO<type:R|W> [NOUNCOORD|PRO<type:D|P|I|X>] VERB|CONJ<coord:verb>
 					# NEXT
-					# AdjnR: NOUNCOORD [PRO<type:R|W>] [NOUNCOORD|PRO<type:D|P|I|S>] VERB|CONJ<coord:verb>
+					# AdjnR: NOUNCOORD [PRO<type:R|W>] [NOUNCOORD|PRO<type:D|P|I|X>] VERB|CONJ<coord:verb>
 					# NoUniq
-					@temp = ($listTags =~ /(?:$NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "DobjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD)(?:$PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($NOUNCOORD)(?:$PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
+					$listTags =~ s/($NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
 
 					# CircL: [NOUNCOORD|PRO<type:D|P|I|X>]  PRP PRO<type:R|W> VERB|CONJ<coord:verb>
 					# NEXT
@@ -1199,12 +1072,20 @@ my %Ordenar=();#<map><integer>
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
 
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc]? VERB<mode:[GP]>|CONJ<coord:verb>
+					}
+{#<function>
+					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X>  VERB<mode:[GP]>|CONJ<coord:verb>
 					# NoUniq
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/$1$2$3/g;
+					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/$1$2/g;
+
+					# CircR: VERB<lemma:$PTa> [NOUNCOORD|PRO<type:D|P|I|X>] PRP<lemma:a> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>|ADV
+					@temp = ($listTags =~ /($VERB${l}lemma:$PTa\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP${l}lemma:a\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r}|$ADV$a2)/g);
+					$Rel =  "CircR";
+					HeadRelDep($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$PTa\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP${l}lemma:a\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r}|$ADV$a2)/$1$2/g;
 
 					# CircR: VERB<mode:P> [NOUNCOORD|PRO<type:D|P|I|X>] PRP<lemma:por|by> NOUNCOORD|PRO<type:D|P|I|X>|ADV
 					@temp = ($listTags =~ /($VERB${l}mode:P\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP${l}lemma:(?:por|by)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$ADV$a2)/g);
@@ -1253,222 +1134,97 @@ my %Ordenar=();#<map><integer>
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($CONJ${l}coord:cprep\|${r})/$1/g;
 
-					# SubjL: [VERB] [X<lemma:what>] NOUNCOORD|PRO<type:D|P|I|S> VERB
-					# NEXT
-					# DobjL: [VERB] X<lemma:what> [NOUNCOORD|PRO<type:D|P|I|S] VERB
-					# Add: compl:yes
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$X${l}lemma:what\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($X${l}lemma:what\|${r})(?:$NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/g);
-					$Rel =  "DobjL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($X${l}lemma:what\|${r})($NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/$1$4/g;
-					Add("DepHead","compl:yes",\@temp);
-
-					# AdjnL:  [VERB] [X<lemma:where|when>] NOUNCOORD|PRO<type:D|P|I|S> VERB
-					# NEXT
-					# DobjL: [VERB] X<lemma:where|when> [NOUNCOORD|PRO<type:D|P|I|S] VERB
-					# Add: compl:yes
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$X${l}lemma:(?:where|when)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/g);
-					$Rel =  "AdjnL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($X${l}lemma:(?:where|when)\|${r})(?:$NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/g);
-					$Rel =  "DobjL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($X${l}lemma:(?:where|when)\|${r})($NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/$1$4/g;
-					Add("DepHead","compl:yes",\@temp);
-
-					# CircR: [VERB] [NOUN]  VERB<compl:yes&mode:[^PNG]> PRP NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# SubjL: [VERB] NOUN VERB<compl:yes&mode:[^PNG]>  [PRP NOUNCOORD|PRO<type:D|P|I|X>]
-					# NEXT
-					# DobjComplR: VERB [NOUN]? VERB<compl:yes&mode:[^PNG]>  [PRP NOUNCOORD|PRO<type:D|P|I|X>]
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$NOUN$a2)($VERB${l}compl:yes\|${b2}mode:[^PNG]\|${r})($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "CircR";
-					HeadRelDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($NOUN$a2)($VERB${l}compl:yes\|${b2}mode:[^PNG]\|${r})([PRP)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$NOUN$a2)?($VERB${l}compl:yes\|${b2}mode:[^PNG]\|${r})([PRP)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/g);
-					$Rel =  "DobjComplR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($NOUN$a2)?($VERB${l}compl:yes\|${b2}mode:[^PNG]\|${r})([PRP)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/$1/g;
-
-					# CircR: [VERB<lemma:say|think>]  [NOUN]  VERB<mode:[^PNG]> PRP NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# SubjL: [VERB<lemma:say|think>] NOUN VERB<mode:[^PNG]> [PRP NOUNCOORD|PRO<type:D|P|I|X>]
-					# NEXT
-					# DobjComplR: VERB<lemma:say|think> [NOUN]? VERB<mode:[^PNG]>  [PRP NOUNCOORD|PRO<type:D|P|I|X>]
-					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:say|think)\|${r})(?:$NOUN$a2)($VERB${l}mode:[^PNG]\|${r})($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "CircR";
-					HeadRelDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)($VERB${l}mode:[^PNG]\|${r})([PRP)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:say|think)\|${r})(?:$NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})([PRP)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/g);
-					$Rel =  "DobjComplR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})([PRP)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/$1/g;
-
-					# Dobj2R: VERB NOUNCOORD|PRO<type:P|X> [NOUNCOORD|PRO<type:D|I|X>]
-					# NEXT
-					# DobjR: VERB [NOUNCOORD|PRO<type:P|X>] NOUNCOORD|PRO<type:D|I|X>
-					@temp = ($listTags =~ /($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:P|X)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|I|X)\|${r})/g);
-					$Rel =  "Dobj2R";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$NOUNCOORD|$PRO${l}type:(?:P|X)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|I|X)\|${r})/g);
+					# DobjR: VERB NOUNCOORD|PRO
+					@temp = ($listTags =~ /($VERB$a2)($NOUNCOORD|$PRO$a2)/g);
 					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:P|X)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|I|X)\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($NOUNCOORD|$PRO$a2)/$1/g;
 
-					# CircR: [VERB<lemma:be>] [ADJ|CONJ<coord:adj>] [PRP] VERB [NOUNCOORD|PRO<type:D|P|I|X>]? PRP NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# DobjR: [VERB<lemma:be>] [ADJ|CONJ<coord:adj>] [PRP] VERB NOUNCOORD|PRO<type:D|P|I|X> [PRP]? [NOUNCOORD|PRO<type:D|P|I|X>]?
-					# NEXT
-					# CprepR: [VERB<lemma:be>] ADJ|CONJ<coord:adj> PRP VERB [NOUNCOORD|PRO<type:D|P|I|X>]? [PRP]? [NOUNCOORD|PRO<type:D|P|I|X>]?
-					@temp = ($listTags =~ /(?:$VERB${l}lemma:be\|${r})(?:$ADJ$a2|$CONJ${l}coord:adj\|${r})(?:$PRP$a2)($VERB$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "CircR";
-					HeadRelDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB${l}lemma:be\|${r})(?:$ADJ$a2|$CONJ${l}coord:adj\|${r})(?:$PRP$a2)($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$PRP$a2)?(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?/g);
-					$Rel =  "DobjR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})($PRP$a2)($VERB$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?(?:$PRP$a2)?(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?/g);
-					$Rel =  "CprepR";
-					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})($PRP$a2)($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP$a2)?($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?/$1$2/g;
-
-					# AdjnR: NOUN [VERB<lemma:be>] NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# AtrR: [NOUN] VERB<lemma:be> NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# SubjL: NOUN VERB<lemma:be> [NOUNCOORD|PRO<type:D|P|I|X>]
-					# AdjnR: NOUN [VERB<lemma:be>] ADJ|CONJ<coord:adj>
-					# NEXT
-					# AtrR: [NOUN] VERB<lemma:be> ADJ|CONJ<coord:adj>
-					# NEXT
-					# SubjL: NOUN VERB<lemma:be> [ADJ|CONJ<coord:adj>]
-					@temp = ($listTags =~ /($NOUN$a2)(?:$VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "AdjnR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUN$a2)($VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "AtrR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUN$a2)($VERB${l}lemma:be\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUN$a2)($VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
-					$Rel =  "AtrR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUN$a2)($VERB${l}lemma:be\|${r})(?:$ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2)($VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})/$2/g;
-
-					# AtrR: VERB<lemma:be> NOUNCOORD|PRO<type:D|P|I|X>
-					@temp = ($listTags =~ /($VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "AtrR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
-
-					# AtrR: VERB ADJ|CONJ<coord:adj>
+					# AdjnR: VERB ADJ|CONJ<coord:adj>
 					@temp = ($listTags =~ /($VERB$a2)($ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
-					$Rel =  "AtrR";
+					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($ADJ$a2|$CONJ${l}coord:adj\|${r})/$1/g;
 
-					# DobjR: VERB NOUNCOORD|PRO<type:D|P|I|X>
-					@temp = ($listTags =~ /($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "DobjR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
-
-					# CoordL: VERB CONJ<coord:no&lemma:and|or|y|e|et|o|ou> [VERB]
+					# CoordL: VERB CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# CoordR: [VERB]  CONJ<coord:no&lemma:and|or|y|e|et|o|ou> VERB
+					# CoordR: [VERB]  CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> VERB
 					# Add: coord:verb
 					# Inherit: mode, tense
-					@temp = ($listTags =~ /($VERB$a2)($CONJ${l}coord:no\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}coord:no\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CONJ${l}coord:no\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$2/g;
+					$listTags =~ s/($VERB$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$2/g;
 					Inherit("HeadDep","mode,tense",\@temp);
 					Add("HeadDep","coord:verb",\@temp);
 
-					# CoordL: VERB [Fc] [VERB] [Fc] CONJ<lemma:and|or|y|e|et|o|ou> [VERB]
+					# CoordL: VERB [Fc] [VERB] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# PunctL:  [VERB] Fc [VERB] [Fc] CONJ<lemma:and|or|y|e|et|o|ou> [VERB]
-					# Add: coord:verb
+					# PunctL:  [VERB] Fc [VERB] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# Recursivity: 5
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
 
-					# PunctL: [VERB] Fc CONJ<coord:verb&lemma:and|or|y|e|et|o|ou> [VERB]
+					# PunctL: [VERB] Fc CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# CoordL: VERB [Fc] CONJ<coord:verb&lemma:and|or|y|e|et|o|ou> [VERB]
+					# CoordL: VERB [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# CoordR:  [VERB] [Fc] CONJ<coord:verb&lemma:and|or|y|e|et|o|ou> VERB
+					# CoordR:  [VERB] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> VERB
 					# Add: coord:verb
 					# Inherit: mode, tense
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3/g;
+					$listTags =~ s/($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3/g;
 					Inherit("HeadDep","mode,tense",\@temp);
 					Add("HeadDep","coord:verb",\@temp);
 
@@ -1631,60 +1387,48 @@ my %Ordenar=();#<map><integer>
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD)($PRP$a2)($NOUNCOORD)/$1/g;
 
-					# SpecL: [VERB] CONJ<lemma:that|whether>  VERB<mode:[^PNG]>
+					# SpecL: [VERB] CONJ<lemma:that>  VERB<mode:[^PNG]>
 					# NEXT
-					# DobjComplR: VERB [CONJ<lemma:that|whether>] VERB<mode:[^PNG]>
-					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}lemma:(?:that|whether)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					# DobjR: VERB [CONJ<lemma:that>] VERB<mode:[^PNG]>
+					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}lemma:that\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "SpecL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}lemma:(?:that|whether)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
-					$Rel =  "DobjComplR";
+					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}lemma:that\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CONJ${l}lemma:(?:that|whether)\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($CONJ${l}lemma:that\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
 
-					# SpecL: [VERB]  CONJ<lemma:that|whether>  [NOUNCOORD|PRO<type:D|P|I|S>] VERB<mode:[^PNG]>
+					# SpecL: [VERB]  CONJ<lemma:that>  [NOUNCOORD|PRO<type:D|P|I|X>] VERB<mode:[^PNG]>
 					# NEXT
-					# SubjL:  [VERB]  [CONJ<lemma:that|whether>]  NOUNCOORD|PRO<type:D|P|I|S> VERB<mode:[^PNG]>
+					# SubjL:  [VERB]  [CONJ<lemma:that>]  NOUNCOORD|PRO<type:D|P|I|X> VERB<mode:[^PNG]>
 					# NEXT
-					# DobjComplR: VERB   [CONJ<lemma:that|whether>] [NOUNCOORD|PRO<type:D|P|I|S>] VERB<mode:[^PNG]>
-					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}lemma:(?:that|whether)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					# DobjR: VERB   [CONJ<lemma:that>] [NOUNCOORD|PRO<type:D|P|I|X>] VERB<mode:[^PNG]>
+					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}lemma:that\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "SpecL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$CONJ${l}lemma:(?:that|whether)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)(?:$CONJ${l}lemma:that\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}lemma:(?:that|whether)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
-					$Rel =  "DobjComplR";
+					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}lemma:that\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CONJ${l}lemma:(?:that|whether)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($CONJ${l}lemma:that\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
 
-					# DobjComplR: VERB [NOUN]? VERB<compl:yes&mode:[^PNG]>
-					@temp = ($listTags =~ /($VERB$a2)(?:$NOUN$a2)?($VERB${l}compl:yes\|${b2}mode:[^PNG]\|${r})/g);
-					$Rel =  "DobjComplR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($NOUN$a2)?($VERB${l}compl:yes\|${b2}mode:[^PNG]\|${r})/$1$2/g;
-
-					# DobjComplR: VERB<lemma:say|think> [NOUN]? VERB<mode:[^PNG]>
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:say|think)\|${r})(?:$NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})/g);
-					$Rel =  "DobjComplR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})/$1$2/g;
-
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|S>] Fc|Fpa VERB [Fc|Fpt]
+					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa VERB [Fc|Fpt]
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|S>] [Fc|Fpa] VERB Fc|Fpt
+					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc|Fpa] VERB Fc|Fpt
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|S> [Fc|Fpa] VERB [Fc|Fpt]
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)(?:$Fc$a2|$Fpt$a2)/g);
+					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc|Fpa] VERB [Fc|Fpt]
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)(?:$Fc$a2|$Fpt$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})(?:$Fc$a2|$Fpa$a2)($VERB$a2)(?:$Fc$a2|$Fpt$a2)/g);
+					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2)($VERB$a2)(?:$Fc$a2|$Fpt$a2)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/$1/g;
+					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/$1/g;
 
 					# AdjnL: [Fc] VERB<mode:P> [Fc] VERB
 					# NEXT
@@ -1702,120 +1446,113 @@ my %Ordenar=();#<map><integer>
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($VERB${l}mode:P\|${r})($Fc$a2)($VERB$a2)/$4/g;
 
-					# CoordL: VERB CONJ<coord:no&lemma:and|or|y|e|et|o|ou> [VERB]
+					# CoordL: VERB CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# CoordR: [VERB]  CONJ<coord:no&lemma:and|or|y|e|et|o|ou> VERB
+					# CoordR: [VERB]  CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> VERB
 					# Add: coord:verb
 					# Inherit: mode, tense
-					@temp = ($listTags =~ /($VERB$a2)($CONJ${l}coord:no\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}coord:no\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CONJ${l}coord:no\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$2/g;
+					$listTags =~ s/($VERB$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$2/g;
 					Inherit("HeadDep","mode,tense",\@temp);
 					Add("HeadDep","coord:verb",\@temp);
 
-					# CoordL: VERB [Fc] [VERB] [Fc] CONJ<lemma:and|or|y|e|et|o|ou> [VERB]
+					# CoordL: VERB [Fc] [VERB] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# PunctL:  [VERB] Fc [VERB] [Fc] CONJ<lemma:and|or|y|e|et|o|ou> [VERB]
-					# Add: coord:verb
+					# PunctL:  [VERB] Fc [VERB] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# Recursivity: 5
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
-					Add("DepHead","coord:verb",\@temp);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3$4$5$6/g;
 
-					# PunctL: [VERB] Fc CONJ<coord:verb&lemma:and|or|y|e|et|o|ou> [VERB]
+					# PunctL: [VERB] Fc CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# CoordL: VERB [Fc] CONJ<coord:verb&lemma:and|or|y|e|et|o|ou> [VERB]
+					# CoordL: VERB [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> [VERB]
 					# NEXT
-					# CoordR:  [VERB] [Fc] CONJ<coord:verb&lemma:and|or|y|e|et|o|ou> VERB
+					# CoordR:  [VERB] [Fc] CONJ<(type:C)|(lemma:and|or|y|e|et|o|ou)> VERB
 					# Add: coord:verb
 					# Inherit: mode, tense
-					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})(?:$VERB$a2)/g);
 					$Rel =  "CoordL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/g);
 					$Rel =  "CoordR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($CONJ${l}coord:verb\|${b2}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3/g;
+					$listTags =~ s/($VERB$a2)($Fc$a2)($CONJ${l}type:C\|${r}|$CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($VERB$a2)/$3/g;
 					Inherit("HeadDep","mode,tense",\@temp);
 					Add("HeadDep","coord:verb",\@temp);
 
-					# SubjL: [NOUNCOORD] NOMINAL|PRO<type:D|P|I|S>  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
+					# SubjL: [NOUNCOORD] NOMINAL|PRO<type:D|P|I|X>  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
 					# NEXT
-					# AdjnR: NOUNCOORD [NOMINAL|PRO<type:D|P|I|S>]  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
-					@temp = ($listTags =~ /(?:$NOUNCOORD)($NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
+					# AdjnR: NOUNCOORD [NOMINAL|PRO<type:D|P|I|X>]  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
+					@temp = ($listTags =~ /(?:$NOUNCOORD)($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD)(?:$NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
+					@temp = ($listTags =~ /($NOUNCOORD)(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD)($NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/$1/g;
+					$listTags =~ s/($NOUNCOORD)($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/$1/g;
 
-					# SubjL: NOUN<type:D|P|I|S> VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
+					# SubjL: NOUN<type:P> VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
 					# Add: subj:yes
-					@temp = ($listTags =~ /($NOUN${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
+					@temp = ($listTags =~ /($NOUN${l}type:P\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($NOUN${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/$2/g;
+					$listTags =~ s/($NOUN${l}type:P\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/$2/g;
 					Add("DepHead","subj:yes",\@temp);
 
-					# SubjL: NOMINAL|PRO<type:D|P|I|S>  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
+					# SubjL: NOMINAL|PRO<type:D|P|I|X>  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
 					# Add: subj:yes
-					@temp = ($listTags =~ /($NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
+					@temp = ($listTags =~ /($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/$2/g;
+					$listTags =~ s/($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/$2/g;
 					Add("DepHead","subj:yes",\@temp);
 
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRO<type:R|W>] VERB<subj:yes>|CONJ<subj:yes&coord:verb>    [Fc]?
@@ -1860,8 +1597,6 @@ my %Ordenar=();#<map><integer>
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)?/$1/g;
 
-					}
-{#<function>
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>   [Fc]?
 					# NEXT
 					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]?  [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb> Fc
@@ -1912,16 +1647,20 @@ my %Ordenar=();#<map><integer>
 #########SAIDA CORRECTOR TAGGER
 			if ($flag eq "-c") {    
 				for($i=0;$i<=$#Token;$i++) {
-					print "$Token[$i]\t";
+					my $saida = "$Token[$i]\t";#<string>
 					my %OrdTags=();#<map><string>
 					$OrdTags{"tag"} = $Tag[$i]; 
 					foreach my $feat (keys %{$ATTR[$i]}) {
 						$OrdTags{$feat} = $ATTR[$i]{$feat};
 					}
 					foreach my $feat (sort keys %OrdTags) {
-						print "$feat:$OrdTags{$feat}|";
+						$saida .= "$feat:$OrdTags{$feat}|";
 					}
-					print "\n";
+					if($pipe){#<ignore-line>
+						print "$saida\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,$saida);
+					}#<ignore-line>
 				}
 				##Colocar a zero os vectores de cada oraçao
 				@Token=();
@@ -1933,7 +1672,11 @@ my %Ordenar=();#<map><integer>
 #########SAIDA STANDARD DO ANALISADOR 
 			elsif ($flag eq "-a") {
 				##Escrever a oraçao que vai ser analisada:
-				print "SENT::$seq\n";
+				if($pipe){#<ignore-line>
+					print "SENT::$seq\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"SENT::$seq");
+				}#<ignore-line>
 				#print STDERR "LIST:: $listTags\n";
 				####imprimir Hash de dependencias ordenado:
 				foreach my $triplet (sort {$Ordenar{$a} <=> $Ordenar{$b} } keys %Ordenar ) {
@@ -1947,22 +1690,33 @@ my %Ordenar=();#<map><integer>
 						$de = $Lemma[$pos2];
 						$triplet = "$re;$he\_$ta1\_$pos1;$de\_$ta2\_$pos2" ;
 					}
-					print "($triplet)\n";
+					if($pipe){#<ignore-line>
+						print "($triplet)\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"($triplet)");
+					}#<ignore-line>
 				}
 				##final de analise de frase:
-				print "---\n";
+				if($pipe){#<ignore-line>
+					print "---\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"---");
+				}#<ignore-line>
 			}
 ###SAIDA ANALISADOR COM ESTRUTURA ATRIBUTO-VALOR (full analysis)
 			elsif ($flag eq "-fa") {
 				##Escrever a oraçao que vai ser analisada:
-				print "SENT::$seq\n";
+				if($pipe){#<ignore-line>
+					print "SENT::$seq\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"SENT::$seq");
+				}#<ignore-line>
 				#print STDERR "LIST:: $listTags\n";
 				####imprimir Hash de dependencias ordenado:
 				my $re="";#<string>
 				foreach my $triplet (sort {$Ordenar{$a} <=>
 					$Ordenar{$b} }
 					keys %Ordenar ) {
-					# print "$triplet\n";
 					$triplet =~ s/^\(//;
 					$triplet =~ s/\)$//;
 					($re, my $he,my $de) =  split (";", $triplet);#<string>
@@ -1974,38 +1728,60 @@ my %Ordenar=();#<map><integer>
 						$de2 = $Lemma[$pos2];
 						$triplet = "$re;$he1\_$ta1\_$pos1;$de2\_$ta2\_$pos2";
 					}
-					print "($triplet)\n";
+					if($pipe){#<ignore-line>
+						print "($triplet)\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"($triplet)");
+					}#<ignore-line>
+
 					($he, my $ta, my $pos) = split ("_", $he);#<string>
-					print "HEAD::$he\_$ta\_$pos<";
+					my $saida = "HEAD::$he\_$ta\_$pos<";#<string>
 					$ATTR[$pos]{"lemma"} = $Lemma[$pos];
 					$ATTR[$pos]{"token"} = $Token[$pos];
 					foreach my $feat (sort keys %{$ATTR[$pos]}) {
-						print "$feat:$ATTR[$pos]{$feat}|" ;
+						$saida .= "$feat:$ATTR[$pos]{$feat}|";
 					}
-					print ">\n";
+					if($pipe){#<ignore-line>
+						print "$saida>\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"$saida>");
+					}#<ignore-line>
+
 					($de, $ta, $pos) = split ("_", $de);#<string>
-					print "DEP::$de\_$ta\_$pos<";
+					$saida = "DEP::$de\_$ta\_$pos<";
 					$ATTR[$pos]{"lemma"} = $Lemma[$pos];
 					$ATTR[$pos]{"token"} = $Token[$pos];
 					foreach my $feat (sort keys %{$ATTR[$pos]}) {
-						print "$feat:$ATTR[$pos]{$feat}|" ;
+						$saida .= "$feat:$ATTR[$pos]{$feat}|" ;
 					}
-					print ">\n";
+					if($pipe){#<ignore-line>
+						print "$saida>\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida,"$saida>");
+					}#<ignore-line>
 
 					if ($re =~ /\//) {
 						my ($depName, $reUnit) = split ('\/', $re);#<string>
 						(my $reLex, $ta, $pos) = split ("_", $reUnit);#<string>
-						print "REL::$reLex\_$ta\_$pos<";
+						$saida =  "REL::$reLex\_$ta\_$pos<";
 						$ATTR[$pos]{"lemma"} = $Lemma[$pos];
 						$ATTR[$pos]{"token"} = $Token[$pos];
 						foreach my $feat (sort keys %{$ATTR[$pos]}) {
-							print "$feat:$ATTR[$pos]{$feat}|" ;
+							$saida .= "$feat:$ATTR[$pos]{$feat}|" ;
 						}
-						print ">\n";
+						if($pipe){#<ignore-line>
+							print "$saida>\n";#<ignore-line>
+						}else{#<ignore-line>
+							push (@saida,"$saida>");
+						}#<ignore-line>
 					}
 				}
 				##final de analise de frase:
-				print "---\n";
+				if($pipe){#<ignore-line>
+					print "---\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida,"---");
+				}#<ignore-line>
 			}
     
 			##Colocar numa lista vazia os strings com os tags (listTags) e a oraçao (seq)
@@ -2027,7 +1803,7 @@ my %Ordenar=();#<map><integer>
 	}
 
 	#print "\n";
-	print STDERR "Fim do parsing...\n";
+	return \@saida;
 }
 
 
@@ -3559,3 +3335,10 @@ sub ReConvertChar {
 	$Token[$z] =~ s/\*$y\*/$x/g;
 	$Lemma[$z] =~ s/\*$y\*/$x/g;
 }
+
+#<ignore-block>
+if($pipe){
+	my @lines=<STDIN>;
+	parse(\@lines, shift(@ARGV));
+}
+#<ignore-block>

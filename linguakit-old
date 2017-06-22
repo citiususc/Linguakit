@@ -1,0 +1,89 @@
+#!/bin/bash
+
+help()
+{
+  echo "Syntax: linguakit <lang> <module> <input> [options]
+      
+      language = gl, es, en, pt
+      module = dep, tagger, mwe, key, recog, sent, rel, tok, kwic, link, sum, conj, coref
+      input = path of the input (by default a txt file or gz/zip) 
+
+      'dep'     dependency syntactic analysis
+      'tagger'  part-of-speech tagging
+      'mwe'     multiword extraction
+      'key'     keyword extraction
+      'recog'   language recognition
+      'sent'    sentiment analysis
+      'rel'     relation extraction
+      'tok'     tokenizer
+      'seg'     sentence segmentation
+      'lem'     lemmatization
+      'kwic'    keyword in context (concordances)
+      'link'    entity linking and semantic annotation
+      'sum'     text summarizer
+      'conj'    verb conjugator
+      'coref'   named entity coreference solver
+
+      Available command-line options:
+
+      -a       'dep' option: simple dependency analysis (by default syntactic output)
+      -fa      'dep' option: full dependency analysis
+      -c       'dep' option: tagged text with syntactic information (for correction rules)
+      -conll   'dep' option: CoNLL output style
+
+      -noner   'tagger' option: no NER or NEC is processed (by default PoS tagger output)
+      -ner     'tagger' option: PoS tagger with Named Entity Recognition - NER (only with 'tagger' module)
+      -nec     'tagger' option: PoS tagger with Named Entity Classification - NEC (only with 'tagger' module)
+
+      -crnec   'coref' option: NEC correction with NE Coreference Resolution
+      
+      -chi     'mwe' option: chi-square co-occurrence measure (by default)
+      -log     'mwe' option: loglikelihood 
+      -scp     'mwe' option: symmetrical conditional probability
+      -mi      'mwe' option: mutual information 
+      -cooc    'mwe' option: co-occurrence counting
+     
+      -split   'tok' option: tokenization with splitting
+      -sort    'tok' option: tokenization with tokens sorted by frequency
+
+      -tokens  'kwic' option: contexts are tokens
+               The kwic option is mandatory and also requires another argument: the keyword to be searched
+
+      -json   'link' option: json output format of entity linking (by default)
+      -xml    'link' option: xml output format of entity linking
+
+      1-100   'sum' option: percentage of the input text that will be summarized (by default 10%)
+
+      -pe     'conj' option: the verb conjugator uses European Portuguese (by default)
+      -pb     'conj' option: the verb conjugator uses Brasilian Portuguese
+      -pen    'conj' option: the verb conjugator uses European Portuguese before the spell agreement
+      -pbn    'conj' option: the verb conjugator uses Brasilian Portuguese before the spell agreement
+
+"
+  exit
+}
+
+[ $# -lt 3 ] && help
+
+if [ "$MOD" != "dep" ] &&  [ "$MOD" != "tagger" ] && [ "$MOD" != "sent" ] && [ "$MOD" != "mwe" ] && [ "$MOD" != "recog" ] && [ "$MOD" != "tok" ] && [ "$MOD" != "kwic" ]  && [ "$MOD" != "key" ]  && [ "$MOD" != "rel" ] && [ "$MOD" != "link" ] && [ "$MOD" != "sum" ] && [ "$MOD" != "seg" ] && [ "$MOD" != "lem" ] && [ "$MOD" != "conj" ] && [ "$MOD" != "coref" ]; then
+  help;
+  echo "help" ;
+fi
+
+
+if [ "$OPT" != "-a" ] &&  [ "$OPT" != "-fa" ] && [ "$OPT" != "-c" ] && [ "$OPT" != "-conll" ] && [ "$OPT" != "-crnec" ] && [ "$OPT" != "-nec" ] && [ "$OPT" != "-ner" ] && [ "$OPT" != "-noner" ] && [ "$OPT" != "-chi" ]  && [ "$OPT" != "-log" ]  && [ "$OPT" != "-mi" ]  && [ "$OPT" != "-cooc" ]  && [ "$OPT" != "-scp" ] && [ "$OPT" != "-split" ]  && [ "$OPT" != "-sort" ] && [ "$OPT" != "-tokens" ] && [ "$OPT" != "-xml" ] && [ "$OPT" != "-json" ] && ! [[ $OPT =~ [0-9][0-9]? ]]  && [ "$OPT" != "-pe" ] && [ "$OPT" != "-pb" ] && [ "$OPT" != "-pen" ]  && [ "$OPT" != "-pbn" ]  && [ "$OPT" != "-crnec" ] &&  [ "$OPT" != "" ] ; then
+  help;
+  echo "help" ;
+fi
+
+case $LING in
+  es) ;;
+  en) ;;
+  gl) ;;
+  pt) ;;
+  none) ;;
+ # fr) ;;
+  *) help
+esac
+
+perl "$(dirname "$0")"/linguakit.perl "$2" "$1" "${@:3:99}" 

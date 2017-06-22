@@ -9,28 +9,36 @@ package Nbayes;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
+use utf8;
 #<ignore-block>
 
-{#<main>
+# Pipe
+my $pipe = !defined (caller);#<ignore-line> 
 
-	my $train = shift(@ARGV);#<string>
+# Absolute path 
+use File::Basename;#<ignore-line>
+my $abs_path = ".";#<string>
+$abs_path = dirname(__FILE__);#<ignore-line>
+
+my %Lex=();#<hash><string>
+my %Lex_contr=();#<hash><string>
+my %ProbCat=();#<hash><string>
+my %PriorProb=();#<hash><hash><double>
+my %featFreq=();#<hash><integer>
+my %list=();#<hash><string>
+my $N=1;#<integer>
+
+sub load{
+	my ($lang) = @_;#<string>
+
 	my $TRAIN;#<file>
-	open ($TRAIN, $train) or die "O ficheiro não pode ser aberto: $! ".$train."\n";
-	binmode TRAIN,  ':utf8';#<ignore-line>
+	open ($TRAIN, $abs_path."/$lang/train_$lang") or die "O ficheiro não pode ser aberto: $! $lang/train_$lang\n";
+	binmode $TRAIN,  ':utf8';#<ignore-line>
 
-	my $lex = shift(@ARGV);#<string>
 	my $LEX;#<file>
-	open ($LEX, $lex) or die "O ficheiro não pode ser aberto: $! ".$lex."\n";
-	binmode LEX,  ':utf8';#<ignore-line>
+	open ($LEX, $abs_path."/$lang/lex_$lang") or die "O ficheiro não pode ser aberto: $! $lang/lex_$lang\n";
+	binmode $LEX,  ':utf8';#<ignore-line>
 
-	my %Lex=();#<hash><string>
-	my %Lex_contr=();#<hash><string>
-	my %ProbCat=();#<hash><string>
-	my %PriorProb=();#<hash><hash><double>
-	my %featFreq=();#<hash><integer>
-	my %list=();#<hash><string>
-	my $N=1;#<integer>
 
 	#####################
 	#                   #
@@ -106,6 +114,13 @@ use open qw(:std :utf8);
 		}
 	}
 
+}
+
+
+sub nbayes{
+
+	my ($text) = @_;#<ref><list><string>
+
 	my $previous = "";#<string>
 	my $previous2;#<string>
 	my $LEX="";#<string>
@@ -115,7 +130,9 @@ use open qw(:std :utf8);
 	my %Compound=();#<hash><boolean>
 	my @A=();#<list><string>
 
-	while (my $line = <STDIN>) {#<string>
+	foreach my $line (@{$text}) {
+		chomp $line;
+
 		if ($line !~ /\w/) {next;}
 		my ($token, $lemma, $tag) = split (" ", $line);#<string>
 		#print STDERR "#$token# - #$lemma# - #$tag#\n" ;
@@ -179,21 +196,21 @@ use open qw(:std :utf8);
 	} 
 
 
-#########################################
-#                                       #
-#       Classification                  #
-#                                       #
-#########################################
+	#########################################
+	#                                       #
+	#       Classification                  #
+	#                                       #
+	#########################################
  
 
 	if ($POS_EMOT > $NEG_EMOT){ #if there is more positive emoticons: positive
 		#$logger -> debug("OKKKK: POS : #$POS_EMOT# - NEG: #$NEG_EMOT#"); 
-		exit (print "POSITIVE\t1\n");
+		return "POSITIVE\t1";
 	} elsif ($POS_EMOT < $NEG_EMOT){#if there is more negative emoticons: negative
 		#$logger -> debug("OKKKK: NEG"); 
-		exit (print "NEGATIVE\t1\n");
+		return "NEGATIVE\t1";
 	} elsif (!$LEX) {
-		 exit (print "$default_value\t1\n"); #if there is no lemma from the polartity lexicon: NONE.
+		return "$default_value\t1"; #if there is no lemma from the polartity lexicon: NONE.
 	}
 
 	my $smooth = 1/$N;#<double>
@@ -232,23 +249,28 @@ use open qw(:std :utf8);
 		$found=1 if ($found{$c});
 	}
 
-	my $First=0;#<boolean>
 	if (!$found) {
-		print "$default_value\t1\n"; 
+		return "$default_value\t1"; 
 	} else {
 		foreach my $c (sort {$PostProb{$b} <=> $PostProb{$a} } keys %PostProb ) {
-			if (!$First) {
-				print "$c\t$PostProb{$c}\n";
-				$First=1;
-			}
+			return "$c\t$PostProb{$c}";
 		}
 	}
 }
 
-sub trim {    #remove all leading and trailing spaces
-  my $str = $_[0];#<string>
+#<ignore-block>
+if($pipe){
+	my $lang = shift(@ARGV);
+	load($lang);
+	my @lines=<STDIN>;
+	print nbayes(\@lines);
+}
+#<ignore-block>
 
-  $str =~ s/^\s*(.*\S)\s*$/$1/;
-  return $str;
+sub trim {    #remove all leading and trailing spaces
+	my $str = $_[0];#<string>
+
+	$str =~ s/^\s*(.*\S)\s*$/$1/;
+	return $str;
 }
 

@@ -12,7 +12,6 @@ package Sentences;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
@@ -20,10 +19,9 @@ use utf8;
 my $pipe = !defined (caller);#<ignore-line> 
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 ##ficheiros de recursos
 my $ABR;#<file>
@@ -47,18 +45,13 @@ close $ABR;
 
 $Abr =~ s/\|[\|]+/\|/g;
 $Abr =~ s/^\|//g;
-#print STDERR "#$Abr#\n";
-#my $separador = "\.\n" ;
-#$/ = $separador;
 
 sub sentences {
-	my $CountLines = 0;#<integer>
 	my @saida = ();#<list><string>
-	while (my $texto = <STDIN>) {#<string>
-		if(($CountLines % 100) == 0) {
-			printf  STDERR "- - - number of lines :(%6d) - - -\r",$CountLines;
-		}
-		$CountLines++;
+	my $lines = $_[0];#<ref><list><string>
+
+	foreach my $texto (@{$lines}) {
+		chomp $texto;
 
 		my $mark_abr = "<ABR-TMP>";#<string>
 		my $mark_sigla= "<SIGLA-TMP>";#<string>
@@ -101,7 +94,7 @@ sub sentences {
 		if($pipe){#<ignore-line>
 			print $texto;#<ignore-line>
 		}else{#<ignore-line>
-			push (@saida, $texto);
+			push (@saida, split("\n", $texto));
 		}#<ignore-line>
 
 	}
@@ -111,26 +104,9 @@ sub sentences {
 
 #<ignore-block>
 if($pipe){
-	sentences();
+	my @lines=<STDIN>;
+	sentences(\@lines);
 }
-#<ignore-block> 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+#<ignore-block>
   
   

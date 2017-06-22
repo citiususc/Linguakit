@@ -1,211 +1,216 @@
 #!/usr/bin/env perl
 
 #A PARTIR DA SAIDA -fa DO PARSER, GERA A SAIDA FORMATO CONLL
+package CONLL;
 
-$DepLex = "<|>|lex" ;
+#<ignore-block>
+use strict; 
+binmode STDIN, ':utf8';
+binmode STDOUT, ':utf8';
+use utf8;
+#<ignore-block>
 
-while ($line = <STDIN>) {
+# Pipe
+my $pipe = !defined (caller);#<ignore-line> 
 
-   if ( ($CountLines % 100) == 0) {;
-       printf  STDERR "- - - processar linha:(%6d) - - -\r",$CountLines;
-   }
-   $CountLines++;
+sub conll{
 
-   $head="";
-   $dep="";
-   $rel="";
-   $cat_h="";
-   $cat_d="";
-   $cat_r="";
-   $ref_h="";
-   $ref_d="";
-   $ref_r="";
+	my @saida=();#<list><string>
+	my ($text) = @_;#<ref><list><string>
 
-   chomp $line;
+	my $DepLex = "<|>|lex";#<string>
+	my @listaTags;#<array><string>
 
-   if ($line =~ /^SENT::/) {
-     $line =~ s/^SENT::(\<)?//;
-     #$line =~ s/\>//;
+	my %Deps = ();#<hash><hash><string><smart>
+	my %Cats = ();#<hash><string>
+	my %Heads = ();#<hash><string>
+	my %Rels = ();#<hash><string>
+	my %Roots = ();#<hash><string>
+	my %Root_cats = ();#<hash><string>
 
-     (@listaTags) = split (" ", $line);
-   }
-  
- 
-   elsif ($line  =~ /^\-\-\-/) {
-      for ($i=0;$i<=$#listaTags;$i++) {
-        #print STDERR "#$i# --- #$listaTags[$i]#\n";
-        $listaTags[$i] = ConvertCharLarge($listaTags[$i]);    
-         
-        $j=$i+1;  
-        if (defined  $Deps{$i} ) {   
-          $Heads{$i}++;
-          $Deps="";
-          $Deps_lex="";
-          $found=0;
-	  foreach $r (keys %{$Deps{$i}}) {
-           # print STDERR "$r\n";
-            if ($Deps{$i}{$r} !~ /^($DepLex)$/ ) {
-             
-                  $Deps = $r;
-                  $found=1
-	       
-            }
-            else{
-		$Deps_lex = $r;
-            }
-	   }
-	  if (!$found) {
-	      $Deps = $Deps_lex;
-              #print STDERR "--------------DEP: $Deps\n";
-	  }
-          print "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}\n";  
-	      
-        }  
-        elsif (defined $Roots{$i}) {
-	  $Roots="";
-          $Roots_lex="";
-          $found=0;
-	  foreach $r (keys %{$Roots{$i}}) {
-            #print STDERR "$r\n";
-            if ($Roots{$i}{$r} !~ /^($DepLex)$/ ) {
-             
-                  $Roots = $r;
-                  $found=1,
-                  #print STDERR "--------------DEP: $Tokens{$i}-- $Roots{$i}{$r}\n";
-	       
-            }
-            else{
-		$Roots_lex = $r;
-            }
-	   }
-	  if (!$found) {
-	      $Roots = $Roots_lex;
-              
-	  }
-           print "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT\n";
-         }
-         
-         else {
-           ($token, $tag, $ref) = split ("_", $listaTags[$i]);
-           # $listaTags[$i] = ConvertCharLarge($listaTags[$i]);
+	my %Tokens = ();#<hash><string>
+	my %Args = ();#<hash><string>
 
-           ($lema) = ($listaTags[$i] =~ /lemma:([^ <>|]+)/);
-           $listaTags[$i] =~ s/^</Fz2/ ;
-          #  $args = "<lemma:$lema|token:$token|>";
-           ($args) = ($listaTags[$i] =~ /(<[^ ]+>)/);
-           # print STDERR "#$token# :: #$args# --- #$listaTags[$i]#\n";
-           $args = ReConvertCharLarge($args);
+	foreach my $line (@{$text}) {
+		chomp $line;
 
-           if ($tag =~ /^SENT/) {
-	     $tag =~ s/>//;
-             print "$j\t$token\t$token\t$tag\t_\t$args\t_\n";  
-           }
-	   else {
-             $lema = ReConvertChar($lema);
-             print "$j\t$token\t$lema\t$tag\t_\t$args\t_\n";
-           }
-         }    
+		my $head="";#<string>
+		my $dep="";#<string>
+		my $rel="";#<string>
+		my $cat_h="";#<string>
+		my $cat_d="";#<string>
+		my $cat_r="";#<string>
+		my $ref_h="";#<string>
+		my $ref_d="";#<string>
+		my $ref_r="";#<string>
 
-      }
+		if ($line =~ /^SENT::/) {
+			$line =~ s/^SENT::(\<)?//;
+			#$line =~ s/\>//;
 
-      for ($i=0;$i<=$#listaTags;$i++) {
-         delete $listaTags[$i];
-         delete $Deps{$i};
-         delete $Cats{$i};
-         delete $Heads{$i};
-         delete $Rels{$i};
-	 delete $Roots{$i};
-         delete $Root_cats{$i};
+			@listaTags = split (" ", $line);
+		} elsif ($line  =~ /^\-\-\-/) {
+			for (my $i=0; $i<=$#listaTags; $i++) {#<integer>
+				#print STDERR "#$i# --- #$listaTags[$i]#\n";
+				$listaTags[$i] = ConvertCharLarge($listaTags[$i]);  
+				
+				my $j=$i+1; #<integer>  
+				if (defined  $Deps{$i} ) {   
+					$Heads{$i}=1;
+					my $Deps="";#<string>
+					my $Deps_lex="";#<string>
+					my $found=0;#<boolean>
+					foreach my $r (keys %{$Deps{$i}}) {
+						#print STDERR "$r\n";
+						if ($Deps{$i}{$r} !~ /^($DepLex)$/ ) {
+							$Deps = $r;
+							$found = 1; 
+						} else{
+							$Deps_lex = $r;
+						}
+					}
+					if (!$found) {
+						$Deps = $Deps_lex;
+						#print STDERR "--------------DEP: $Deps\n";
+					}
+					if($pipe){#<ignore-line>
+						print "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}\n";#<ignore-line>
+					}else{#<ignore-line>
+						push(@saida, "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}");
+					}#<ignore-line>
+				} elsif (defined $Roots{$i}) {
+					my $Roots="";#<string>
+					my $Roots_lex="";#<string>
+					my $found=0;#<boolean>
+					foreach my $r (keys %{$Roots{$i}}) {
+						#print STDERR "$r\n";
+						if ($Roots{$i}{$r} !~ /^($DepLex)$/ ) {
+							$Roots = $r;
+							$found=1;
+							#print STDERR "--------------DEP: $Tokens{$i}-- $Roots{$i}{$r}\n";
+						} else{
+							$Roots_lex = $r;
+						}
+					}
+					if (!$found) {
+						$Roots = $Roots_lex;      
+					}
+					if($pipe){#<ignore-line>
+						print "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT\n";
+					}else{#<ignore-line>
+						push(@saida, "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT");
+					}#<ignore-line>
+				} else {
+					my ($token, $tag, $ref) = split ("_", $listaTags[$i]);#<string>
+					#$listaTags[$i] = ConvertCharLarge($listaTags[$i]);
 
-         delete $Tokens{$i};
-         delete $Args{$i};
+					my ($lema) = ($listaTags[$i] =~ /lemma:([^ <>|]+)/);#<string>
+					$listaTags[$i] =~ s/^</Fz2/ ;
+					#$args = "<lemma:$lema|token:$token|>";
+					my ($args) = ($listaTags[$i] =~ /(<[^ ]+>)/);#<string>
+					#print STDERR "#$token# :: #$args# --- #$listaTags[$i]#\n";
+					$args = ReConvertCharLarge($args);
 
-       }
-  
-   }
-    
- 
-   elsif  ($line =~ /^\(/) {
+					if ($tag =~ /^SENT/) {
+						$tag =~ s/>//;
+						if($pipe){#<ignore-line>
+							print "$j\t$token\t$token\t$tag\t_\t$args\t_\n";  
+						}else{#<ignore-line>
+							push(@saida, "$j\t$token\t$token\t$tag\t_\t$args\t_");
+						}#<ignore-line>
+					} else {
+						$lema = ReConvertChar($lema);
+						if($pipe){#<ignore-line>
+							print "$j\t$token\t$lema\t$tag\t_\t$args\t_\n";
+						}else{#<ignore-line>
+							push(@saida, "$j\t$token\t$lema\t$tag\t_\t$args\t_");
+						}#<ignore-line>
+					}
+				}    
+			}
+			%Deps = ();#<smart>
+			%Cats = ();
+			%Heads = ();
+			%Rels = ();
+			%Roots = ();
+			%Root_cats = ();
 
-     #tiramos as parenteses da dependencia
-     $line =~ s/^\(//;
-     $line =~ s/\)$//;
-    
-     #nao tomamos em conta as dependencias semanticas
-     if ($line !~ /\-SEM/ ) {
-   
-      ($rel, $head, $dep) = split('\;', $line);
+			%Tokens = ();
+			%Args = ();
 
-    
-      ($head,$cat_h,$ref_h) = split ("_", $head);
-      ($dep,$cat_d,$ref_d) = split ("_", $dep);
-      if ($rel =~ /_/) {
-        ($rel,$cat_r,$ref_r) = split ("_", $rel);
-        ($rel_name, $rel) = split ("/", $rel);
+		} elsif  ($line =~ /^\(/) {
+			#tiramos as parenteses da dependencia
+			$line =~ s/^\(//;
+			$line =~ s/\)$//;
 
-        $Deps{$ref_d}{$dep} = $rel_name ;
-	$Heads{$ref_d} = $ref_r;
-	$Rels{$ref_d} = "Term" ;
-	$Cats{$ref_d} = $cat_d ;
-        
-        $Deps{$ref_r}{$rel} = $rel_name ;
-	$Heads{$ref_r} = $ref_h;
-	$Rels{$ref_r} = $rel_name ;
-	$Cats{$ref_r} = $cat_r ;
-	
-        $Roots{$ref_h}{$head} = $rel_name;
-	$Root_cats{$ref_h} = $cat_h ;
-      }
-    
-      else {
-       $Deps{$ref_d}{$dep} = $rel ; 
-       $Heads{$ref_d} = $ref_h  ;
-       $Rels{$ref_d} = $rel  ;
-       $Cats{$ref_d} = $cat_d ;
+			#nao tomamos em conta as dependencias semanticas
+			if ($line !~ /\-SEM/ ) {
+				my ($rel, $head, $dep) = split('\;', $line);#<string>
 
-       $Roots{$ref_h}{$head} = $rel ;
-       $Root_cats{$ref_h} = $cat_h ;
-      }
-     }
-  
- }
 
-  elsif  ($line =~ /^HEAD::|^DEP::|^REL::/) {
+				my ($head,$cat_h,$ref_h) = split ("_", $head);#<string>
+				my ($dep,$cat_d,$ref_d) = split ("_", $dep);#<string>
+				if ($rel =~ /_/) {
+					my ($rel,$cat_r,$ref_r) = split ("_", $rel);#<string>
+					my ($rel_name, $rel) = split ("/", $rel);#<string>
 
-       #if  ($line =~ /^HEAD/) {
+					$Deps{$ref_d}{$dep} = $rel_name;
+					$Heads{$ref_d} = $ref_r;
+					$Rels{$ref_d} = "Term" ;
+					$Cats{$ref_d} = $cat_d ;
 
-         ($token) = ($line =~ /token:([^ _<>|]+)\|/); 
-         ($args) = ($line =~ /(<[^ _<>]+>)/); 
-         ($temp) = ($line =~ /::([^ <>]+)</); 
-         ($tmp,$tmp,$pos) = split ("_", $temp);
-         #$rel = $Rels{$pos};
-         $Tokens{$pos} = $token;
-         $Args{$pos} = $args;
-         #$Tok{$pos}{$Head_token} = $rel ; 
-        # print STDERR "$line\nH == ##$token## - ($args) ##$Token{$pos}## ###$pos### ---$temp$---\n";
+					$Deps{$ref_r}{$rel} = $rel_name;
+					$Heads{$ref_r} = $ref_h;
+					$Rels{$ref_r} = $rel_name;
+					$Cats{$ref_r} = $cat_r ;
 
-  }
+					$Roots{$ref_h}{$head} = $rel_name;
+					$Root_cats{$ref_h} = $cat_h;
+				} else {
+					$Deps{$ref_d}{$dep} = $rel; 
+					$Heads{$ref_d} = $ref_h;
+					$Rels{$ref_d} = $rel;
+					$Cats{$ref_d} = $cat_d;
 
-} 
+					$Roots{$ref_h}{$head} = $rel;
+					$Root_cats{$ref_h} = $cat_h;
+				}
+			}
+		} elsif  ($line =~ /^HEAD::|^DEP::|^REL::/) {
+			my ($token) = ($line =~ /token:([^ _<>|]+)\|/);#<string>
+			my ($args) = ($line =~ /(<[^ _<>]+>)/); #<string>
+			my ($temp) = ($line =~ /::([^ <>]+)</); #<string>
+			my ($tmp,$tmp,$pos) = split ("_", $temp);#<string>
+			#$rel = $Rels{$pos};
+			$Tokens{$pos} = $token;
+			$Args{$pos} = $args;
+			#$Tok{$pos}{$Head_token} = $rel ; 
+			#print STDERR "$line\nH == ##$token## - ($args) ##$Token{$pos}## ###$pos### ---$temp$---\n";
+		}
+	}
+	return \@saida;
+}	
 
+#<ignore-block>
+if($pipe){
+	my @lines=<STDIN>;
+	conll(\@lines);
+}
+#<ignore-block>
 
 ##funcions especias para tratar os caracteres problematicos: "|", "<", ">"
-
 sub ConvertChar {
-
-    my ($string) = @_ ;
+    my ($string) = @_ ;#<string>
 
     $string =~ s/\>/\*Fz1\*/g; 
     $string =~ s/\</\*Fz2\*/g;
     $string =~ s/\|/\*Fz\*/g;
 
    return $string;
-
 }
 
 sub ConvertCharLarge {
-
-    my ($string) = @_ ;
+    my ($string) = @_ ;#<string>
 
     $string =~ s/\\>/\*Fz1\*/g; 
     $string =~ s/tok\\>/token:\*Fz1\*/g; 
@@ -214,14 +219,11 @@ sub ConvertCharLarge {
     $string =~ s/lemma:\\\|/lemma:\*Fz\*/g;
     $string =~ s/token:\\\|/token:\*Fz\*/g; 
    # print STDERR "+++ $string\n";
-
    return $string;
-
 }
 
 sub ReConvertCharLarge {
-
-    my ($string) = @_ ;
+    my ($string) = @_ ;#<string>
 
     $string =~ s/lemma:\*Fz1\*/lemma:\\>/g; 
     $string =~ s/lemma:\*Fz2\*/lemma:\\</g; 
@@ -230,19 +232,16 @@ sub ReConvertCharLarge {
     $string =~ s/token:\*Fz2\*/token:\\</g; 
     $string =~ s/token:\*Fz\*/token:\\|/g; 
     
-
     return $string;
 }
 
 sub ReConvertChar {
-
-    my ($string) = @_ ;
+    my ($string) = @_ ;#<string>
 
     $string =~ s/\*Fz1\*/\\>/g; 
     $string =~ s/\*Fz2\*/\\</g; 
     $string =~ s/\*Fz\*/\\|/g; 
     
-
     return $string;
 }
 

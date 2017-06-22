@@ -11,7 +11,6 @@ package Splitter;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
@@ -25,7 +24,7 @@ my $pipe = !defined (caller);#<ignore-line>
 #my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
 sub splitter {
-	return @_;
+	return $_[0];
 }
 
 #<ignore-block>

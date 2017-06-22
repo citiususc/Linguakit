@@ -13,7 +13,6 @@ package Tagger;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
-use open qw(:std :utf8);
 use utf8;
 #<ignore-block>
 
@@ -22,14 +21,13 @@ use utf8;
 my $pipe = !defined (caller);#<ignore-line> 
 
 # Absolute path 
-use Cwd 'abs_path';#<ignore-line>
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
-$abs_path = dirname(abs_path($0));#<ignore-line>
+$abs_path = dirname(__FILE__);#<ignore-line>
 
 my $MODEL;#<file>
 open ($MODEL, $abs_path."/model/train-es") or die "O ficheiro train-es não pode ser aberto: $!\n";
-binmode MODEL,  ':utf8';#<ignore-line>
+binmode $MODEL,  ':utf8';#<ignore-line>
 
 ##variabeis globais
 my $w=1; #<string>#mesma janela/window que no treino
@@ -79,6 +77,7 @@ while (my $line = <$MODEL>) {  #<string>#leitura treino
 	#printf STDERR "<%7d>\r",$cont if ($cont++ % 100 == 0);
    
 }
+close $MODEL;
 
 sub tagger {
 
@@ -128,10 +127,10 @@ sub tagger {
 				$Lema{$pos}{$tag} = $Lema[$pos];
 
 				if  ($#entry == 2 && $entry[2] ne "UNK") { ##identificar formas nao ambiguas nem desconhecidas (unk)
-				$noamb[$pos]=1;
+					$noamb[$pos]=1;
 				}
 				if  ($#entry == 2 && $entry[2] eq "UNK") { ##identificar formas  desconhecidas (unk)
-				$unk[$pos]=1;
+					$unk[$pos]=1;
 				}
 
 				$i++;
@@ -189,140 +188,140 @@ sub tagger {
 			my $last_entry =  "$entry[0] $entry[1] $entry[2]";#<string>
 			for ($pos=0;$pos<=$#Tag;$pos++) {
 				#print STDERR "TOKENS::: #$pos# -- #$Token[$pos]#\n";
-					if ($noamb[$pos]) {
-						###RESULTADO para nao ambiguas nem desconhecidas: 
-						if($pipe){#<ignore-line>
-							print "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]}."\n";#<ignore-line>
-						}else{#<ignore-line>
-							push (@saida, "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]}."\n");
-						}#<ignore-line>
-					}else {
-						if (!$unk[$pos]) { #se a forma e ambigua mas conhecida, utilizamos a lista de tags atribuida a forma
-							foreach  my $cat (keys %{$Tag{$pos}}) {
-								#print STDERR "----#$cat# \n";
-								push (@Cat, $cat);
-							}
-						}else { #se a forma e desconhecida, utilizamos uma lista de tags de classes abertas
-							foreach  my $cat (@cat_open) {
-								#print STDERR "UNK----#$cat# \n";
-								push (@Cat, $cat);
-							}  
-						}     
-						#buscar a informaçao das entradas a direita (w=1)
-						my $k=0;#<integer>
-						my $amb;#<string>
-            
-						if ($pos==0) {
-							for (my $j=1;$j<=$w;$j++) {#<integer>
-								if ($noamb[$j]) {
-									$amb = "noamb";
-								}else {
-									$amb = "amb";
-								}
-								foreach my $feat (keys %{$Tag{$j}}) {
-									if (!$feat) {next;}
-									$k++;
-									$feat = $amb . "_" . $k . "_" . $w . "_R_" . $feat;
-									my $new_token = lc $Token[$pos];#<string>
-									my $featL = $feat . "_" .  $new_token;#<string>
-									#  print STDERR "FEATS:: ----#$feat#  #$Tag{$j}{$feat}# #$Token[$pos]# #$Token[$j]# \n";
-									push (@Feat, $feat);
-									push (@Feat, $featL);
-								}   
-								my $feat = "noamb" . "_" . "1" . "_" . $w . "_L_" . "BEGIN";#<string>
-								push (@Feat, $feat);
-								$k=0;
-								$amb="";
-							}
-						}elsif ($pos==$#Tag) {
-							my $end=$#Tag-$w;#<integer>
-							for (my $j=$#Tag-1;$j>=$end;$j--) {#<integer>
+				if ($noamb[$pos]) {
+					###RESULTADO para nao ambiguas nem desconhecidas: 
+					if($pipe){#<ignore-line>
+						print "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]}."\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida, "$Token[$pos] $Lema[$pos] ".$Tag{$pos}{$Tag[$pos]});
+					}#<ignore-line>
+				}else {
+					if (!$unk[$pos]) { #se a forma e ambigua mas conhecida, utilizamos a lista de tags atribuida a forma
+						foreach  my $cat (keys %{$Tag{$pos}}) {
+							#print STDERR "----#$cat# \n";
+							push (@Cat, $cat);
+						}
+					}else { #se a forma e desconhecida, utilizamos uma lista de tags de classes abertas
+						foreach  my $cat (@cat_open) {
+							#print STDERR "UNK----#$cat# \n";
+							push (@Cat, $cat);
+						}  
+					}     
+					#buscar a informaçao das entradas a direita (w=1)
+					my $k=0;#<integer>
+					my $amb;#<string>
+		
+					if ($pos==0) {
+						for (my $j=1;$j<=$w;$j++) {#<integer>
 							if ($noamb[$j]) {
 								$amb = "noamb";
 							}else {
 								$amb = "amb";
 							}
-							foreach  my $feat (keys %{$Tag{$j}}) {
+							foreach my $feat (keys %{$Tag{$j}}) {
+								if (!$feat) {next;}
+								$k++;
+								$feat = $amb . "_" . $k . "_" . $w . "_R_" . $feat;
+								my $new_token = lc $Token[$pos];#<string>
+								my $featL = $feat . "_" .  $new_token;#<string>
+								#  print STDERR "FEATS:: ----#$feat#  #$Tag{$j}{$feat}# #$Token[$pos]# #$Token[$j]# \n";
+								push (@Feat, $feat);
+								push (@Feat, $featL);
+							}   
+							my $feat = "noamb" . "_" . "1" . "_" . $w . "_L_" . "BEGIN";#<string>
+							push (@Feat, $feat);
+							$k=0;
+							$amb="";
+						}
+					}elsif ($pos==$#Tag) {
+						my $end=$#Tag-$w;#<integer>
+						for (my $j=$#Tag-1;$j>=$end;$j--) {#<integer>
+						if ($noamb[$j]) {
+							$amb = "noamb";
+						}else {
+							$amb = "amb";
+						}
+						foreach  my $feat (keys %{$Tag{$j}}) {
+							if (!$feat) {
+								next;
+							}
+							$k++;
+							$feat =  $amb . "_" . $k . "_" . $w . "_L_" . $feat;
+							my $new_token = lc $Token[$pos];#<string>
+							my $featL = $feat . "_" .  $new_token;#<string>
+							#   print STDERR "OKKK----#$Tag{$pos}# \n";
+							push (@Feat, $feat);
+							push (@Feat, $featL);
+						}
+						my $feat = "noamb" . "_" . "1" . "_" . $w . "_R_" . "END";#<string>
+						push (@Feat, $feat);  
+						$k=0;
+						$amb="";
+						}  
+					} 
+					else {
+						my $end=$pos+$w;#<integer>
+						#print STDERR "i=#$i#::: #$Cat# -- #$#Tag#\n";
+						for (my $j=$pos+1;$j<=$end;$j++) {#<integer>
+							if ($noamb[$j]) {
+								$amb = "noamb";
+							}else {
+								$amb = "amb";
+							}
+							foreach my $feat (keys %{$Tag{$j}}) {
 								if (!$feat) {
 									next;
 								}
 								$k++;
-								$feat =  $amb . "_" . $k . "_" . $w . "_L_" . $feat;
+								$feat = $amb . "_" . $k . "_" . $w . "_R_" . $feat;
 								my $new_token = lc $Token[$pos];#<string>
 								my $featL = $feat . "_" .  $new_token;#<string>
-								#   print STDERR "OKKK----#$Tag{$pos}# \n";
+								# print STDERR "OKKK----#$Token[$pos]# \n";
+								#print STDERR "----#$feat# \n";
 								push (@Feat, $feat);
 								push (@Feat, $featL);
-							}
-							my $feat = "noamb" . "_" . "1" . "_" . $w . "_R_" . "END";#<string>
-							push (@Feat, $feat);  
-							$k=0;
+							}     
+							$k=0; 
 							$amb="";
-							}  
-						} 
-						else {
-							my $end=$pos+$w;#<integer>
-							#print STDERR "i=#$i#::: #$Cat# -- #$#Tag#\n";
-							for (my $j=$pos+1;$j<=$end;$j++) {#<integer>
-								if ($noamb[$j]) {
-									$amb = "noamb";
-								}else {
-									$amb = "amb";
-								}
-								foreach my $feat (keys %{$Tag{$j}}) {
-									if (!$feat) {
-										next;
-									}
-									$k++;
-									$feat = $amb . "_" . $k . "_" . $w . "_R_" . $feat;
-									my $new_token = lc $Token[$pos];#<string>
-									my $featL = $feat . "_" .  $new_token;#<string>
-									# print STDERR "OKKK----#$Token[$pos]# \n";
-									#print STDERR "----#$feat# \n";
-									push (@Feat, $feat);
-									push (@Feat, $featL);
-								}     
-								$k=0; 
-								$amb="";
-							}  
-							$end=$pos-$w; 
-							for (my $j=$pos-1;$j>=$end;$j--) {#<integer>
-								if ($noamb[$j]) {
-									$amb = "noamb";
-								}else {
-									$amb = "amb";
-								}
-								foreach my $feat (keys %{$Tag{$j}}) {
-									if (!$feat) {
-										next;
-									}
-									$k++;
-									$feat = $amb . "_" . $k . "_" . $w . "_L_" . $feat;
-									my $new_token = lc $Token[$pos];#<string>
-									my $featL = $feat . "_" .  $new_token;#<string>
-									#print STDERR "----#$feat# \n";
-									push (@Feat, $feat);
-									push (@Feat, $featL);
-								}  
-								$k=0;    
-								$amb="";
+						}  
+						$end=$pos-$w; 
+						for (my $j=$pos-1;$j>=$end;$j--) {#<integer>
+							if ($noamb[$j]) {
+								$amb = "noamb";
+							}else {
+								$amb = "amb";
 							}
+							foreach my $feat (keys %{$Tag{$j}}) {
+								if (!$feat) {
+									next;
+								}
+								$k++;
+								$feat = $amb . "_" . $k . "_" . $w . "_L_" . $feat;
+								my $new_token = lc $Token[$pos];#<string>
+								my $featL = $feat . "_" .  $new_token;#<string>
+								#print STDERR "----#$feat# \n";
+								push (@Feat, $feat);
+								push (@Feat, $featL);
+							}  
+							$k=0;    
+							$amb="";
 						}
-						$tag = classif ($pos, \@Feat, \@Cat, \@unk);
-						#print STDERR "RES:::::#$Token[$pos]# #$tag#\n";
-						if ($unk[$pos]) {
-							$tag =~ s/^([^ ]+)/${1}00000/ if ($tag =~ /^[N]/);
-							$tag =~ s/^([^ ]+)/${1}0000/ if ($tag =~ /^[AV]/);
-							$Tag[$pos] = $tag;
-							$Lema{$pos}{$Tag[$pos]} =  $Token[$pos]; ##colocar o mesmo token no lema para as desconhecidas
-						}else {
-							$Tag[$pos] = $Tag{$pos}{$tag} ;
-						}
+					}
+					$tag = classif ($pos, \@Feat, \@Cat, \@unk);
+					#print STDERR "RES:::::#$Token[$pos]# #$tag#\n";
+					if ($unk[$pos]) {
+						$tag =~ s/^([^ ]+)/${1}00000/ if ($tag =~ /^[N]/);
+						$tag =~ s/^([^ ]+)/${1}0000/ if ($tag =~ /^[AV]/);
+						$Tag[$pos] = $tag;
+						$Lema{$pos}{$Tag[$pos]} =  $Token[$pos]; ##colocar o mesmo token no lema para as desconhecidas
+					}else {
+						$Tag[$pos] = $Tag{$pos}{$tag} ;
+					}
 					###RESULTADO:
 					if($pipe){#<ignore-line>
 						print "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n";#<ignore-line>
 					}else{#<ignore-line>
-						push (@saida, "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n"); 
+						push (@saida, "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]"); 
 					}#<ignore-line>
 
 					##eliminar tags nao selecionados do token resultante para proximos processos
@@ -337,9 +336,10 @@ sub tagger {
 			}
 			###RESULTADO:
 			if($pipe){#<ignore-line>
-				print "$last_entry\n";#<ignore-line>
+				print "$last_entry\n\n";#<ignore-line>
 			}else{#<ignore-line>
 				push (@saida, "$last_entry");
+				push (@saida, "");
 			}#<ignore-line>  
     
 			for ($pos=0;$pos<=$#Tag;$pos++) {
@@ -396,12 +396,12 @@ sub classif {
 	#}
 
 	#my $Normalizer=0;
-	my %count;#<hash><integer>
+	#my %count;#<hash><integer>
 	foreach my $cat (@{$C}) {
 		if (!$cat) {
 			next;
 		}
-		$count{$cat}++;
+		#$count{$cat}++;
 		$PostProb{$cat}  = $ProbCat{$cat};
 		#print STDERR "----#$cat_restr# #$ProbCat{$cat}#\n";
 		$found{$cat}=0;
