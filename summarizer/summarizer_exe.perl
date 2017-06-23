@@ -35,7 +35,8 @@ sub summarizer{
 if($pipe){
 	my $lang = shift(@ARGV); 
 	my $size = shift(@ARGV); 
-	my $result = summarizer($line, $lang, $size);
+	my @lines = <STDIN>;
+	my $result = summarizer(join("\n" ,@lines), $lang, $size);
 	print "$result\n";
 }
 

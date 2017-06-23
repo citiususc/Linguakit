@@ -78,7 +78,7 @@ my $key= $parser->add_parser('key', help => "Keyword extraction");
 $key->add_args(@common_args);
 
 my $recog= $parser->add_parser('recog', help => "Language recognition");
-$recog->add_argument(@{$common_args[1]});
+$recog->add_args(@common_args[1..2]);
 
 my $sent= $parser->add_parser('sent', help => "Sentiment analysis");
 $sent->add_args(@common_args);
@@ -247,14 +247,22 @@ if($MOD eq "dep"){
 	do $TAGGER;
 	do $FILTER;
 	do $NAMEPARSER;
+	do $CONLL;
 	do $REL;
 
 	while(my $line = <$input>){
-		my $list = Triples::triples(Parser::parse(AdapterFreeling::adapter(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line])))))), '-fa'));
+		my $list = Triples::triples(CONLL::conll(Parser::parse(AdapterFreeling::adapter(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line])))))), '-fa')));
 		for my $result (@{$list}){
 			print "$result\n";
 		}
 	}
+	
+#	while(my $line = <$input>){
+#		my $list = Triples::triples(CONLL::conll(Parser::parse(AdapterFreeling::adapter(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line])))))), '-fa')));
+#		for my $result (@{$list}){
+#			print "$result\n";
+#		}
+#	}
 
 }elsif($MOD eq "tagger"){
 	do $SENT;
@@ -490,15 +498,14 @@ if($MOD eq "dep"){
 }elsif($MOD eq "sum"){  ##summarizer
 	do $SUM;
 	if($args->percentage){
-		while(my $line = <$input>){
-			my $result = Summarizer::summarizer($line,$LING,$args->percentage);
-			print "$result\n"
-		}
+		my @lines = <$input>;
+		my $result = Summarizer::summarizer(join("\n" ,@lines),$LING,$args->percentage);
+		print "$result\n"
+		
 	}else{
-		while(my $line = <$input>){
-			my $result = Summarizer::summarizer($line,$LING,10);
-			print "$result\n"
-		}
+		my @lines = <$input>;
+		my $result = Summarizer::summarizer(join("\n" ,@lines),$LING,10);
+		print "$result\n"
 	}
 }elsif($MOD eq "conj"){  ##conjugator
 	do $CONJ;

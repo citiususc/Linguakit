@@ -22,8 +22,7 @@ $abs_path = dirname(abs_path($0));#<ignore-line>
 my $Border="SENT";#<string>
 
 sub triples {
-	my $lang = $_[0];#<string>
-	my $lines = $_[1];#<ref><list><string>
+	my ($lines) = @_;#<ref><list><string>
 
 	my @saida=();#<list><string>
   
@@ -279,7 +278,7 @@ sub triples {
 
 						my $saida = building_result ($k, $result_token);#<string>
 						if($pipe){#<ignore-line>
-							print $saida;#<ignore-line>
+							print "$saida\n";#<ignore-line>
 						}else{#<ignore-line>
 							push (@saida, $saida);
 						}#<ignore-line>
@@ -348,7 +347,7 @@ sub triples {
 
 					my $saida = building_result ($k, $result_token);#<string>
 					if($pipe){#<ignore-line>
-						print $saida;#<ignore-line>
+						print "$saida\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, $saida);
 					}#<ignore-line>
@@ -412,7 +411,7 @@ sub triples {
 
 					my $saida = building_result ($k, $result_token);#<string>
 					if($pipe){#<ignore-line>
-						print $saida;#<ignore-line>
+						print "$saida\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, $saida);
 					}#<ignore-line>
@@ -471,7 +470,7 @@ sub triples {
 
 					my $saida = building_result ($k, $result_token);#<string>
 					if($pipe){#<ignore-line>
-						print $saida;#<ignore-line>
+						print "$saida\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, $saida);
 					}#<ignore-line>
@@ -547,7 +546,7 @@ sub triples {
 
 						my $saida = building_result ($k, $result_token);#<string>
 						if($pipe){#<ignore-line>
-							print $saida;#<ignore-line>
+							print "$saida\n";#<ignore-line>
 						}else{#<ignore-line>
 							push (@saida, $saida);
 						}#<ignore-line>
@@ -620,7 +619,7 @@ sub triples {
 
 					my $saida = building_result ($k, $result_token);#<string>
 					if($pipe){#<ignore-line>
-						print $saida;#<ignore-line>
+						print "$saida\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, $saida);
 					}#<ignore-line>
@@ -678,9 +677,8 @@ sub triples {
 
 #<ignore-block>
 	if($pipe){
-		my $lang = shift(@ARGV);
-		my @tagged = <STDIN>;
-		triples($lang, \@tagged);
+		my @lines = <STDIN>;
+		triples(\@lines);
 	}
 #<ignore-block>
 
@@ -690,7 +688,7 @@ sub triples {
 sub building_result {
 	my ($idf, $res_tok) = @_ ;#<string>
 
-	my $saida  =   "SENTID_$idf\t$res_tok\n";#<string>
+	my $saida  =   "SENTID_$idf\t$res_tok";#<string>
 
 	return $saida;
 }

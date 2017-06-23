@@ -55,8 +55,9 @@ sub conll{
 				$listaTags[$i] = ConvertCharLarge($listaTags[$i]);  
 				
 				my $j=$i+1; #<integer>  
-				if (defined  $Deps{$i} ) {   
-					$Heads{$i}=1;
+				if (defined  $Deps{$i} ) { 
+					$Heads{$i} = 0 if (!defined $Heads{$i});
+					$Heads{$i}++;
 					my $Deps="";#<string>
 					my $Deps_lex="";#<string>
 					my $found=0;#<boolean>

@@ -36,8 +36,8 @@ sub linking{
 if($pipe){
 	my $lang = shift(@ARGV); 
 	my $format = shift(@ARGV); 
-	my $line = <STDIN>;
-	my $result = linking($line, $lang, $format);
+	my @lines = <STDIN>;
+	my $result = linking(join("\n" ,@lines), $lang, $format);
 	print "$result\n";
 }
 

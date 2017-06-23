@@ -211,8 +211,6 @@ sub adapter {
 			#}
 			#else {
 			my $out = "$token\t";#<string>
-			
-			print "$token\t" ;
 			foreach my $attrib (sort keys %Exp) {
 				$out .= "$attrib:$Exp{$attrib}|";
 				delete $Exp{$attrib};
