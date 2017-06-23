@@ -8,6 +8,7 @@ binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
+use Encode;
 
 # Pipe
 my $pipe = !defined (caller);
@@ -28,17 +29,15 @@ sub linking{
 
 	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
 
-	return $ua->request($req)->content;
+	return decode('utf-8', $ua->request($req)->content);
 }
 
 
 if($pipe){
 	my $lang = shift(@ARGV); 
 	my $format = shift(@ARGV); 
-	my @lines=<STDIN>;
-	for my $line (@lines){
-		my $result = linking($line, $lang, $format);
-		print "$result\n";
-	}
+	my $line = <STDIN>;
+	my $result = linking($line, $lang, $format);
+	print "$result\n";
 }
 

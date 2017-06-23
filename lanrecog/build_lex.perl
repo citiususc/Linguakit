@@ -9,11 +9,11 @@ use File::Basename;
 my $abs_path = dirname(__FILE__);
 my $lex = "$abs_path/lexicons/lexicons";#Lexicon file joined
 
-if (-ne $lex) {
+if (!-e $lex) {
 	opendir(my $DIR, "$abs_path/lexicons");#Lexicon directory
 	open(my $LEX, ">", $lex);
 
-	for my $file (grep(/\.lx$/,readdir($DIR))){#Filter all files in lexicon directory that finish with .lx
+	for my $file (grep(/\.lx$/, readdir($DIR))){#Filter all files in lexicon directory that finish with .lx
 
 		open(my $FILE, "$abs_path/lexicons/$file");
 		my $lang = basename($file,".lx");

@@ -8,6 +8,7 @@ binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
+use Encode;
 
 # Pipe
 my $pipe = !defined (caller);
@@ -46,6 +47,14 @@ sub conjugator{
 
 	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,variety=>$variety];
 
-	return $ua->request($req)->content;
+	return decode('utf-8', $ua->request($req)->content);
+}
+
+if($pipe){
+	my $line = <STDIN>;
+	my $lang = shift(@ARGV); ### es, gl, pt, en
+	my $variety = shift(@ARGV); ##percentage of the abstract
+	my $result = conjugator($line, $lang, $variety);
+	print "$result\n";
 }
 

@@ -45,7 +45,8 @@ my $parser = Getopt::ArgParse -> new_parser( prog => $name, help => $shortDescri
 
 my @common_args = (
 	['lang', type => 'Scalar', dest => 'lang', required => 1, metavar => "<lang>", help => "Choose the language", choices_i => ["en", "es", "gl", "pt"], default => "en"],
-	['input', type => 'Scalar',  dest => 'input', metavar => "<input>", help => "Path of the input (by default a txt file or gz/zip)"]
+	['input', type => 'Scalar',  dest => 'input', metavar => "<input>", help => "Path of the input(a plain text file or gz/zip) by default STDIN"],
+	['-s', type => 'Bool',  dest => 'string', help => "Changes input from a file path to a text string"]
 );
 
 
@@ -125,6 +126,7 @@ my $args = $parser->parse_args();
 my $LING = $args->get_attr("lang")?$args->lang:"en";
 my $MOD = $args->current_command();
 my $FILE = $args->get_attr("input");
+my $STRING = $args->get_attr("string");
 
 ###################################################################
 # Script to use different linguistic tools, for instance:
@@ -183,18 +185,16 @@ my $KWIC = "$MAIN_DIR/kwic/kwic.perl";
 #      EXECUTION      #
 #######################
 my $input;
-my $cat;
 if($FILE){
-	my $ZIP = $FILE =~ m/\.zip$/; 
-	$cat = $ZIP ? "zcat" : "cat";
-	if ($ZIP){
+	if ($STRING){
+		open($input,"<",\$FILE);
+	}elsif ($FILE =~ m/\.zip$/){
 		open ($input, '<:gzip', $FILE) or die("'$FILE' not found.");
 	}else{
 		open ($input, '<', $FILE) or die("'$FILE' not found.");
 	}
 	binmode $input, ':utf8';
 }else{
-	$cat = "";
 	$input = \*STDIN;
 }
 
@@ -250,7 +250,7 @@ if($MOD eq "dep"){
 	do $REL;
 
 	while(my $line = <$input>){
-		my $list = Triples::triples(Parser::parse(AdapterFreeling::adapter(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line])))))),  '-fa'));
+		my $list = Triples::triples(Parser::parse(AdapterFreeling::adapter(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line])))))), '-fa'));
 		for my $result (@{$list}){
 			print "$result\n";
 		}
@@ -398,10 +398,16 @@ if($MOD eq "dep"){
 	do $TOK;
 	do $QUELINGUA_LEX;
 	do $QUELINGUA;
+	my %Peso = ();#Line acumulator
 	
 	while(my $line = <$input>){
-		my $result = LanRecog::langrecog(Tokens::tokens(Sentences::sentences([$line])));
-		print "$result\n";
+		my $ling = LanRecog::langrecog(Tokens::tokens(Sentences::sentences([$line])));
+		$Peso{$ling}++;
+	}
+	
+	foreach my $ling (sort {$Peso{$b} <=> $Peso{$a}} keys %Peso ) {
+		print "$ling\n";
+		last;
 	}
 
 }elsif($MOD eq "tok"){  ##tokenizer

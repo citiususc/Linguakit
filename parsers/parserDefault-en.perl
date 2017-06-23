@@ -83,7 +83,6 @@ my $PTa  = "(?:aceder\|acostumar\|acudir\|adaptar\|comprometer\|chegar\|cheirar\
 my $i=0;#<integer>
 my $listTags="";#<string>
 my $seq="";#<string>
-my $CountLines=0;#<integer>
 my $info;#<string>
 
 my @Token=();#<list><string>
@@ -113,11 +112,6 @@ sub parse{
 		chop($line);
 
 		(my $token, $info) = split(" ", $line);#<string>
-
-		if ( ($CountLines % 100) == 0) {;
-			printf  STDERR "- - - processar linha:(%6d) - - -\n",$CountLines;
-		}
-		$CountLines++;
 
 		###Convertimos caracteres significativos na sintaxe de DepPattern em tags especiais
 		if ($token =~ /:/) {

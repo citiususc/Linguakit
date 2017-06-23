@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 
 #GERA UMA LISTA DE TRIGRAMAS "EXPR VALUE PADRAO" 
 #lê um ficheiro com N-gramas etiquetados e filtrados 
@@ -62,10 +62,6 @@ sub mwe{
 		chomp($line);
 		($p1, $p2, $p3, $p4, $p5, $p6) = split(" ", $line);
 
-		#if ( ($CountLines % 100) == 0) {;
-			#printf  STDERR "- - - processar linha:(%6d) - - -\r",$CountLines;
-		#}
-		#$CountLines++;
 		#print STDERR "#$line# ------- #$p1# -- #$p2# -- #$p3#\n";
 
 		if ($p1 =~ /\_/) {

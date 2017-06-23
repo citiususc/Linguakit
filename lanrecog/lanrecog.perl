@@ -29,6 +29,7 @@ my %Suffix = ();#<hash><hash><integer>
 my $ling_def="en";#<string>
 my $Separador = "[\.\,\;\:\«\»\"\&\%\+\=\$\#\(\)\<\>\!\¡\?\¿\\[\\]]";#<string>
 
+do "$abs_path/build_lex.perl";
 my $L;#<file>
 open ($L, "$abs_path/lexicons/lexicons") or die "O ficheiro não pode ser aberto: $!\n";
 binmode $L,  ':utf8';#<ignore-line>
@@ -90,14 +91,14 @@ sub langrecog{
 		##change uppercase to lowercase:
 		$token = lc ($token);
 		if ($token !~ /$Separador/) {
-			foreach $ling (keys %Lex) {
+			foreach my $ling (keys %Lex) {
 				#if ($Lex{$ling}{$token} =~ /^$token$/i) {
 				if (defined $Lex{$ling} and defined $Lex{$ling}{$token}) {
 					$Peso{$ling} += $i - $Rank{$ling}{$token} ;
 					# print STDERR "lex: #$ling# :: #$token# #$Peso{$ling}# #$i# # $Rank{$ling}{$token} # \n";
 					$found=1;
 				} else {
-					foreach $s (keys %{$Suffix{$ling}}) {
+					foreach my $s (keys %{$Suffix{$ling}}) {
 						#print STDERR "lex: #$ling# :: #$token# #$Peso{$ling}# #$s# \n";
 						if ($token =~ /$s$/) {
 							$Peso{$ling} += $i - ($i/2) ;
@@ -108,12 +109,12 @@ sub langrecog{
 			}
 		}
 	}
-	
+
 	##default:
 	if (!$found){
 		return $ling_def 
 	} else {
-		foreach $ling (sort {$Peso{$b} <=> $Peso{$a}} keys %Peso ) {
+		foreach my $ling (sort {$Peso{$b} <=> $Peso{$a}} keys %Peso ) {
 			return $ling;
 			last;
 		}
