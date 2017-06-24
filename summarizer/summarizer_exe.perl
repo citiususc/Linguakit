@@ -25,8 +25,7 @@ sub summarizer{
 	my $module = "summarizer";
 	my $format = "xml";
 
-
-	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
+	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,output_size=>$size];
 
 	return decode('utf-8', $ua->request($req)->content);
 }
