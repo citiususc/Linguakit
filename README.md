@@ -2,7 +2,7 @@
 
 Made by the ProLNat@GE Group (http://gramatica.usc.es/pln/), CiTIUS, University of Santiago de Compostela.
 
-New more efficient version released in 22 June 2017 by César Piñeiro.
+New more efficient version released in 22 June 2017 by César Piñeiro (also for Windows: `linguakit.bat` command).
 
 LinguaKit is a Natural Language Processing tool containing several NLP modules:
 
@@ -91,7 +91,7 @@ Download [Linguakit-master.zip](https://github.com/citiususc/Linguakit/archive/m
 unzip Linguakit-master.zip
 ```
 
-## Usage
+## Usage (Linux)
 
 Run `./linguakit --help` to see the modules:
 
@@ -119,7 +119,7 @@ Run `./linguakit --help` to see the modules:
       'conj'    verb conjugator (the input is just a verb)
       'coref'   named entity coreference solver
 ```
-Run `./linguakit <module> --help` to see the option of a module. These are the available command-line options:
+Run `./linguakit <module> --help` to see the options of a module. These are the available command-line options:
 
 ```
       -a       'dep' option: simple dependency analysis (by default syntactic output)
@@ -157,6 +157,9 @@ Run `./linguakit <module> --help` to see the option of a module. These are the a
 
       -s      'sent', 'recog' and 'conj' option: if <input> is a string and not a file
 ```
+## Usage in Windows
+
+The same syntax with `linguakit.bat` command.
 
 ### Examples
 
