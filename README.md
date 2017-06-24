@@ -186,7 +186,7 @@ Return a sentiment value:
 
 Make multiword extraction ranked with chi-square:
 ```
-./linguakit mw pt test/pt.txt -chi
+./linguakit mwe pt test/pt.txt -chi
 ```
 
 Generate the context in tokens of the keyword *presidente* (concordances or keyword in context). 
@@ -201,7 +201,7 @@ Return triples (relations):
 
 Return an abstract or summary of the input text (50%):
 ```
-./linguakit sum en tests/en.txt -p 50
+./linguakit sum en test/en.txt -p 50
 ```
 
 Return the european portuguese inflection of the input verb:
