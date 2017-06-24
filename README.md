@@ -1,6 +1,7 @@
-#LINGUAKIT
+# LINGUAKIT
 
-Made by the ProLNat@GE Group (http://gramatica.usc.es/pln/)
+Made by the ProLNat@GE Group (http://gramatica.usc.es/pln/). 
+New `linguakit` command by César Piñeiro (CiTIUS),
 University of Santiago de Compostela
 
 LinguaKit is a Natural Language Processing tool containing several NLP modules:
@@ -58,16 +59,18 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Summarizer** (parameter `sum`): Returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. This module requires Internet conection since it runs using a Web API. The code was developed by Fernando Blanco Dosil when it was working in Cilenis Language Technology. 
 
-* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. Pay attention that the input is not a file but a string: the infinitive verb. The module is working for three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`). The output is in json format. This module requires Internet conection since it runs using a Web API.
+* **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. Pay attention that the input is not a file but a string, the infinitive verb, and the module should be used like this: `echo "fazer" | ./linguakit conj pt`. The module is working for three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`). The output is in json format. This module requires Internet conection since it runs using a Web API.
 
 ## Requirements
 Depending on your GNU/Linux version or distribution, you may need to install some CPAN Perl modules:
+* *Getopt::ArgParse* Perl module.
 * *LWP::UserAgent* Perl module.
 * *HTTP::Request::Common* Perl module.
 * *Storable* Perl module. 
 
 To install them, you may use the -MCPAN interface at the command line:
 ```
+sudo perl -MCPAN -e 'install (Getopt::ArgParse)'
 sudo perl -MCPAN -e 'install (LWP::UserAgent)'
 sudo perl -MCPAN -e 'install (HTTP::Request::Common)'
 sudo perl -MCPAN -e 'install (Storable)'
@@ -78,8 +81,6 @@ sudo perl -MCPAN -e 'install (Storable)'
 
 ```bash
 git clone https://github.com/citiususc/Linguakit.git
-cd Linguakit
-./install-linguakit.sh
 ```
 
 ### ZIP Download
@@ -88,20 +89,18 @@ Download [Linguakit-master.zip](https://github.com/citiususc/Linguakit/archive/m
 
 ```bash
 unzip Linguakit-master.zip
-cd Linguakit-master
-./install-linguakit.sh
 ```
-Please, **do not** install the package in a path with blank spaces in any directory.
 
 ## Usage
 
-Run `./linguakit` to see the basic usage:
+Run `./linguakit --help` to see the modules:
 
 ```
- linguakit <lang> <module> <input> [options]
-    
-      language = gl, es, en, pt, none
+ ./linguakit <module> <lang> <input> [options]
+ cat <input> |./linguakit  <module> <lang>  [options]
+   
       module = dep, tagger, mwe, recog, sent, rel, tok, seg, kwic, link, sum, conj
+      language = gl, es, en, pt
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -119,9 +118,10 @@ Run `./linguakit` to see the basic usage:
       'sum'     text summarizer
       'conj'    verb conjugator (the input is just a verb)
       'coref'   named entity coreference solver
+```
+Run `./linguakit <module> --help` to see the option of a module. These are the available command-line options:
 
-      Available command-line options:
-
+```
       -a       'dep' option: simple dependency analysis (by default syntactic output)
       -fa      'dep' option: full dependency analysis
       -c       'dep' option: tagged text with syntactic information (for correction rules)
@@ -148,7 +148,7 @@ Run `./linguakit` to see the basic usage:
       -json   'link' option: json output format of entity linking (by default)
       -xml    'link' option: xml output format of entity linking
 
-      1-100   'sum' option: percentage of the input text that will be summarized (by default 10%)
+      -p 1-99 'sum' option: percentage of the input text that will be summarized (by default 10%)
 
       -pe     'conj' option: the verb conjugator uses European Portuguese (by default)
       -pb     'conj' option: the verb conjugator uses Brasilian Portuguese
@@ -162,47 +162,48 @@ Run `./linguakit` to see the basic usage:
 
 Return a dependency-based analysis in CoNLL format:
 ```
-./linguakit pt dep tests/pt.txt -conll
+./linguakit dep pt test/pt.txt -conll
 ```
 
 Return the PoS tags with NEC information for named entities:
 ```
- ./linguakit en tagger tests/en.txt -nec
+ ./linguakit tagger en test/en.txt -nec
 ```
 
 Return the PoS tags with NEC information for named entities and Coreference Resolution:
 ```
- ./linguakit en coref tests/en.txt
+ ./linguakit coref en test/en.txt
 ```
 
 Return a sentiment value:
 ```
-./linguakit en sent "I don't like the film" -s
+ ./linguakit sent en "I don't like the film" -s
+ echo  "I don't like the film" | ./linguakit sent en
 ```
 
-Identify the language of the input text and then make multiword extraction ranked with chi-square:
+Make multiword extraction ranked with chi-square:
 ```
-./linguakit none mw tests/pt.txt -chi
+./linguakit mw pt test/pt.txt -chi
 ```
 
 Generate the context in tokens of the keyword *presidente* (concordances or keyword in context). 
 ```
-./linguakit none kwic tests/pt.txt -tokens "presidente"
+./linguakit kwic pt test/pt.txt -tokens "presidente"
 ```
 
 Return triples (relations):
 ```
-./linguakit en rel tests/en.txt
+./linguakit  rel en test/en.txt
 ```
 
 Return an abstract or summary of the input text (50%):
 ```
-./linguakit en sum tests/pt.txt 50
+./linguakit sum en tests/en.txt -p 50
 ```
 
 Return the european portuguese inflection of the input verb:
 ```
-./linguakit pt conj fazer -pe
+echo "fazer" | ./linguakit pt conj -pe
 ```
 
 ###  Input file
@@ -221,7 +222,7 @@ Lexicons (electronic dictionaries) are in `tagger/*/lexicon/dicc.src` files. If 
 ### Dependency parser 
 
 #### Output format
-Parameter `-a` means that `dp.sh` generates a file with a dependency-based analysis. Each analysed sentence consists of two elements:
+Parameter `-a` gives as output the basic dependency-based analysis. Each analysed sentence consists of two elements:
 
 1. A line containing the POS tagged lemmas of the sentence. This line begins with the tag `SENT`. The set of tags used here are listed in file `TagSet.txt`. All lemmas are identified by means of a position number from 1 to N, where N is the size of the sentence.
 2. All dependency triplets identified by the grammar. A triplet consists of: `(relation;head_lemma;dependent_lemma)`
@@ -237,9 +238,9 @@ SENT::<I_PRO_0_<number:0|lemma:I|possessor:0|case:0|genre:0|person:0|politeness:
 
 Parameter `-fa` gives rise to a full represention of the depedency-based analysis. Each triplet is associated with two pieces of information: morpho-syntactic features of both the head and the dependent. 
 
-Parameter `-c` allows `dp.sh` to generate a file with the same input (a tagged text) but with some corrections proposed by the grammar. This option is useful to identify and correct regular errors of PoS taggers using grammatical rules. 
+Parameter `-c` generates as output with the same format as the input (a tagged text) but with some corrections proposed by the grammar. This option is useful to identify and correct regular errors of PoS taggers using grammatical rules. 
 
-Parameter `-conll`  gets an output file with the format defined by CoNLL-X, inspired by Lin (1998). This format was adopted by the evaluation tasks defined in CoNLL.
+Parameter `-conll`  generates an output with the format defined by CoNLL-X, inspired by Lin (1998). This format was adopted by the evaluation tasks defined in CoNLL.
 
 [More information »](http://gramatica.usc.es/pln/tools/deppattern.html)
 
@@ -285,6 +286,8 @@ For more information, you can look up for our paper:
 More information on the modules can be found in papers stored in the `docs` directory.
 
 ### References
+#### The toolkit
+>Gamallo P. , Garcia M. (2017) LinguaKit: uma ferramenta multilingue para a análise linguística e a extração de informação, Linguamática , 9(1).
 
 #### Dependency analysis
 
