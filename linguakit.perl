@@ -132,7 +132,7 @@ my $STRING = $args->get_attr("string");
 # Script to use different linguistic tools, for instance:
 #   - - dependency parser (DepPattern)
 #   - - PoS tagger + NER + NEC
-#   - - Sentiment Analysis 
+#   - - Sentiment Analysis
 #   - - Multiword Extractor (GaleXtra)
 #
 # Pablo Gamallo
@@ -256,7 +256,7 @@ if($MOD eq "dep"){
 			print "$result\n";
 		}
 	}
-	
+
 #	while(my $line = <$input>){
 #		my $list = Triples::triples(CONLL::conll(Parser::parse(AdapterFreeling::adapter(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line])))))), '-fa')));
 #		for my $result (@{$list}){
@@ -407,12 +407,12 @@ if($MOD eq "dep"){
 	do $QUELINGUA_LEX;
 	do $QUELINGUA;
 	my %Peso = ();#Line acumulator
-	
+
 	while(my $line = <$input>){
 		my $ling = LanRecog::langrecog(Tokens::tokens(Sentences::sentences([$line])));
 		$Peso{$ling}++;
 	}
-	
+
 	foreach my $ling (sort {$Peso{$b} <=> $Peso{$a}} keys %Peso ) {
 		print "$ling\n";
 		last;
@@ -484,15 +484,17 @@ if($MOD eq "dep"){
 }elsif($MOD eq "link"){  ##entity linking
 	do $LINK;
 	if($args->xml){
-		while(my $line = <$input>){
-			my $result = Linking::linking($line,$LING,"xml");
-			print "$result\n"
-		}
+		#while(my $line = <$input>){
+		my @lines = <$input>;
+		my $result = Linking::linking(join("\n" ,@lines),$LING,"xml");
+		print "$result\n"
+	#	}
 	}else{
-		while(my $line = <$input>){
-			my $result = Linking::linking($line,$LING,"json");
-			print "$result\n"
-		}
+#		while(my $line = <$input>){
+		my @lines = <$input>;
+		my $result = Linking::linking(join("\n" ,@lines),$LING,"json");
+		print "$result\n"
+	#	}
 	}
 
 }elsif($MOD eq "sum"){  ##summarizer
@@ -501,7 +503,7 @@ if($MOD eq "dep"){
 		my @lines = <$input>;
 		my $result = Summarizer::summarizer(join("\n" ,@lines),$LING,$args->percentage);
 		print "$result\n"
-		
+
 	}else{
 		my @lines = <$input>;
 		my $result = Summarizer::summarizer(join("\n" ,@lines),$LING,10);
