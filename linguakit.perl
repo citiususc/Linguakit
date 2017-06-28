@@ -407,16 +407,13 @@ if($MOD eq "dep"){
 	do $QUELINGUA_LEX;
 	do $QUELINGUA;
 	my %Peso = ();#Line acumulator
+	my $ling = "en";
 
 	while(my $line = <$input>){
-		my $ling = LanRecog::langrecog(Tokens::tokens(Sentences::sentences([$line])));
-		$Peso{$ling}++;
+		$ling = LanRecog::langrecog(Tokens::tokens(Sentences::sentences([$line])), \%Peso);
 	}
+	print "$ling\n";
 
-	foreach my $ling (sort {$Peso{$b} <=> $Peso{$a}} keys %Peso ) {
-		print "$ling\n";
-		last;
-	}
 
 }elsif($MOD eq "tok"){  ##tokenizer
 	do $SENT;
