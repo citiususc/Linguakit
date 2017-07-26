@@ -334,40 +334,46 @@ if($MOD eq "dep"){
 	do $MWE;
 
 	if($args->log){
-		while(my $line = <$input>){
-			my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))))),"-log",1);
+#		while(my $line = <$input>){
+	    my @lines = <$input>;
+	    my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([join("\n" ,@lines)]))))))),"-log",1);
+	    print STDERR "#@lines\n";
 			for my $result (@{$list}){
 				print "$result\n";
 			}
-		}
+	#	}
 	}elsif($args->scp){
-		while(my $line = <$input>){
-			my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))))),"-scp",1);
+#		while(my $line = <$input>){
+	    my @lines = <$input>;
+	    my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([join("\n" ,@lines)]))))))),"-scp",1);
 			for my $result (@{$list}){
 				print "$result\n";
 			}
-		}
+	#	}
 	}elsif($args->mi){
-		while(my $line = <$input>){
-			my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))))),"-mi",1);
+#		while(my $line = <$input>){
+	    my @lines = <$input>;
+	    my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([join("\n" ,@lines)]))))))),"-mi",1);
 			for my $result (@{$list}){
 				print "$result\n";
 			}
-		}
+	#	}
 	}elsif($args->cooc){
-		while(my $line = <$input>){
-			my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))))),"-cooc",1);
+	#	while(my $line = <$input>){
+	    my @lines = <$input>;
+	    my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([join("\n" ,@lines)]))))))),"-cooc",1);
 			for my $result (@{$list}){
 				print "$result\n";
 			}
-		}
+	#	}
 	}else{
-		while(my $line = <$input>){
-			my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))))),"-chi",1);
+#		while(my $line = <$input>){
+	    my @lines = <$input>;
+	    my $list = Mwe::mwe(SixTokens::sixTokens(FiltroGalExtra::filtro(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([join("\n" ,@lines)]))))))),"-chi",1);
 			for my $result (@{$list}){
 				print "$result\n";
 			}
-		}
+	#	}
 	}
 
 }elsif($MOD eq "key"){
@@ -379,12 +385,14 @@ if($MOD eq "dep"){
 	do $KEYWORD;
 	Keywords::load($LING);
 
-	while(my $line = <$input>){
-		my $list = Keywords::keywords(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))));
-		for my $result (@{$list}){
+#	while(my $line = <$input>){
+	my @lines = <$input>;
+	#my $list = Keywords::keywords(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))));
+	my $list = Keywords::keywords(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([join("\n" ,@lines)]))))));	
+	for my $result (@{$list}){
 			print "$result\n";
-		}
 	}
+	#}
 
 }elsif($MOD eq "sent"){  ##sentiment analysis
 	do $SENT;
