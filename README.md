@@ -249,7 +249,6 @@ Parameter `-conll`  generates an output with the format defined by CoNLL-X, insp
 [More information »](http://gramatica.usc.es/pln/tools/deppattern.html)
 
 ### PoS tagger
-[Lexicons] PoS tagger is based on open lexicons that you'll find in tagger/LING/lexicon/dicc.src. If a lexicon file is modified or updated, you must compile dictionaries using the `lexicon_compiler.sh` script.
 
 [The EAGLES convention](https://talp-upc.gitbooks.io/freeling-user-manual/content/tagsets.html) is being followed.
 
