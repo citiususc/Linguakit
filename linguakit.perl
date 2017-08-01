@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 use File::Basename;
+use lib dirname(__FILE__);
+
 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
@@ -12,6 +14,7 @@ use utf8;
 push @ARGV, "-h" if $#ARGV < 0;
 
 #Linguakit dependencies
+push(@INC, dirname(__FILE__)."/lib");
 my $deps = 1;
 if (!eval{require Getopt::ArgParse;}){
 	warn "Please install Getopt::ArgParse module: cpan Getopt::ArgParse\n";
@@ -21,7 +24,7 @@ if (!eval{require Storable;}){
 	warn "Please install Storable module: cpan Storable\n";
 	$deps = 0;
 }
-if (!eval{require PerlIO::gzip}){
+if (!eval{require PerlIO::gzip;}){
 	warn "WARNING PerlIO::gzip module not installed, use 'cpan PerlIO::gzip' to solve\n";
 }
 if (!eval{require LWP::UserAgent;}){
@@ -143,42 +146,40 @@ my $STRING = $args->get_attr("string");
 ############################
 # Config
 ############################
-my $MAIN_DIR = dirname(__FILE__);
-unshift(@INC, $MAIN_DIR);
 
-my $PROGS = "$MAIN_DIR/scripts";
-my $DIRPARSER = "$MAIN_DIR/parsers";
+my $PROGS = "scripts";
+my $DIRPARSER = "parsers";
 
 my $NAMEPARSER ="$DIRPARSER/parserDefault-$LING.perl";
 my $FILTER ="$PROGS/AdapterFreeling-${LING}.perl";
 my $CONLL ="$PROGS/saidaCoNLL-fa.perl";
 
-my $SENT = "$MAIN_DIR/tagger/$LING/sentences-${LING}_exe.perl";
-my $TOK = "$MAIN_DIR/tagger/$LING/tokens-${LING}_exe.perl";
-my $SPLIT = "$MAIN_DIR/tagger/$LING/splitter-${LING}_exe.perl";
-my $LEMMA = "$MAIN_DIR/tagger/$LING/lemma-${LING}_exe.perl";
-my $NER = "$MAIN_DIR/tagger/$LING/ner-${LING}_exe.perl";
-my $TAGGER = "$MAIN_DIR/tagger/$LING/tagger-${LING}_exe.perl" ;
-my $NEC = "$MAIN_DIR/tagger/$LING/nec-${LING}_exe.perl";
+my $SENT = "tagger/$LING/sentences-${LING}_exe.perl";
+my $TOK = "tagger/$LING/tokens-${LING}_exe.perl";
+my $SPLIT = "tagger/$LING/splitter-${LING}_exe.perl";
+my $LEMMA = "tagger/$LING/lemma-${LING}_exe.perl";
+my $NER = "tagger/$LING/ner-${LING}_exe.perl";
+my $TAGGER = "tagger/$LING/tagger-${LING}_exe.perl" ;
+my $NEC = "tagger/$LING/nec-${LING}_exe.perl";
 
-my $COREF = "$MAIN_DIR/tagger/coref/coref_exe.perl";
+my $COREF = "tagger/coref/coref_exe.perl";
 
-my $SENTIMENT = "$MAIN_DIR/sentiment/nbayes.perl";
+my $SENTIMENT = "sentiment/nbayes.perl";
 
-my $MWE = "$MAIN_DIR/mwe/mwe.perl";
-my $MWE_FILT = "$MAIN_DIR/mwe/filtro_galextra.perl";
-my $MWE_SIX = "$MAIN_DIR/mwe/six_tokens.perl";
+my $MWE = "mwe/mwe.perl";
+my $MWE_FILT = "mwe/filtro_galextra.perl";
+my $MWE_SIX = "mwe/six_tokens.perl";
 
-my $KEYWORD = "$MAIN_DIR/keywords/keywords_exe.perl";
-my $REL = "$MAIN_DIR/triples/triples_exe.perl";
-my $LINK = "$MAIN_DIR/linking/linking_exe.perl";
-my $SUM = "$MAIN_DIR/summarizer/summarizer_exe.perl";
-my $CONJ = "$MAIN_DIR/conjugator/conjugator_exe.perl";
+my $KEYWORD = "keywords/keywords_exe.perl";
+my $REL = "triples/triples_exe.perl";
+my $LINK = "linking/linking_exe.perl";
+my $SUM = "summarizer/summarizer_exe.perl";
+my $CONJ = "conjugator/conjugator_exe.perl";
 
-my $QUELINGUA = "$MAIN_DIR/lanrecog/lanrecog.perl";
-my $QUELINGUA_LEX = "$MAIN_DIR/lanrecog/build_lex.perl";
+my $QUELINGUA = "lanrecog/lanrecog.perl";
+my $QUELINGUA_LEX = "lanrecog/build_lex.perl";
 
-my $KWIC = "$MAIN_DIR/kwic/kwic.perl";
+my $KWIC = "kwic/kwic.perl";
 
 
 #######################
