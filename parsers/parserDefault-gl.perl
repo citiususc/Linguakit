@@ -127,7 +127,7 @@ sub parse{
 	my $flag = "-a"; #<string>
 
 	##flag -a=analisador -c=corrector
-	if(@_>1){
+	if(@_>1 && $_[1]){
 		$flag = $_[1];
 	}
 
@@ -2905,7 +2905,7 @@ sub LEX {
 ##Operaçoes Corr, Inherit, Add, 
 sub Corr {
 
-	(my $y, my $z,#<string>
+	(my $z, my $y,#<string>
 	my $x) = @_ ;#<ref><array><string>
 	my $size = @{$x};#<integer>
 	my $n1=0;#<integer>
@@ -2995,7 +2995,7 @@ sub Corr {
 
 sub Inherit {
 
-	(my $y, my $z,#<string>
+	(my $z, my $y,#<string>
 	my $x) = @_ ;#<ref><array><string>
 	my $size = @{$x};#<integer>
 	my $n1=0;#<integer>
