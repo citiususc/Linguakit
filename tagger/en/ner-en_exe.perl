@@ -60,7 +60,7 @@ my $Prep = "(de|del|of)";#<string>  ##preposiçoes que fazem parte dum NP compos
 my $Art = "(el|la|los|las|the)";#<string> ##artigos que fazem parte dum NP composto
 my $currency = "(euro|euros|peseta|pesetas|€|dollar|dollars|pound|pounds)";#<string>
 my $measure = "(kg|kilogram|gram|g|centimeter|cm|hour|second|minute|ton|tn|meter|km|kilometer|%)";#<string>
-my $quant = "(hundred|hundreds|thousand|thousands|million|millions|bilion|billions||trillion|trillions)";#<string>
+my $quant = "(hundred|hundreds|thousand|thousands|million|millions|billion|billions||trillion|trillions)";#<string>
 my $cifra = "(two|three|four|five|six|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|eighteen|nineteen|twenty|hundred|thousand)";#<string>  ##hai que criar as cifras básicas...
 my $meses =  "(january|february|march|april|may|june|july|august|september|october|november|december)";#<string>
 ######################info dependente da língua!!!####################################################################################
