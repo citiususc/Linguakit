@@ -125,7 +125,13 @@ sub adapter {
 				$Exp{"token"} = $token;
 				$Exp{"tag"} =  "CONJ";
 				$Exp{"type"} = "S";
-			} elsif ($tag =~ /^UH/) { ##interjections:
+			} elsif ($tag =~ /^CS/ ) {
+				$Exp{"lemma"} = $lemma;
+				$Exp{"token"} = $token;
+				$Exp{"tag"} =  "CONJ";
+				$Exp{"type"} = "S";
+			}
+			elsif ($tag =~ /^UH/) { ##interjections:
 				#my @tmp = split ("", $tag);
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
