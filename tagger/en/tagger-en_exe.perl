@@ -421,7 +421,7 @@ sub classif {
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
 			#print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
-		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
+		#$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
 		#$Normalizer +=   $PostProb{$cat} 
 		#print STDERR "----#$cat# $PostProb{$cat} \n";
@@ -452,6 +452,11 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	elsif ($cat =~ /^DT/ && ($feat eq "R_END" || $feat eq "R_IN" || $feat eq "R_CC") ) {
 		$result = 1;
 	}
+       ##impedir o 'that' DT ou CS após nome 
+	elsif ($cat =~ /^(DT|CS)/ && $feat =~ /L_NN_that/  ) {
+	    $result = 1;
+	}
+
 	#elsif ($cat =~ /^NN/ && $feat eq "L_F_one"  ) {
 		#$result = 1;
 	#}
