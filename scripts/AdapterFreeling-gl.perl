@@ -23,6 +23,7 @@ sub adapter {
 	my @saida=();#<list><string>
 	my ($text) = @_;#<ref><list><string>
 	my %Exp = ();#<hash><string>
+	my $out="";#<string>
 
 	foreach my $line (@{$text}) {
 		chomp $line;
@@ -31,7 +32,7 @@ sub adapter {
 			next;
 		} elsif ($line eq "" && !$FoundFinal) {##se hai um final de linha sem ponto final. So tem sentido com --flush
 			# $Pos++;
-			print "\.\tlemma:\.|tag:SENT|pos:$Pos|token:\.|\n";
+			$out = "\.\tlemma:\.|tag:SENT|pos:$Pos|token:\.|\n";
 			$FoundFinal = 1;
 			$Pos = 0;
 		} else {
@@ -201,7 +202,7 @@ sub adapter {
 			#if( ($tag =~ /^Fra/) || ( $tag =~ /^Frc/) ||  ($tag eq "Fe") ) {
 			#}
 			#else {
-			my $out = "$token\t";#<string>
+			$out = "$token\t";
 			foreach my $attrib (sort keys %Exp) {
 				$out .= "$attrib:$Exp{$attrib}|";
 				delete $Exp{$attrib};
