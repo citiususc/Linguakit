@@ -292,6 +292,18 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:(?:ser|tornar|converter|be|become)\|${r})($ADV${l}lemma:$Quant\|${r})($ADJ$a2)($CONJ$a2|$PRO${l}lemma:(?:que|como)\|${r})/$1/g;
 					LEX();
 
+					# >: [ADV<lemma:antes>] PRP<lemma:de> ADV<lemma:ontem>
+					# NEXT
+					# >: ADV<lemma:antes> PRP<lemma:de> [ADV<lemma:ontem>]
+					@temp = ($listTags =~ /(?:$ADV${l}lemma:antes\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:ontem\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					@temp = ($listTags =~ /($ADV${l}lemma:antes\|${r})($PRP${l}lemma:de\|${r})(?:$ADV${l}lemma:ontem\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($ADV${l}lemma:antes\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:ontem\|${r})/$1/g;
+					LEX();
+
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
 					# NEXT
 					# PunctL: [ADV] Fc [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
@@ -754,29 +766,37 @@ sub parse{
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 					Add("DepHead","type:perfect",\@temp);
 
-					# VSpecL: VERB<lemma:$VModalES> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
+					# VSpecL: VERB<lemma:$VModalES> [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:$VModalES\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:$VModalES\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$VModalES\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3$4$5$6$7$8$9$10$11$12/g;
+					$listTags =~ s/($VERB${l}lemma:$VModalES\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
-					# VSpecLocL: VERB<lemma:ter|haver> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? PRP<lemma:de>|CONJ<lemma:que&type:S> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
+					# VSpecLocL: VERB<lemma:ter|haver> [ADV]? PRP<lemma:de>|CONJ<lemma:que&type:S> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:ter|haver)\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:ter|haver)\|${r})(?:$ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecLocL";
 					DepRelHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:ter|haver)\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3$4$5$6$7$8$9$10$11$13$14$15$16$17$18$19$20$21$22$23/g;
+					$listTags =~ s/($VERB${l}lemma:(?:ter|haver)\|${r})($ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5$6$7$8$9$10$11$12$13$14/g;
 					Inherit("DepRelHead","mode,person,tense,number",\@temp);
 
-					# VSpecLocL: VERB<lemma:ir|vir|comezar|acabar|finalizar|terminar|passar|estar> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? PRP<lemma:$PrepLocs> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
+					# VSpecLocL: VERB<lemma:comezar|acabar|finalizar|terminar|passar|estar> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? PRP<lemma:$PrepLocs> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:ir|vir|comezar|acabar|finalizar|terminar|passar|estar)\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecLocL";
 					DepRelHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:ir|vir|comezar|acabar|finalizar|terminar|passar|estar)\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3$4$5$6$7$8$9$10$11$13$14$15$16$17$18$19$20$21$22$23/g;
+					$listTags =~ s/($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3$4$5$6$7$8$9$10$11$13$14$15$16$17$18$19$20$21$22$23/g;
 					Inherit("DepRelHead","mode,person,tense,number",\@temp);
+
+					# VSpecL: VERB<lemma:ir|vir> [ADV]?  VERB<mode:N>
+					# Inherit: mode, person, tense, number
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:ir|vir)\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					$Rel =  "VSpecL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:(?:ir|vir)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
+					Inherit("DepHead","mode,person,tense,number",\@temp);
 
 					# VSpecL: VERB<lemma:estar> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:G>
 					# Inherit: mode, person, tense, number
@@ -969,6 +989,8 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5/g;
 
+					}
+{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:de> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -981,8 +1003,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
-					}
-{#<function>
 					# CprepR: X<lemma:uno>|PRO<type:[DI]> PRP NOUNSINGLE|PRO<type:D|P|I|X>
 					# Add: tag:PRO
 					@temp = ($listTags =~ /($X${l}lemma:uno\|${r}|$PRO${l}type:[DI]\|${r})($PRP$a2)($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
@@ -1713,6 +1733,8 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}mode:[^PNG]\|${r})($DATE$a2)/$1/g;
 
+					}
+{#<function>
 					# PunctL: Fc [DATE] VERB<mode:[^PNG]>
 					# NEXT
 					# AdjnL:  [Fc]? DATE VERB<mode:[^PNG]>
@@ -1730,8 +1752,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD)($PRP$a2)($NOUNCOORD)/$1/g;
 
-					}
-{#<function>
 					# Single: [VERB<lemma:$SubcatClaus>]  PRO<type:R>  [NOUNCOORD|PRO<type:D|P|I|X>]?  [VERB<mode:[^PNG]>]
 					# Corr: tag:CONJ, type:S
 					@temp = ($listTags =~ /(?:$VERB${l}lemma:$SubcatClaus\|${r})($PRO${l}type:R\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?(?:$VERB${l}mode:[^PNG]\|${r})/g);
