@@ -124,7 +124,7 @@ sub tagger {
 				#($Tag[$pos]) = $tag =~ /([A-Z][A-Z0-9]?)/ if ($tag !~ /^[VN]/);
                                 if ($tag =~ /^VBZ[bh]/) {
 				     $Tag[$pos] = "VB";
-				}elsif ($tag =~ /^V/ || $tag =~ /^NNP/ ||  $tag =~ /^PRP/) {
+				}elsif ($tag =~ /^V/ || $tag =~ /^NNP/){ #||  $tag =~ /^PRP/) {
 					($Tag[$pos]) = $tag =~ /([A-Z][A-Z][A-Z]?[A-Za-z\$]?)/;
 				}else {
 					($Tag[$pos]) = $tag =~ /([A-Z][A-Za-z\$0-9]?)/;
@@ -419,7 +419,7 @@ sub classif {
 			}
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-#			print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+		#	print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		#$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -456,8 +456,8 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	elsif ($cat =~ /^(DT|CS)/ && $feat =~ /L_NN_that/  ) {
 	    $result = 1;
 	}
-	##impedir o s' PO(S) após ADV (there) 
-	elsif ($cat =~ /^PO/ && ($feat =~ /L_RB_'s/ || $feat =~ /R_DT_'s/)  ) {
+	##impedir o s' PO(S) após adv, pron, det...
+	elsif ($cat =~ /^PO/ && ($feat =~ /L_RB_'s/ || $feat =~ /R_DT_'s/ || $feat =~ /L_PR_'s/)  ) {
 	    $result = 1;
 	}
 
