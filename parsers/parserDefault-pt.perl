@@ -292,16 +292,16 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:(?:ser|tornar|converter|be|become)\|${r})($ADV${l}lemma:$Quant\|${r})($ADJ$a2)($CONJ$a2|$PRO${l}lemma:(?:que|como)\|${r})/$1/g;
 					LEX();
 
-					# >: [ADV<lemma:antes>] PRP<lemma:de> ADV<lemma:ontem>
+					# >: ADV<lemma:antes|depois> PRP<lemma:de> [ADV<lemma:ontem|amanhã>]
 					# NEXT
-					# >: ADV<lemma:antes> PRP<lemma:de> [ADV<lemma:ontem>]
-					@temp = ($listTags =~ /(?:$ADV${l}lemma:antes\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:ontem\|${r})/g);
+					# <: ADV<lemma:antes|depois> [PRP<lemma:de>] ADV<lemma:ontem|amanhã>
+					@temp = ($listTags =~ /($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})(?:$ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
 					$Rel =  ">";
 					HeadDep_lex($Rel,"",\@temp);
-					@temp = ($listTags =~ /($ADV${l}lemma:antes\|${r})($PRP${l}lemma:de\|${r})(?:$ADV${l}lemma:ontem\|${r})/g);
-					$Rel =  ">";
-					HeadDep_lex($Rel,"",\@temp);
-					$listTags =~ s/($ADV${l}lemma:antes\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:ontem\|${r})/$1/g;
+					@temp = ($listTags =~ /($ADV${l}lemma:(?:antes|depois)\|${r})(?:$PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					$listTags =~ s/($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/$3/g;
 					LEX();
 
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
