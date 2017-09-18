@@ -292,17 +292,26 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:(?:ser|tornar|converter|be|become)\|${r})($ADV${l}lemma:$Quant\|${r})($ADJ$a2)($CONJ$a2|$PRO${l}lemma:(?:que|como)\|${r})/$1/g;
 					LEX();
 
-					# >: ADV<lemma:antes|depois> PRP<lemma:de> [ADV<lemma:ontem|amanhã>]
+					# <: ADV<lemma:antes|depois> PRP<lemma:de> [ADV<lemma:ontem|amanhã>]
 					# NEXT
-					# <: ADV<lemma:antes|depois> [PRP<lemma:de>] ADV<lemma:ontem|amanhã>
+					# <: [ADV<lemma:antes|depois>] PRP<lemma:de> ADV<lemma:ontem|amanhã>
 					@temp = ($listTags =~ /($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})(?:$ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
-					$Rel =  ">";
-					HeadDep_lex($Rel,"",\@temp);
-					@temp = ($listTags =~ /($ADV${l}lemma:(?:antes|depois)\|${r})(?:$PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					@temp = ($listTags =~ /(?:$ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
 					$Rel =  "<";
 					DepHead_lex($Rel,"",\@temp);
 					$listTags =~ s/($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/$3/g;
 					LEX();
+
+					# <: PRP<lemma:de> X<lemma:manhã|tarde|noite>
+					# Add: tag:ADV
+					@temp = ($listTags =~ /($PRP${l}lemma:de\|${r})($X${l}lemma:(?:manhã|tarde|noite)\|${r})/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					$listTags =~ s/($PRP${l}lemma:de\|${r})($X${l}lemma:(?:manhã|tarde|noite)\|${r})/$2/g;
+					LEX();
+					Add("DepHead_lex","tag:ADV",\@temp);
 
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
 					# NEXT
@@ -774,20 +783,20 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VModalES\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
-					# VSpecLocL: VERB<lemma:ter|haver> [ADV]? PRP<lemma:de>|CONJ<lemma:que&type:S> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
+					# VSpecLocL: VERB<lemma:ter|haver> [ADV]? PRP<lemma:de>|CONJ<lemma:que&type:S> [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:ter|haver)\|${r})(?:$ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:ter|haver)\|${r})(?:$ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecLocL";
 					DepRelHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:ter|haver)\|${r})($ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5$6$7$8$9$10$11$12$13$14/g;
+					$listTags =~ s/($VERB${l}lemma:(?:ter|haver)\|${r})($ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5/g;
 					Inherit("DepRelHead","mode,person,tense,number",\@temp);
 
-					# VSpecLocL: VERB<lemma:comezar|acabar|finalizar|terminar|passar|estar> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? PRP<lemma:$PrepLocs> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
+					# VSpecLocL: VERB<lemma:comezar|acabar|finalizar|terminar|passar|estar> [ADV]? PRP<lemma:$PrepLocs> [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})(?:$ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecLocL";
 					DepRelHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3$4$5$6$7$8$9$10$11$13$14$15$16$17$18$19$20$21$22$23/g;
+					$listTags =~ s/($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5/g;
 					Inherit("DepRelHead","mode,person,tense,number",\@temp);
 
 					# VSpecL: VERB<lemma:ir|vir> [ADV]?  VERB<mode:N>
@@ -798,12 +807,12 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:(?:ir|vir)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
-					# VSpecL: VERB<lemma:estar> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:G>
+					# VSpecL: VERB<lemma:estar> [ADV]? VERB<mode:G>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:estar\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:G\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:estar\|${r})(?:$ADV$a2)?($VERB${l}mode:G\|${r})/g);
 					$Rel =  "VSpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:estar\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:G\|${r})/$2$3$4$5$6$7$8$9$10$11$12/g;
+					$listTags =~ s/($VERB${l}lemma:estar\|${r})($ADV$a2)?($VERB${l}mode:G\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
 					# PunctL: [ADV<pos:0>] Fc VERB
@@ -983,14 +992,14 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5$6$7/g;
 
+					}
+{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:de> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5/g;
 
-					}
-{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:de> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -1727,14 +1736,14 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($VERB${l}mode:N\|${r})/$1/g;
 
+					}
+{#<function>
 					# AdjnR:  VERB<mode:[^PNG]> DATE
 					@temp = ($listTags =~ /($VERB${l}mode:[^PNG]\|${r})($DATE$a2)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}mode:[^PNG]\|${r})($DATE$a2)/$1/g;
 
-					}
-{#<function>
 					# PunctL: Fc [DATE] VERB<mode:[^PNG]>
 					# NEXT
 					# AdjnL:  [Fc]? DATE VERB<mode:[^PNG]>
@@ -3380,7 +3389,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /$Tag[$n1]_${n1}${l}$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3419,7 +3428,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /$Tag[$n1]_${n1}${l}$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3456,7 +3465,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /($Tag[$n1]_${n1}${l})$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3493,7 +3502,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 				$ATTR[$n1]{$atr} = $value;
-				$listTags =~ s/$Tag[$n1]/$value/;
+				$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 				$Tag[$n1] = $value;
 				} elsif ($listTags =~ /($Tag[$n1]_${n1}${l})$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3531,7 +3540,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /($Tag[$n1]_${n1}${l})$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3569,7 +3578,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /($Tag[$n1]_${n1}${l})$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3606,7 +3615,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags  =~ /($Tag[$n1]_${n1}${l})$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3643,7 +3652,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /($Tag[$n1]_${n1}${l})$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3680,7 +3689,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+					$listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /$Tag[$n1]_${n1}${l}$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
@@ -3719,7 +3728,7 @@ sub Add {
 				##change the PoS tag:
 				if ($atr =~ /^tag/) {
 					$ATTR[$n1]{$atr} = $value;
-					$listTags =~ s/$Tag[$n1]/$value/;
+				        $listTags =~ s/$Tag[$n1]_${n1}/${value}_${n1}/;
 					$Tag[$n1] = $value;
 				} elsif ($listTags =~ /$Tag[$n1]_${n1}${l}$atr:/) {
 					$ATTR[$n1]{$atr} = $value;
