@@ -65,6 +65,7 @@ my $PUNCT = "F[a-z]+_[0-9]+";#<string>
 
 #################################### LEXICAL CLASSES #####################################
 my $Quant  = "(?:very\|more\|less\|least\|most\|quite\|as\|muy\|mucho\|bastante\|bien\|casi\|tan\|muy\|bem\|ben\|menos\|poco\|mui\|moi\|muito\|tão\|más\|mais\|máis\|pouco\|peu\|assez\|plus\|moins\|aussi\|)";#<string>
+my $AdvTemp  = "(?:hoy\|mañana\|ayer\|amanhã\|hoje\|ontem\|mañá\|hoxe\|onte\|today\|yesterday\|tomorrow\|)";#<string>
 my $CCord  = "(?:and\|or\|nor\|y\|ni\|e\|nin\|nem\|et\|o\|ou\|)";#<string>
 my $Partitive  = "(?:de\|of\|)";#<string>
 my $PrepLocs  = "(?:a\|de\|por\|par\|by\|to\|)";#<string>
@@ -81,24 +82,23 @@ my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
 my $NincSp  = "(?:alusión\|comentario\|referencia\|llamamiento\|mención\|observación\|declaración\|propuesta\|pregunta\|)";#<string>
 my $NincExp  = "(?:afecto\|alegría\|amparo\|angustia\|ánimo\|cariño\|cobardía\|comprensión\|consuelo\|corte\|daño\|disgusto\|duda\|escándalo\|fobia\|gana\|gracias\|gusto\|inquietud\|)";#<string>
 my $PTa  = "(?:aceder\|acostumar\|acudir\|adaptar\|comprometer\|chegar\|cheirar\|dar\|dedicar\|equivaler\|ir\|olhar\|negar\|pertencer\|recorrer\|referir\|regressar\|renunciar\|subir\|sustrair\|unir\|vincular\|voltar\|acostumbrar\|llegar\|oler\|mirar\|pertenecer\|recurrir\|sustraer\|volver\|)";#<string>
-my $AdvTemp  = "(?:hoje\|ontem\|amanhã\|hoy\|ayer\|mañana\|hoxe\|onte\|)";#<string>
-my $VSrefleja  = "(?:acabar\|esgotar\|apontar\|espalhar\|desencadear\|filtrar\|importar\|informar\|produzir\|quebrar\|)";#<string>
-my $VSind  = "(?:agradar\|apaixonar\|apetecer\|assombrar\|desagradar\|encantar\|estranhar\|faltar\|interessar\|)";#<string>
-my $VS  = "(?:decorrer\|afirmar\|abundar\|aflorar\|agradar\|habitar\|aparecer\|apaixonar\|arder\|bastar\|bramir\|brilhar\|brotar\|caber\|cessar\|circular\|começar\|comparecer\|concluir\|afluir\|constar\|contrastar\|concordar\|coalhar\|dançar\|desfilar\|gastar\|doer\|começar\|estourar\|existir\|faltar\|fascinar\|chatear\|figurar\|finalizar\|fracassar\|gostar\|encher\|escusar\|imperar\|intervir\|bater\|interceder\|ocorrer\|parecer\|perdurar\|predominar\|\|particularizar\|ranger\|reinar\|replicar\|rebentar\|rugir\|sentenciar\|sobrar\|sobrevir\|sobreviver\|soar\|suceder\|surgir\|tremer\|cruzar\|transcorrer\|urgir\|)";#<string>
-my $SubcatIND  = "(?:dar\|agradar\|parecer\|fazer\|dizer\|perguntar\|pedir\|passar\|pôr\|ocorrer\|atribuir\|falar\|oferecer\|contar\|entregar\|atirar\|importar\|interessar\|deixar\|tirar\|servir\|tocar\|encantar\|prestar\|escrever\|dirigir\|dedicar\|corresponder\|explicar\|permitir\|acrescentar\|presentear\|ensinar\|sorrir\|devolver\|enviar\|apresentar\|contribuir\|dever\|exigir\|levar\|permanecer\|faltar\|abrir\|impor\|ter\|ir\|propor\|pagar\|comunicar\|ordenar\|conceder\|tirar\|mandar\|custar\|mostrar\|agregar\|escapar\|chegar\|vir\|atribuir\|outorgar\|cair\|negar\|trazer\|ver\|meter\|recordar\|tender\|dever\|vender\|causar\|aplicar\|pegar\|cerrar\|expor\|agradecer\|consultar\|responder\|encarregar\|render\|comprar\|imprimir\|ocultar\|sair\|demonstrar\|tomar\|expor\|cortar\|diminuir\|confessar\|assegurar\|confiar\|ser\|concordar\|encontrar\|agradar\|gritar\|perder\|recomendar\|impedir\|roubar\|chamar\|atribuir\|entrar\|facilitar\|prometer\|solicitar\|pegar\|caber\|furtar\|advertir\|proporcionar\|bastar\|comentar\|conferir\|doer\|estranhar\|produzir\|adjudicar\|evitar\|avisar\|brindar\|supor\|indicar\|arrebatar\|bater\|cantar\|valer\|esquecer\|referir\|prender\|suplicar\|arengar\|imputar\|revelar\|surpreender\|aconselhar\|buscar\|plantar\|reclamar\|repetir\|invejar\|replicar\|levantar\|perdoar\|relatar\|sugerir\|guardar\|reprovar\|afectar\|procurar\|dever\|arengar\|furtar\|)";#<string>
-my $SubcatA  = "(?:acceder\|aproximar\|acertar\|acostumar\|acudir\|adaptar\|afetar\|aferrar\|aficionar\|afiliar\|ajustar\|aludir\|apelar\|apostar\|apressar\|aproximar\|emprestar\|jogar\|asistir\|assomar\|atender\|atinar\|atrever\|avenir\|comprometer\|conduzir\|contribuir\|corresponder\|dever\|dedicar\|dirigir\|dispor\|enfrentar\|equivaler\|expor\|induzir\|convitar\|ir\|limitar\|chegar\|mudar\|negar\|obrigar\|cheirar\|opor\|pertencer\|precipitar\|proceder\|recorrer\|referir\|regresar\|remontar\|renunciar\|resignar\|resistir\|submeter\|subir\|sumar\|subtrair\|tender\|trasladar\|unir\|vincular\|volver\|ir\|ligar\|levar\|volver\|venir\|chegar\|sair\|referir\|dirigir\|atrever\|dedicar\|obrigar\|dar\|passar\|pertencer\|dispor\|asistir\|subir\|acudir\|responder\|regressar\|ajudar\|olhar\|convidar\|jogar\|assomar\|negar\|limitar\|sentar\|renunciar\|baixar\|enfrentar\|aprender\|lançar\|afetar\|conduzir\|entrar\|chamar\|tender\|esperar\|correr\|decidir\|reducir\|destinar\|corresponder\|fazer\|submeter\|aludir\|entregar\|unir\|dever\|contribuir\|resistir\|arrojar\|mandar\|cheirar\|recorrer\|acompanhar\|opor\|acostumar\|acceder\|cair\|aplicar\|estar\|aproximar\|lançar\|trasladar\|trair\|proceder\|apressar\|pôr\|condenar\|ensinar\|ficar\|enviar\|adaptar\|ajustar\|tirar\|expor\|incorporar\|escapar\|sacar\|atender\|forçar\|animar\|marchar\|acertar\|devolver\|agarrar\|aspirar\|presentar\|saltar\|retirar\|extender\|ascender\|comprometer\|parar\|remeter\|agarrar\|abraçar\|resignar\|apostar\|pegar\|contestar\|seguir\|aproximar\|prestar\|elevar\|obedecer\|conciliar\|largar\|ceder\|sumar\|precipitar\|viajar\|preferir\|avançar\|remontar\|apontar\|equivaler\|abrir\|mover\|inclinar\|subtrair\|acolher\|concernir\|impulsar\|deslocar\|abandonar\|induzir\|assemelhar\|dobrar\|subjazer\|atender\|sujeitar\|impor\|sobrepor\|transportar\|adequar\|empurrar\|instar\|deixar\|encaminhar\|encontrar\|transmitir\|declarar\|equiparar\|viver\|incitar\|sobreviver\|colocar\|sonar\|pagar\|autorizar\|aguardar\|oferecer\|reintegrar\|arrastar\|levantar\|tocar\|mudar\|arriscar\|cerrar\|traduzir\|descer\|provar\|retornar\|aficionar\|sucumbir\|concurrer\|consagrar\|convocar\|dobrar\|atinar\|comparar\|anticipar\|comparecer\|vincular\|apelar\|tender\|cruzar\|cambiar\|exortar\|achar\|afiliar\|atar\|preparar\|resolver\|associar\|optar\|saber\|meter\|baixar\|dizer\|sacrificar\|assinalar\|empestar\|instalar\|partir\|resvalar\|retroceder\|alcançar\|relegar\|aventurar\|denunciar\|fugir\|antepor\|cooperar\|ligar\|sentir\|subordinar\|cingir\|faltar\|impelir\|misturar\|subordinar\|figurar\|)";#<string>
-my $SubcatDE  = "(?:gostar\|falar\|tratar\|sair\|dar\|tirar\|acordar\|vir\|fazer\|saber\|passar\|entrar\|servir\|cambiar\|depender\|ocupar\|ir\|separar\|separar\|carecer\|dispor\|acusar\|afastar\|pensar\|encargar\|fugir\|aitrar\|convencer\|esquecer\|tirar\|preencher\|baixar\|levantar\|librar\|ligar\|despedir\|gozar\|retirar\|pender\|tomar\|duvidar\|informar\|provenir\|pensar\|rir\|escapar\|pegar\|encolher\|ficar\|queixar\|namorar\|vestir\|entender\|autorizar\|desprender\|desfrutar\|extrair\|surgir\|descer\|proceder\|nascer\|viver\|regressar\|trair\|receber\|arrancar\|alegrar\|brotar\|prescindir\|derivar\|volver\|descer\|defender\|retirar\|equivar\|necessitar\|esperar\|salvar\|preocupar\|partir\|aproveitar\|despojar\|participar\|mover\|distinguir\|deixar\|desaparecer\|presumir\|levar\|envergonhar\|liberar\|percatar\|cansar\|marchar\|saltar\|privar\|cair\|emergir\|cobrir\|fiar\|aprender\|abster\|apropriar\|cerciorar\|arrepender\|perder\|desconfiar\|herdar\|apagar\|custar\|desligar\|alimentar\|repor\|desviar\|distar\|prover\|resgatar\|subir\|abusar\|cuidar\|conhecer\|contar\|isolar\|chorar\|equivocar\|deduzir\|disfarçar\|distrair\|excluir\|avisar\|descolar\|dotar\|suspeitar\|apropriar\|apear\|armar\|ignorar\|diferenciar\|emanar\|preservar\|recolher\|agarrar\|desfazer\|extranhar\|persuadir\|constar\|valer\|assegurar\|cruzar\|desistir\|vingar\|pender\|diferir\|renegar\|resultar\|surprender\|proteger\|vaciar\|alardear\|cargar\|desembaraçar\|mudar\|expulsar\|elevar\|impregnar\|limpar\|bastar\|compor\|despertar\|absolver\|obter\|predicar\|matricular\|descargar\|extender\|assombrar\|escorrer\|apiadar\|assustar\|querer\|alçar\|arrojar\|comportar\|evadir\|protestar\|recuperar\|desvincular\|esconder\|examinar\|jactar\|redimir\|aborrecer\|adolecer\|escrever\|rodear\|disuadir\|começar\|fartar\|suspeitar\|seguir\|conversar\|trasladar\|exigir\|acompanhar\|curar\|beneficiar\|ser\|abster\|abusar\|acordar\|acusar\|apropriar\|isolar\|alegrar\|separar\|apiadar\|autorizar\|apropriar\|envergonhar\|evitar\|carecer\|cerciorar\|convencer\|depender\|derivar\|desconfiar\|desembaraçar\|ignorar\|despojar\|lançar\|diferenciar\|diferir\|disfarçar\|desfrutar\|duvidar\|namorar\|encargar\|encolher\|entrar\|extrair\|fiar\|gozar\|conversar\|escapar\|libertar\|livrar\|ocupar\|partir\|percatar\|prescindir\|presumir\|privar\|provenir\|sair\|separar\|tratar\|vestir\|)";#<string>
-my $SubcatEM  = "(?:falar\|entrar\|pensar\|converter\|estar\|meter\|viver\|por\|encontrar\|ficar\|deixar\|sentar\|cair\|crer\|participar\|afixar\|tardar\|consistir\|passar\|insistir\|apoiar\|confiar\|nascer\|introduzir\|figurar\|residir\|transformar\|ir\|encerrar\|achar\|instalar\|permanecer\|reparar\|colocar\|situar\|afundar\|intervir\|atirar\|incluir\|refugir\|guardar\|empenhar\|sentir\|centrar\|esconder\|coincidir\|cravar\|concentrar\|sair\|esforçar\|conduzir\|basear\|despertar\|vir\|penetrar\|envolver\|caber\|mirar\|refletir\|ingressar\|viajar\|acenturar\|flutuar\|inscrver\|beijar\|depositar\|distinguir\|seguir\|manter\|influir\|sumergir\|tomar\|cifrar\|sumir\|golpear\|duvidar\|posar\|habitar\|girar\|reconhecer\|fundar\|montar\|escarafunchar\|incorrer\|interessar\|obstinar\|trabalhar\|inclinar\|matricular\|dividir\|veranear\|actuar\|manifestar\|tirar\|mediar\|ocupar\|oscilar\|colar\|empregar\|reinar\|trair\|acabar\|inverter\|incidir\|infiltrar\|internar\|acomodar\|colaborar\|interpor\|irromper\|integrar\|precipitar\|descansar\|fazer\|prender\|provocar\|encarnar\|plantar\|inspirar\|parar\|fundir\|assentar\|culminar\|cavber\|repercutir\|segurar\|molestar\|localizar\|expressar\|repartir\|concordar\|delegar\|admitir\|volver\|andar\|jazer\|comprazer\|citar\|mandar\|tender\|vacilar\|traduzir\|vaziar\|concretar\|ler\|tombar\|especializar\|gastar\|recriar\|virar\|teimar\|demorar\|inserir\|projetar\|afundar\|enredar\|fincar\|profundir\|degenerar\|trocar\|eleger\|implantar\|cagar\|esgaravatar\|agolpar\|distribuir\|establecer\|investigar\|reclinar\|redundar\|tirar\|servir\|abandonar\|constituir\|distinguir\|entreter\|estourar\|localizar\|resolver\|mergulhar\|causar\|equivocar\|iluminar\|estimar\|persistir\|sonhar\|recuar\|materializar\|sobrevivir\|reinstalar\|sepultar\|tocar\|transfigurar\|proteger\|imprimir\|induzir\|sustentar\|vegetar\|acodar\|descargar\|governar\|levar\|embalar\|albergar\|construir\|existir\|gravar\|fanar\|moderar\|reafirmar\|afirmar\|alojar\|pender\|cruzar\|derramar\|extender\|iniciar\|recair\|surgir\|acodar\|afundar\|apoiar\|assentar\|basear\|cair\|centrar\|colar\|comprazer\|concentrar\|confiar\|consistir\|converter\|desembocar\|dividir\|teimar\|empenhar\|encarnar\|encerrar\|entrar\|envolver\|esconder\|esforçar\|especializar\|afixar\|flutuar\|fundir\|remexer\|incidir\|incorrer\|infiltrar\|influir\|ingressar\|inscrever\|insistir\|instalar\|internar\|introduzir\|irromper\|materializar\|matricular\|meter\|nascer\|obstinar\|oscilar\|participar\|penetrar\|plantificar\|aprofundar\|irromper\|consistir\|inclinar\|recriar\|refugir\|reparar\|repercutir\|residir\|sentar\|situar\|sonhar\|sumergir\|sumir\|demorar\|transformar\|tombar\|veranear\|mergulhar\|)";#<string>
-my $SubcatCOM  = "(?:conversar\|contar\|encontrar\|relacionar\|ter\|ficar\|casar\|acabar\|coincidir\|dar\|comparar\|bastar\|acostar\|identificar\|passar\|tratar\|sonhar\|viver\|lutar\|reunir\|compartilhar\|estar\|confundir\|encontrar\|poder\|cobrir\|enfrentar\|cruzar\|misturar\|romper\|tapar\|entrevistar\|sair\|conversar\|conformar\|concorrer\|conviver\|comentar\|contrastar\|ameaçar\|começar\|fazer\|cumprir\|seguir\|bater\|chocar\|lutar\|discutir\|andar\|comunicar\|carregar\|atentar\|unir\|guardar\|lançar\|encher\|vestir\|negociar\|enfadar\|combinar\|entender\|colaborar\|desfrutar\|estrelar\|falar\|fundir\|dançar\|continuar\|comentar\|encarar\|contactar\|reconciliar\|terminar\|despertar\|divertir\|dotar\|concluir\|meter\|revoltar\|conectar\|defender\|protestar\|volver\|arremeter\|suceder\|tocar\|competir\|alterar\|enlaçar\|golpear\|apoiar\|acordar\|sentir\|comprometer\|entusiasmar\|acompanhar\|comungar\|envolver\|acasalar\|dirigir\|vir\|mandar\|aborrecer\|substituir\|associar\|concordar\|consultar\|esfregar\|intercambiar\|alçar\|combinar\|corresponder\|permanecer\|enrolar\|atrever\|combater\|contentar\|insistir\|tirar\|simpatizar\|culminar\|complementar\|completar\|gozar\|associar\|atentar\|bastar\|coincidir\|colaborar\|comparar\|conectar\|conformar\|confundir\|conversar\|conviver\|encarar\|enlaçar\|entrevistar\|identificar\|misturar\|revelar\|conciliar\|relacionar\|sonhar\|bater\|encontrar\|)";#<string>
-my $SubcatPOR  = "(?:passar\|entrar\|ir\|preguntar\|dar\|sair\|optar\|passear\|andar\|interessar\|lutar\|vir\|começar\|sentir\|preocupar\|cambiar\|substituir\|meter\|olhar\|subir\|esforçar\|seguir\|chorar\|agarrar\|pegar\|pôr\|tirar\|pugnar\|pagar\|guiar\|cair\|inclinar\|decidir\|viver\|caracterizar\|valer\|estender\|julgar\|advogar\|felicitar\|protestar\|lançar\|rezar\|deambular\|velar\|tomar\|assomar\|colar\|cruzar\|ficar\|estar\|vaguear\|volver\|circular\|apostar\|trepar\|percorrer\|multiplicar\|brindar\|escorrer\|arrojar\|atravessar\|trair\|substituir\|viajar\|temer\|pronunciar\|lutar\|rondar\|caber\|distinguir\|faltar\|sacar\|advogar\|brindar\|caracterizar\|vaguear\|lutar\|optar\|pugnar\|vagar\|velar\|)";#<string>
-my $SubcatPARA  = "(?:voltar\|ir\|olhar\|dirigir\|avançar\|correr\|caminhar\|encaminhar\|sair\|atrair\|orientar\|sentir\|inclinar\|desviar\|vir\|empurrar\|tender\|andar\|assinalar\|lançar\|atirar\|levar\|arrastar\|deslocar\|partir\|levantar\|conduzir\|fugir\|apontar\|cruzar\|saltar\|encaminhar\|)";#<string>
+my $VSrefleja  = "(?:acabar\|agotar\|apuntar\|desencadenar\|filtrar\|importar\|informar\|\|producir\|quebrar\|)";#<string>
+my $VSind  = "(?:agradar\|apasionar\|apetecer\|\|asombrar\|\|cundir\|desagradar\|encantar\|extrañar\|faltar\|gustar\|interesar\|sorprender\|)";#<string>
+my $VS  = "(?:abundar\|aflorar\|agradar\|anidar\|aparecer\|apasionar\|arder\|bastar\|bramar\|brillar\|brotar\|caber\|cesar\|circular\|comenzar\|comparecer\|concluir\|concurrir\|constar\|contrastar\|convenir\|cuajar\|danzar\|desfilar\|despuntar\|doler\|empezar\|\|estallar\|existir\|faltar\|fascinar\|fastidiar\|figurar\|finalizar\|fracasar\|gustar\|hinchar\|holgar\|imperar\|\|intervenir\|latir\|mediar\|ocurrir\|parecer\|perdurar\|predominar\|\|puntualizar\|rechinar\|reinar\|replicar\|reventar\|rugir\|sentenciar\|sobrar\|sobrevenir\|sobrevivir\|sonar\|suceder\|surgir\|temblar\|terciar\|transcurrir\|urgir\|)";#<string>
+my $SubcatIND  = "(?:dar\|agradar\|gustar\|parecer\|hacer\|decir\|preguntar\|pedir\|pasar\|poner\|ocurrir\|atribuir\|hablar\|ofrecer\|contar\|entregar\|echar\|importar\|interesar\|dejar\|quitar\|servir\|tocar\|encantar\|prestar\|escribir\|dirigir\|dedicar\|corresponder\|explicar\|permitir\|añadir\|regalar\|enseñar\|sonreír\|devolver\|enviar\|presentar\|aportar\|deber\|exigir\|llevar\|quedar\|faltar\|abrir\|imponer\|tener\|proponer\|pagar\|comunicar\|ordenar\|conceder\|sacar\|ser\|mandar\|costar\|mostrar\|agregar\|escapar\|llegar\|venir\|asignar\|otorgar\|caer\|negar\|traer\|ver\|arrancar\|molestar\|remitir\|resultar\|ceder\|suceder\|atraer\|meter\|recordar\|tender\|adeudar\|vender\|causar\|aplicar\|pegar\|cerrar\|plantear\|agradecer\|consultar\|contestar\|encargar\|rendir\|comprar\|imprimir\|ocultar\|salir\|demostrar\|tomar\|exponer\|cortar\|restar\|confesar\|asegurar\|confiar\|convenir\|encontrar\|agradar\|gritar\|perder\|recomendar\|impedir\|robar\|llamar\|achacar\|entrar\|facilitar\|prometer\|solicitar\|coger\|caber\|hurtar\|advertir\|proporcionar\|bastar\|comentar\|conferir\|doler\|extrañar\|producir\|adjudicar\|evitar\|avisar\|brindar\|suponer\|indicar\|arrebatar\|chocar\|cantar\|valer\|olvidar\|referir\|prender\|suplicar\|arengar\|imputar\|revelar\|sorprender\|aconsejar\|buscar\|plantar\|reclamar\|repetir\|envidiar\|replicar\|levantar\|perdonar\|relatar\|sugerir\|guardar\|reprochar\|afectar\|procurar\|adeudar\|arengar\|hurtar\|)";#<string>
+my $SubcatA  = "(?:acceder\|acercar\|acertar\|acostumbrar\|acudir\|adaptar\|afectar\|aferrar\|aficionar\|afiliar\|ajustar\|aludir\|apelar\|apostar\|apresurar\|aproximar\|arrimar\|arrojar\|asistir\|asomar\|atener\|atinar\|atrever\|avenir\|comprometer\|conducir\|contribuir\|corresponder\|deber\|dedicar\|dirigir\|disponer\|enfrentar\|equivaler\|exponer\|inducir\|invitar\|ir\|limitar\|llegar\|mudar\|negar\|obligar\|oler\|oponer\|pertenecer\|precipitar\|proceder\|recurrir\|referir\|regresar\|remontar\|renunciar\|resignar\|resistir\|someter\|subir\|sumar\|sustraer\|tender\|trasladar\|unir\|vincular\|volver\|ir\|llegar\|llevar\|volver\|venir\|acercar\|salir\|referir\|dirigir\|atrever\|dedicar\|obligar\|dar\|pasar\|pertenecer\|disponer\|asistir\|subir\|acudir\|responder\|regresar\|ayudar\|mirar\|invitar\|jugar\|asomar\|negar\|limitar\|sentar\|renunciar\|bajar\|enfrentar\|aprender\|echar\|afectar\|conducir\|entrar\|llamar\|tender\|esperar\|correr\|decidir\|reducir\|destinar\|corresponder\|hacer\|someter\|aludir\|entregar\|unir\|deber\|contribuir\|resistir\|arrojar\|mandar\|oler\|recurrir\|acompañar\|oponer\|acostumbrar\|acceder\|caer\|aplicar\|estar\|aproximar\|lanzar\|trasladar\|traer\|proceder\|apresurar\|poner\|condenar\|enseñar\|quedar\|enviar\|adaptar\|ajustar\|tirar\|exponer\|incorporar\|escapar\|sacar\|atener\|forzar\|animar\|marchar\|acertar\|devolver\|agarrar\|aspirar\|presentar\|saltar\|retirar\|extender\|ascender\|comprometer\|parar\|remitir\|aferrar\|abrazar\|resignar\|apostar\|pegar\|contestar\|seguir\|arrimar\|prestar\|elevar\|obedecer\|avenir\|largar\|ceder\|sumar\|precipitar\|viajar\|preferir\|adelantar\|remontar\|apuntar\|equivaler\|abrir\|mover\|inclinar\|sustraer\|acoger\|atañer\|impulsar\|desplazar\|abandonar\|inducir\|asemejar\|plegar\|subyacer\|atender\|sujetar\|imponer\|sobreponer\|transportar\|adecuar\|empujar\|instar\|dejar\|encaminar\|encontrar\|transmitir\|declarar\|equiparar\|vivir\|incitar\|sobrevivir\|colocar\|sonar\|rendir\|autorizar\|aguardar\|ofrecer\|reintegrar\|arrastrar\|levantar\|tocar\|mudar\|arriesgar\|cerrar\|traducir\|descender\|probar\|retornar\|aficionar\|sucumbir\|concurrir\|consagrar\|convocar\|doblar\|atinar\|comparar\|anticipar\|comparecer\|vincular\|apelar\|tener\|cruzar\|cambiar\|exhortar\|hallar\|afiliar\|liar\|preparar\|resolver\|asociar\|optar\|saber\|meter\|rebajar\|decir\|sacrificar\|señalar\|apestar\|instalar\|partir\|resbalar\|propender\|retroceder\|alcanzar\|relegar\|aventurar\|denunciar\|huir\|anteponer\|cooperar\|ligar\|sentir\|supeditar\|ceñir\|faltar\|impeler\|mezclar\|subordinar\|figurar\|jugar\|)";#<string>
+my $SubcatDE  = "(?:hablar\|tratar\|salir\|dar\|sacar\|acordar\|venir\|hacer\|saber\|pasar\|enterar\|servir\|cambiar\|depender\|ocupar\|ir\|separar\|apartar\|carecer\|disponer\|acusar\|alejar\|opinar\|encargar\|huir\|echar\|convencer\|olvidar\|tirar\|llenar\|bajar\|levantar\|librar\|llegar\|despedir\|gozar\|quitar\|colgar\|tomar\|dudar\|informar\|provenir\|pensar\|reír\|escapar\|coger\|encoger\|quedar\|quejar\|enamorar\|vestir\|entender\|apoderar\|desprender\|disfrutar\|extraer\|surgir\|decir\|proceder\|nacer\|vivir\|regresar\|traer\|recibir\|arrancar\|alegrar\|brotar\|prescindir\|derivar\|volver\|descender\|defender\|retirar\|burlar\|necesitar\|esperar\|salvar\|preocupar\|partir\|aprovechar\|despojar\|participar\|mover\|distinguir\|dejar\|desaparecer\|presumir\|llevar\|avergonzar\|liberar\|percatar\|cansar\|marchar\|saltar\|privar\|caer\|emerger\|cubrir\|fiar\|aprender\|abstener\|adueñar\|cerciorar\|arrepentir\|perder\|desconfiar\|heredar\|borrar\|gustar\|desligar\|alimentar\|reponer\|desviar\|distar\|proveer\|rescatar\|subir\|abusar\|cuidar\|conocer\|contar\|aislar\|llorar\|equivocar\|deducir\|disfrazar\|distraer\|excluir\|avisar\|despegar\|dotar\|sospechar\|apropiar\|apear\|armar\|desentender\|diferenciar\|emanar\|preservar\|recoger\|agarrar\|deshacer\|extrañar\|persuadir\|constar\|valer\|asegurar\|cruzar\|desistir\|vengar\|pender\|diferir\|renegar\|resultar\|sorprender\|proteger\|vaciar\|alardear\|cargar\|desembarazar\|mudar\|expulsar\|elevar\|impregnar\|limpiar\|bastar\|componer\|despertar\|absolver\|obtener\|predicar\|matricular\|descargar\|extender\|asombrar\|escurrir\|apiadar\|asustar\|querer\|alzar\|arrojar\|comportar\|evadir\|protestar\|recuperar\|desvincular\|esconder\|examinar\|jactar\|redimir\|aburrir\|adolecer\|escribir\|rodear\|disuadir\|empezar\|hartar\|recelar\|seguir\|charlar\|trasladar\|exigir\|acompañar\|curar\|beneficiar\|ser\|abstener\|abusar\|acordar\|acusar\|adueñar\|aislar\|alegrar\|apartar\|apiadar\|apoderar\|apropiar\|avergonzar\|burlar\|carecer\|cerciorar\|convencer\|depender\|derivar\|desconfiar\|desembarazar\|desentender\|despojar\|desprender\|diferenciar\|diferir\|disfrazar\|disfrutar\|dudar\|enamorar\|encargar\|encoger\|enterar\|extraer\|fiar\|gozar\|hablar\|huir\|liberar\|librar\|ocupar\|partir\|percatar\|prescindir\|presumir\|privar\|provenir\|salir\|separar\|tratar\|vestir\|)";#<string>
+my $SubcatEN  = "(?:entrar\|pensar\|convertir\|estar\|meter\|vivir\|poner\|encontrar\|quedar\|dejar\|sentar\|caer\|creer\|participar\|fijar\|tardar\|consistir\|pasar\|insistir\|apoyar\|confiar\|nacer\|introducir\|figurar\|residir\|transformar\|ir\|encerrar\|hallar\|instalar\|permanecer\|reparar\|colocar\|situar\|hundir\|intervenir\|echar\|incluir\|refugiar\|guardar\|empeñar\|sentir\|centrar\|esconder\|coincidir\|clavar\|concentrar\|salir\|esforzar\|desembocar\|basar\|despertar\|venir\|penetrar\|envolver\|caber\|mirar\|reflejar\|ingresar\|viajar\|adentrar\|flotar\|inscribir\|besar\|depositar\|distinguir\|seguir\|mantener\|influir\|sumergir\|tomar\|cifrar\|sumir\|golpear\|dudar\|posar\|habitar\|girar\|reconocer\|fundar\|montar\|hurgar\|incurrir\|interesar\|obstinar\|trabajar\|recostar\|matricular\|dividir\|veranear\|actuar\|manifestar\|tirar\|mediar\|ocupar\|oscilar\|colar\|emplear\|reinar\|traer\|acabar\|invertir\|incidir\|infiltrar\|internar\|acomodar\|colaborar\|interponer\|irrumpir\|prorrumpir\|integrar\|precipitar\|descansar\|hacer\|prender\|provocar\|encarnar\|plantar\|inspirar\|parar\|fundir\|asentar\|culminar\|encajar\|repercutir\|retener\|molestar\|radicar\|expresar\|repartir\|convenir\|delegar\|admitir\|volver\|andar\|yacer\|complacer\|citar\|mandar\|tender\|vacilar\|traducir\|verter\|concretar\|leer\|tumbar\|especializar\|gastar\|recrear\|volcar\|empecinar\|demorar\|insertar\|proyectar\|ahondar\|enredar\|hincar\|profundizar\|degenerar\|trocar\|elegir\|implantar\|cagar\|escarbar\|agolpar\|distribuir\|establecer\|investigar\|reclinar\|redundar\|sacar\|servir\|abandonar\|constituir\|descollar\|entretener\|estallar\|localizar\|resolver\|zambullir\|causar\|equivocar\|esmerar\|estimar\|persistir\|soñar\|cejar\|materializar\|pervivir\|reinstalar\|sepultar\|tocar\|transfigurar\|amparar\|imprimir\|inducir\|sustentar\|vegetar\|acodar\|descargar\|gobernar\|llevar\|mecer\|albergar\|construir\|existir\|grabar\|afanar\|plasmar\|reafirmar\|afirmar\|alojar\|colgar\|cruzar\|derramar\|extender\|iniciar\|recaer\|surgir\|acodar\|adentrar\|ahondar\|apoyar\|asentar\|basar\|caer\|centrar\|colar\|complacer\|concentrar\|confiar\|consistir\|convertir\|desembocar\|dividir\|empecinar\|empeñar\|encarnar\|encerrar\|entrar\|envolver\|esconder\|esforzar\|especializar\|fijar\|flotar\|hundir\|hurgar\|incidir\|incurrir\|infiltrar\|influir\|ingresar\|inscribir\|insistir\|instalar\|internar\|introducir\|irrumpir\|materializar\|matricular\|meter\|nacer\|obstinar\|oscilar\|participar\|penetrar\|plantificar\|profundizar\|prorrumpir\|radicar\|recostar\|recrear\|refugiar\|reparar\|repercutir\|residir\|sentar\|situar\|soñar\|sumergir\|sumir\|tardar\|transformar\|tumbar\|veranear\|zambullir\|)";#<string>
+my $SubcatCON  = "(?:hablar\|contar\|encontrar\|relacionar\|tener\|quedar\|casar\|acabar\|coincidir\|dar\|comparar\|bastar\|acostar\|identificar\|pasar\|tratar\|soñar\|vivir\|luchar\|reunir\|compartir\|estar\|confundir\|tropezar\|poder\|cubrir\|enfrentar\|cruzar\|mezclar\|romper\|tapar\|entrevistar\|salir\|conversar\|conformar\|ocurrir\|convivir\|comenzar\|contrastar\|amenazar\|empezar\|hacer\|cumplir\|seguir\|topar\|chocar\|pelear\|discutir\|andar\|comunicar\|cargar\|atentar\|unir\|guardar\|lanzar\|llenar\|vestir\|negociar\|enfadar\|combinar\|entender\|colaborar\|disfrutar\|estrellar\|charlar\|fundir\|bailar\|continuar\|comentar\|encarar\|contactar\|reconciliar\|terminar\|despertar\|divertir\|dotar\|concluir\|meter\|rebelar\|conectar\|defender\|protestar\|volver\|arremeter\|suceder\|tocar\|competir\|alternar\|enlazar\|golpear\|apoyar\|pactar\|sentir\|comprometer\|entusiasmar\|acompañar\|comulgar\|envolver\|aparear\|dirigir\|venir\|mandar\|aburrir\|sustituir\|asociar\|concordar\|consultar\|frotar\|intercambiar\|alzar\|compaginar\|corresponder\|permanecer\|enrollar\|atrever\|combatir\|contentar\|insistir\|tirar\|simpatizar\|culminar\|simultanear\|complementar\|completar\|gozar\|asociar\|atentar\|bastar\|coincidir\|colaborar\|comparar\|conectar\|conformar\|confundir\|conversar\|convivir\|encarar\|enlazar\|entrevistar\|identificar\|mezclar\|rebelar\|reconciliar\|relacionar\|soñar\|topar\|tropezar\|)";#<string>
+my $SubcatPOR  = "(?:pasar\|entrar\|ir\|preguntar\|dar\|salir\|optar\|pasear\|andar\|interesar\|luchar\|venir\|empezar\|sentir\|preocupar\|cambiar\|sustituir\|meter\|mirar\|subir\|esforzar\|seguir\|llorar\|agarrar\|coger\|poner\|tirar\|pugnar\|pagar\|guiar\|caer\|inclinar\|decidir\|vivir\|caracterizar\|valer\|extender\|juzgar\|abogar\|felicitar\|protestar\|echar\|rezar\|deambular\|velar\|tomar\|adentrar\|asomar\|colar\|cruzar\|quedar\|estar\|vagar\|volver\|circular\|apostar\|trepar\|discurrir\|multiplicar\|brindar\|escurrir\|arrojar\|atravesar\|traer\|substituir\|viajar\|temer\|pronunciar\|pelear\|rondar\|caber\|distinguir\|faltar\|sacar\|abogar\|brindar\|caracterizar\|deambular\|luchar\|optar\|pugnar\|vagar\|velar\|)";#<string>
+my $SubcatHACIA  = "(?:volver\|ir\|mirar\|dirigir\|avanzar\|correr\|caminar\|encaminar\|salir\|atraer\|orientar\|sentir\|inclinar\|desviar\|venir\|empujar\|tender\|andar\|señalar\|lanzar\|echar\|llevar\|arrastrar\|desplazar\|partir\|levantar\|conducir\|huir\|apuntar\|cruzar\|saltar\|encaminar\|)";#<string>
 my $SubcatSOBRE  = "(?:abalanzar\|)";#<string>
-my $SubcatImpers  = "(?:ter\|fazer\|tratar\|bastar\|ser\|chover\|ir\|dar\|nevar\|cheirar\|anoitecer\|amanhecer\|parecer\|escurecer\|doer\|pôr\|)";#<string>
-my $SubcatBitr  = "(?:dar\|fazer\|pedir\|pôr\|dizer\|perguntar\|oferecer\|atirar\|atribuir\|deixar\|retirar\|contar\|prestar\|dedicar\|contribuir\|dever\|explicar\|permitir\|levar\|ter\|devolver\|entregar\|exigir\|abrir\|dirigir\|passar\|impor\|enviar\|propor\|tirar\|dar\|presentar\|conceder\|adicionar\|negar\|trair\|outorgar\|recordar\|remeter\|custar\|dever\|ensinar\|assignar\|comunicar\|arrancar\|pagar\|render\|agregar\|ceder\|meter\|mandar\|tomar\|assegurar\|cerrar\|ver\|imprimir\|cortar\|encontrar\|chamar\|causar\|confessar\|mostrar\|restar\|comprar\|demonstrar\|ordenar\|tender\|roubar\|pegar\|proporcionar\|plantear\|solicitar\|agradecer\|escrever\|expor\|impedir\|produzir\|conferir\|arrebatar\|perder\|prometer\|facilitar\|evitar\|invejar\|indicar\|esconder\|avisar\|referir\|vender\|levantar\|advertir\|encarregar\|perdoar\|recomendar\|revelar\|buscar\|relatar\|reprovar\|)";#<string>
-my $SubcatTr  = "(?:abandonar\|abarcar\|abonar\|abordar\|abrigar\|abrir\|apertar\|absorver\|acariciar\|acarretar\|habitar\|accionar\|espreitar\|acelerar\|acentuar\|aceitar\|esclarecer\|acolher\|acometer\|aconselhar\|acreditar\|acumular\|avançar\|adivinar\|administrar\|admirar\|admitir\|adoptar\|adorar\|adquirir\|advertir\|afiar\|afirmar\|aflouxar\|afrontar\|agitar\|agradecer\|agredir\|aguardar\|aguçar\|poupar\|alargar\|albergar\|alcançar\|alegar\|encorajar\|aligeirar\|alijar\|alisar\|aliviar\|alugar\|alterar\|alçar\|ampliar\|analisar\|ansiar\|anotar\|anular\|anunciar\|apaziguar\|apagar\|fingir\|aplacar\|esmagar\|adiar\|aplicar\|bater\|contribuir\|apreciar\|aprender\|apresar\|apertar\|aproveitar\|apunhalar\|argumentar\|armar\|arrancar\|arrasar\|arrastar\|arrebatar\|fixar\|arrogar\|articular\|assaltar\|assegurar\|assinar\|assimilar\|aspirar\|assumir\|atacar\|atalhar\|atrair\|apanhar\|atravessar\|atribuir\|aumentar\|autorizar\|aventurar\|descobrir\|avivar\|beijar\|varrer\|bater\|beber\|abençoar\|brandir\|bloquear\|beirar\|excluir\|buscar\|calar\|calcular\|calentar\|calçar\|captar\|carregar\|causar\|casar\|celebrar\|cingir\|cerrar\|citar\|cravar\|cobrar\|cozinhar\|pegar\|combinar\|cometer\|compartilhar\|compensar\|completar\|complicar\|compor\|comprar\|compreender\|comprovar\|comunicar\|conceber\|conceder\|condicionar\|confeccionar\|confessar\|confirmar\|conjeturar\|conhecer\|conquistar\|conseguir\|conservar\|considerar\|consolidar\|constatar\|constituir\|construir\|consultar\|consumar\|contar\|contemplar\|conter\|contrair\|contratar\|controlar\|convocar\|copiar\|coroar\|corroborar\|cortar\|custar\|criar\|crer\|criticar\|cruzar\|cobrir\|culminar\|cultivar\|cumplir\|cursar\|magoar\|dar\|decidir\|declarar\|decretar\|deduzir\|defender\|processar\|demonstrar\|denotar\|denunciar\|deplorar\|depositar\|derrubar\|derrotar\|desfazer\|desativar\|desatar\|superar\|desqualificar\|descarregar\|descartar\|descentralizar\|decifrar\|despendurar\|renegar\|recuar\|descrever\|descobrir\|desdenhar\|desejar\|descartar\|desempenhar\|desenterrar\|desfazer\|designar\|negar\|ignorar\|terminar\|decolar\|desocupar\|desperdiçar\|desdobrar\|desprezar\|destacar\|destapar\|desterrar\|destroçar\|destruir\|revelar\|desviar\|detectar\|determinar\|detestar\|devolver\|devorar\|desenhar\|ditar\|difundir\|elucidar\|dirimir\|esconder\|dissipar\|dissolver\|disputar\|distinguir\|divisar\|dobrar\|dominar\|durar\|tirar\|efectuar\|executar\|exercer\|elaborar\|escolher\|elevar\|eliminar\|louvar\|evitar\|embarcar\|emitir\|empregar\|empreender\|empurrar\|empunhar\|arvorar\|encarecer\|encarnar\|canalizar\|acender\|encontrar\|encobrir\|endireitar\|enfileirar\|focar\|enxugar\|enriquecer\|ensinar\|entabular\|entoar\|entorpecer\|transportar\|entreabrir\|entregar\|entrever\|enumerar\|enviar\|erradicar\|esboçar\|escalar\|escamotear\|esclarecer\|escolher\|escrever\|escrutinar\|escutar\|esgrimir\|espantar\|esperar\|esquivar\|estabelecer\|estimar\|estimular\|estipular\|estirar\|estreitar\|estrear\|estragar\|estudar\|avaliar\|evitar\|evocar\|exaltar\|examinar\|excluir\|excusar\|exibir\|exigir\|expelir\|experimentar\|explicar\|explorar\|expressar\|extender\|fabricar\|facilitar\|favorecer\|financiar\|fingir\|firmar\|promover\|forjar\|formar\|formular\|fortalecer\|forçar\|franquear\|esfregar\|franzir\|fumar\|fundar\|fundir\|ganhar\|garantir\|gastar\|generar\|gerir\|golpear\|guardar\|habitar\|fazer\|folhear\|humedecer\|ignorar\|iluminar\|ilustrar\|imaginar\|imitar\|transmitir\|impedir\|implantar\|implicar\|impor\|imprimir\|improvisar\|impulsar\|inaugurar\|incendiar\|incluir\|iniciar\|aumentar\|investigar\|indicar\|inferir\|infundir\|ingerir\|iniciar\|insinuar\|inspeccionar\|inspirar\|tentar\|intercambiar\|interpretar\|intuir\|invadir\|inventar\|investir\|investigar\|invocar\|envolver\|puxar\|juntar\|jurar\|justificar\|julgar\|inclinar\|lamentar\|lamber\|lançar\|lavar\|ler\|amarrar\|limar\|limpar\|liquidar\|preencher\|levar\|localizar\|conseguir\|brilhar\|maldizer\|mandar\|manejar\|manifestar\|manter\|marcar\|mascar\|mastigar\|matizar\|medir\|melhorar\|mencionar\|mentar\|merecer\|minar\|modernizar\|modificar\|morder\|mostrar\|motivar\|narrar\|necessitar\|negociar\|neutralizar\|nomear\|notar\|nublar\|observar\|obter\|ocultar\|odiar\|oferecer\|ouvir\|esquecer\|achar\|oprimir\|ordenar\|organizar\|observar\|outorgar\|sofrer\|pagar\|saborear\|aplaudir\|palpar\|pedir\|pegar\|pensar\|perceber\|perder\|perfeiçoar\|permitir\|persuadir\|pesar\|picar\|pintar\|pisar\|calcar\|passar\|planear\|plantar\|plantear\|pesar\|pôr\|possuir\|postergar\|postular\|praticar\|precisar\|predizer\|preferir\|perguntar\|prender\|preparar\|presenciar\|pressentir\|preservar\|presidir\|pressionar\|prestar\|pretender\|prever\|provar\|proclamar\|procurar\|proferir\|professar\|proibir\|prolongar\|prometer\|promover\|promover\|pronunciar\|propagar\|propiciar\|propinar\|propor\|proporcionar\|defender\|prosseguir\|provocar\|publicar\|pulsar\|quebrar\|queimar\|querer\|quitar\|coçar\|rasgar\|rastrear\|ratificar\|raciocinar\|realizar\|reiniciar\|baixar\|ultrapassar\|recolher\|prescrever\|rejeitar\|receber\|reclamar\|recuperar\|colectar\|recomendar\|reestabelecer\|reconhecer\|reconsiderar\|reconstruir\|recordar\|recorrer\|recortar\|recuperar\|escrever\|redobrar\|reduzir\|reflexar\|reformar\|reforçar\|oferecer\|registrar\|regular\|evitar\|reiterar\|reivindicar\|relatar\|reler\|rematar\|rememorar\|remover\|renovar\|repartir\|repassar\|repetir\|repor\|representar\|reprimir\|reprovar\|reprovar\|reproduzir\|requerer\|ressaltar\|resgatar\|reservar\|resolver\|respeitar\|reestabelecer\|restar\|restaurar\|esfregar\|resumir\|retomar\|atrasar\|revelar\|revisar\|reviver\|roubar\|rodear\|rogar\|romper\|roçar\|ruminar\|saber\|saborear\|tirar\|sacrificar\|sacudir\|salvaguardar\|salvar\|satisfazer\|apoiar\|seguir\|seleccionar\|semear\|assinalar\|serrar\|servir\|significar\|simular\|solicitar\|solucionar\|sonhar\|suportar\|sorver\|sortear\|suspeitar\|segurar\|sublinhar\|sofrer\|sugerir\|sujeitar\|fornecer\|superar\|suplantar\|supor\|suprimir\|suscitar\|suspender\|sustentar\|substituir\|tapar\|trautear\|temer\|ter\|tentar\|terminar\|tocar\|tolerar\|tomar\|torcer\|trair\|tragar\|transmitir\|transportar\|transferir\|traçar\|usar\|utilizar\|esvaziar\|valer\|avaliar\|velar\|vencer\|vender\|ver\|verificar\|visitar\|vislumbrar\|voltar\|vomitar\|comer\|abrir\|)";#<string>
-my $SubcatAtr  = "(?:acabar\|actuar\|amanhecer\|andar\|apetecer\|aparecer\|cair\|considerar\|continuar\|custar\|crer\|dar\|declarar\|definir\|deixar\|exercer\|encontrar\|erigir\|estar\|fazer\|encontrar\|imaginar\|ingressar\|ir\|chamar\|levar\|manifestar\|manter\|meter\|mostrar\|nascer\|parecer\|passar\|permanecer\|pôr\|prosseguir\|ficar\|resultar\|revelar\|saber\|sair\|seguir\|sentir\|ser\|sonhar\|ter\|terminar\|tirar\|titular\|tornar\|trabalhar\|transcorrer\|vir\|ver\|viver\|volver\|jazer\|)";#<string>
-my $SubcatODirAtr  = "(?:ter\|deixar\|fazer\|ver\|pôr\|chamar\|considerar\|levar\|manter\|sentir\|tomar\|ouvir\|qualificar\|encontrar\|crer\|dar\|imaginar\|trair\|estimar\|passar\|entender\|volver\|julgar\|definir\|conceber\|utilizar\|declarar\|olhar\|colocar\|escutar\|encontrar\|denominar\|conhecer\|conservar\|reconhecer\|rasurar\|identificar\|tratar\|aceitar\|pegar\|)";#<string>
-my $SubcatClaus  = "(?:saber\|crer\|querer\|dizer\|pensar\|ver\|perguntar\|tentar\|recordar\|permitir\|conseguir\|decidir\|desejar\|pretender\|fazer\|assegurar\|esperar\|pedir\|explicar\|compreender\|conseguir\|preferir\|necessitar\|supor\|sentir\|afirmar\|considerar\|ter\|entender\|impedir\|contar\|procurar\|reconhecer\|temer\|advertir\|assinalar\|deixar\|ouvir\|indicar\|propor\|comprovar\|descobrir\|imaginar\|declarar\|confessar\|demonstrar\|adicionar\|jurar\|admitir\|prometer\|significar\|anunciar\|suspeitar\|evitar\|aceitar\|mirar\|fingir\|observar\|contestar\|notar\|esquecer\|mostrar\|manifestar\|negar\|comentar\|mandar\|suster\|encontrar\|responder\|ordenar\|estimar\|precisar\|ignorar\|exigir\|achar\|rogar\|sonhar\|lamentar\|merecer\|dar\|agregar\|confirmar\|averiguar\|ensinar\|adivinhar\|esclarecer\|aconselhar\|comunicar\|sugerir\|prever\|sublinhar\|repetir\|conhecer\|deduzir\|destacar\|intuir\|informar\|revelar\|figurar\|gritar\|perdoar\|pôr\|resolver\|experimentar\|avisar\|proibir\|recomendar\|durar\|agradecer\|determinar\|apontar\|criticar\|acordar\|calcular\|solicitar\|julgar\|reiterar\|reprovar\|simular\|estudar\|replicar\|tolerar\|insinuar\|oferecer\|argumentar\|ostentar\|estabelecer\|perceber\|verificar\|buscar\|pressentir\|referir\|escrever\|aproveitar\|alegar\|ler\|ameaçar\|denunciar\|garantir\|desconhecer\|escutar\|implicar\|justificar\|odiar\|repor\|consentir\|reclamar\|dignar\|falar\|conceber\|servir\|apreciar\|adiantar\|contemplar\|eleger\|excluir\|reflexionar\|suplicar\|presumir\|precisar\|evitar\|dispor\|recusar\|notificar\|exibir\|requerer\|concluir\|estipular\|)";#<string>
+my $SubcatImpers  = "(?:haber\|hacer\|tratar\|bastar\|ser\|llover\|ir\|dar\|nevar\|oler\|anochecer\|amanecer\|parecer\|oscurecer\|doler\|poner\|)";#<string>
+my $SubcatBitr  = "(?:dar\|hacer\|pedir\|poner\|decir\|preguntar\|ofrecer\|echar\|atribuir\|dejar\|quitar\|contar\|prestar\|dedicar\|aportar\|deber\|explicar\|permitir\|llevar\|tener\|devolver\|entregar\|exigir\|abrir\|dirigir\|pasar\|imponer\|enviar\|proponer\|sacar\|regalar\|presentar\|conceder\|añadir\|negar\|traer\|otorgar\|recordar\|remitir\|costar\|adeudar\|enseñar\|asignar\|comunicar\|arrancar\|pagar\|rendir\|agregar\|ceder\|meter\|mandar\|tomar\|asegurar\|cerrar\|ver\|imprimir\|cortar\|encontrar\|llamar\|causar\|confesar\|mostrar\|restar\|comprar\|demostrar\|ordenar\|tender\|robar\|coger\|proporcionar\|plantear\|solicitar\|agradecer\|escribir\|exponer\|impedir\|producir\|conferir\|arrebatar\|perder\|prometer\|facilitar\|evitar\|envidiar\|indicar\|ocultar\|avisar\|referir\|vender\|levantar\|advertir\|encargar\|perdonar\|recomendar\|revelar\|buscar\|relatar\|reprochar\|)";#<string>
+my $SubcatTr  = "(?:abandonar\|abarcar\|abonar\|abordar\|abrigar\|abrir\|abrochar\|absorber\|acariciar\|acarrear\|acatar\|accionar\|acechar\|acelerar\|acentuar\|aceptar\|aclarar\|acoger\|acometer\|aconsejar\|acreditar\|acumular\|adelantar\|adivinar\|administrar\|admirar\|admitir\|adoptar\|adorar\|adquirir\|advertir\|afilar\|afirmar\|aflojar\|afrontar\|agitar\|agradecer\|agredir\|aguardar\|aguzar\|ahorrar\|alargar\|albergar\|alcanzar\|alegar\|alentar\|aligerar\|alijar\|alisar\|aliviar\|alquilar\|alterar\|alzar\|ampliar\|analizar\|añorar\|anotar\|anular\|anunciar\|apaciguar\|apagar\|aparentar\|aplacar\|aplastar\|aplazar\|aplicar\|aporrear\|aportar\|apreciar\|aprender\|apresar\|apretar\|aprovechar\|apuñalar\|argumentar\|armar\|arrancar\|arrasar\|arrastrar\|arrebatar\|arreglar\|arrogar\|articular\|asaltar\|asegurar\|asesinar\|asimilar\|aspirar\|asumir\|atacar\|atajar\|atraer\|atrapar\|atravesar\|atribuir\|aumentar\|autorizar\|aventurar\|averiguar\|avivar\|bajar\|barrer\|batir\|beber\|bendecir\|blandir\|bloquear\|bordear\|borrar\|buscar\|calar\|calcular\|calentar\|calzar\|captar\|cargar\|causar\|cazar\|celebrar\|ceñir\|cerrar\|citar\|clavar\|cobrar\|cocinar\|coger\|combinar\|cometer\|compartir\|compensar\|completar\|complicar\|componer\|comprar\|comprender\|comprobar\|comunicar\|concebir\|conceder\|condicionar\|confeccionar\|confesar\|confirmar\|conjeturar\|conocer\|conquistar\|conseguir\|conservar\|considerar\|consolidar\|constatar\|constituir\|construir\|consultar\|consumar\|contar\|contemplar\|contener\|contraer\|contratar\|controlar\|convocar\|copiar\|coronar\|corroborar\|cortar\|costar\|crear\|creer\|criticar\|cruzar\|cubrir\|culminar\|cultivar\|cumplir\|cursar\|dañar\|decidir\|declarar\|decretar\|deducir\|defender\|demandar\|demostrar\|denotar\|denunciar\|deplorar\|depositar\|derribar\|derrotar\|desabrochar\|desactivar\|desatar\|desbordar\|descalificar\|descargar\|descartar\|descentralizar\|descifrar\|descolgar\|desconocer\|descorrer\|describir\|descubrir\|desdeñar\|desear\|desechar\|desempeñar\|desenterrar\|deshacer\|designar\|desmentir\|desoír\|despachar\|despegar\|despejar\|desperdiciar\|desplegar\|despreciar\|destacar\|destapar\|desterrar\|destrozar\|destruir\|desvelar\|desviar\|detectar\|determinar\|detestar\|devolver\|devorar\|dibujar\|dictar\|difundir\|dilucidar\|dirimir\|disimular\|disipar\|disolver\|disputar\|distinguir\|divisar\|doblar\|dominar\|echar\|efectuar\|ejecutar\|ejercer\|elaborar\|elegir\|elevar\|eliminar\|elogiar\|eludir\|embarcar\|emitir\|emplear\|emprender\|empujar\|empuñar\|enarbolar\|encarecer\|encarnar\|encauzar\|encender\|encontrar\|encubrir\|enderezar\|enfilar\|enfocar\|enjugar\|enriquecer\|enseñar\|entablar\|entonar\|entorpecer\|entrañar\|entreabrir\|entregar\|entrever\|enumerar\|enviar\|erradicar\|esbozar\|escalar\|escamotear\|esclarecer\|escoger\|escribir\|escrutar\|escuchar\|esgrimir\|espantar\|esperar\|esquivar\|establecer\|estimar\|estimular\|estipular\|estirar\|estrechar\|estrenar\|estropear\|estudiar\|evaluar\|evitar\|evocar\|exaltar\|examinar\|excluir\|excusar\|exhibir\|exigir\|expeler\|experimentar\|explicar\|explorar\|expresar\|extender\|fabricar\|facilitar\|favorecer\|financiar\|fingir\|firmar\|fomentar\|forjar\|formar\|formular\|fortalecer\|forzar\|franquear\|frotar\|fruncir\|fumar\|fundar\|fundir\|ganar\|garantizar\|gastar\|generar\|gestionar\|golpear\|guardar\|habitar\|hacer\|hojear\|humedecer\|ignorar\|iluminar\|ilustrar\|imaginar\|imitar\|impartir\|impedir\|implantar\|implicar\|imponer\|imprimir\|improvisar\|impulsar\|inaugurar\|incendiar\|incluir\|incoar\|incrementar\|indagar\|indicar\|inferir\|infundir\|ingerir\|iniciar\|insinuar\|inspeccionar\|inspirar\|intentar\|intercambiar\|interpretar\|intuir\|invadir\|inventar\|invertir\|investigar\|invocar\|involucrar\|jalar\|juntar\|jurar\|justificar\|juzgar\|ladear\|lamentar\|lamer\|lanzar\|lavar\|leer\|liar\|limar\|limpiar\|liquidar\|llenar\|llevar\|localizar\|lograr\|lucir\|maldecir\|mandar\|manejar\|manifestar\|mantener\|marcar\|mascar\|masticar\|matizar\|medir\|mejorar\|mencionar\|mentar\|merecer\|minar\|modernizar\|modificar\|morder\|mostrar\|motivar\|narrar\|necesitar\|negociar\|neutralizar\|nombrar\|notar\|nublar\|observar\|obtener\|ocultar\|odiar\|ofrecer\|oír\|olvidar\|opinar\|oprimir\|ordenar\|organizar\|otear\|otorgar\|padecer\|pagar\|paladear\|palmear\|palpar\|pedir\|pegar\|pensar\|percibir\|perder\|perfeccionar\|permitir\|persuadir\|pesar\|picar\|pintar\|pisar\|pisotear\|planchar\|planear\|plantar\|plantear\|ponderar\|poner\|poseer\|postergar\|postular\|practicar\|precisar\|predecir\|preferir\|preguntar\|prender\|preparar\|presenciar\|presentir\|preservar\|presidir\|presionar\|prestar\|pretender\|pretextar\|prever\|probar\|proclamar\|procurar\|proferir\|profesar\|prohibir\|prolongar\|prometer\|promocionar\|promover\|pronunciar\|propagar\|propiciar\|propinar\|proponer\|proporcionar\|propugnar\|proseguir\|provocar\|publicar\|pulsar\|quebrantar\|quemar\|querer\|quitar\|rascar\|rasgar\|rastrear\|ratificar\|razonar\|realizar\|reanudar\|rebajar\|rebasar\|recabar\|recetar\|rechazar\|recibir\|reclamar\|recobrar\|recoger\|recomendar\|recomponer\|reconocer\|reconsiderar\|reconstruir\|recordar\|recorrer\|recortar\|recuperar\|redactar\|redoblar\|reducir\|reflejar\|reformar\|reforzar\|regalar\|registrar\|regular\|rehuir\|reiterar\|reivindicar\|relatar\|releer\|rematar\|rememorar\|remover\|renovar\|repartir\|repasar\|repetir\|reponer\|representar\|reprimir\|reprobar\|reprochar\|reproducir\|requerir\|resaltar\|rescatar\|reservar\|resolver\|respetar\|restablecer\|restar\|restaurar\|restregar\|resumir\|retomar\|retrasar\|revelar\|revisar\|revivir\|robar\|rodear\|rogar\|romper\|rozar\|rumiar\|saber\|saborear\|sacar\|sacrificar\|sacudir\|salvaguardar\|salvar\|satisfacer\|secundar\|seguir\|seleccionar\|sembrar\|señalar\|serrar\|servir\|significar\|simular\|solicitar\|solucionar\|soñar\|sopesar\|soportar\|sorber\|sortear\|sospechar\|sostener\|subrayar\|sufrir\|sugerir\|sujetar\|suministrar\|superar\|suplantar\|suponer\|suprimir\|suscitar\|suspender\|sustentar\|sustituir\|tapar\|tararear\|temer\|tener\|tentar\|terminar\|tocar\|tolerar\|tomar\|torcer\|traer\|tragar\|transmitir\|transportar\|traspasar\|trasponer\|trazar\|usar\|utilizar\|vaciar\|valer\|valorar\|velar\|vencer\|vender\|ver\|verificar\|visitar\|vislumbrar\|voltear\|vomitar\|zampar\|zanjar\|)";#<string>
+my $SubcatAtr  = "(?:acabar\|actuar\|amanecer\|andar\|antojar\|aparecer\|caer\|considerar\|continuar\|costar\|creer\|dar\|declarar\|definir\|dejar\|ejercer\|encontrar\|erigir\|estar\|hacer\|hallar\|imaginar\|ingresar\|ir\|llamar\|llevar\|manifestar\|mantener\|meter\|mostrar\|nacer\|parecer\|pasar\|permanecer\|poner\|proseguir\|quedar\|resultar\|revelar\|saber\|salir\|seguir\|sentir\|ser\|sonar\|tener\|terminar\|tirar\|titular\|tornar\|trabajar\|transcurrir\|venir\|ver\|vivir\|volver\|yacer\|)";#<string>
+my $SubcatODirAtr  = "(?:tener\|dejar\|hacer\|ver\|poner\|llamar\|considerar\|llevar\|mantener\|sentir\|tomar\|oír\|calificar\|encontrar\|creer\|dar\|imaginar\|traer\|estimar\|pasar\|entender\|volver\|juzgar\|definir\|concebir\|utilizar\|declarar\|mirar\|colocar\|escuchar\|hallar\|denominar\|conocer\|conservar\|reconocer\|tachar\|identificar\|tratar\|aceptar\|coger\|)";#<string>
+my $SubcatClaus  = "(?:saber\|creer\|querer\|decir\|pensar\|ver\|preguntar\|intentar\|recordar\|permitir\|lograr\|decidir\|desear\|pretender\|hacer\|asegurar\|esperar\|pedir\|explicar\|comprender\|conseguir\|preferir\|necesitar\|suponer\|sentir\|afirmar\|considerar\|tener\|entender\|impedir\|contar\|procurar\|reconocer\|temer\|advertir\|señalar\|dejar\|oír\|indicar\|proponer\|comprobar\|descubrir\|imaginar\|declarar\|confesar\|demostrar\|añadir\|jurar\|admitir\|prometer\|significar\|anunciar\|sospechar\|evitar\|aceptar\|mirar\|fingir\|observar\|contestar\|notar\|olvidar\|mostrar\|manifestar\|negar\|comentar\|mandar\|sostener\|encontrar\|responder\|ordenar\|estimar\|precisar\|ignorar\|exigir\|opinar\|rogar\|soñar\|lamentar\|merecer\|dar\|agregar\|confirmar\|averiguar\|enseñar\|adivinar\|aclarar\|aconsejar\|comunicar\|sugerir\|prever\|subrayar\|repetir\|conocer\|deducir\|destacar\|intuir\|informar\|revelar\|figurar\|gritar\|perdonar\|poner\|resolver\|probar\|avisar\|prohibir\|recomendar\|dudar\|agradecer\|determinar\|apuntar\|criticar\|acordar\|calcular\|solicitar\|juzgar\|reiterar\|reprochar\|simular\|estudiar\|replicar\|tolerar\|insinuar\|ofrecer\|argumentar\|aparentar\|establecer\|percibir\|verificar\|buscar\|presentir\|referir\|escribir\|aprovechar\|alegar\|leer\|amenazar\|denunciar\|garantizar\|desconocer\|escuchar\|implicar\|justificar\|odiar\|reponer\|consentir\|reclamar\|dignar\|hablar\|concebir\|servir\|apreciar\|adelantar\|contemplar\|elegir\|descartar\|reflexionar\|suplicar\|presumir\|puntualizar\|rehuir\|disponer\|rehusar\|notificar\|pretextar\|requerir\|concluir\|estipular\|)";#<string>
 
 
 ####################################END CODE BY COMPI################################################
@@ -225,6 +225,14 @@ sub parse{
 					$listTags =~ s/($VERB$a2)/$1/g;
 					Add("Head","nomin:no",\@temp);
 
+					# Single: PRP<lemma:pero|because|though|if|whether|while> [X]?
+					# Corr: tag:CONJ, type:S
+					@temp = ($listTags =~ /($PRP${l}lemma:(?:pero|because|though|if|whether|while)\|${r})(?:$X$a2)?/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($PRP${l}lemma:(?:pero|because|though|if|whether|while)\|${r})($X$a2)?/$1$2/g;
+					Corr("Head","tag:CONJ,type:S",\@temp);
+
 					# Single: [NOUN] [Fc]? CONJ<lemma:que> [NOUN] [VERB]
 					# Corr: tag:PRO, type:R
 					@temp = ($listTags =~ /(?:$NOUN$a2)(?:$Fc$a2)?($CONJ${l}lemma:que\|${r})(?:$NOUN$a2)(?:$VERB$a2)/g);
@@ -232,6 +240,30 @@ sub parse{
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($Fc$a2)?($CONJ${l}lemma:que\|${r})($NOUN$a2)($VERB$a2)/$1$2$3$4$5/g;
 					Corr("Head","tag:PRO,type:R",\@temp);
+
+					# Single: [X<lemma:lo>] CONJ<lemma:que>
+					# Corr: tag:PRO, type:R
+					@temp = ($listTags =~ /(?:$X${l}lemma:lo\|${r})($CONJ${l}lemma:que\|${r})/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($X${l}lemma:lo\|${r})($CONJ${l}lemma:que\|${r})/$1$2/g;
+					Corr("Head","tag:PRO,type:R",\@temp);
+
+					# Single: X<lemma:lo> [PRO<lemma:que>]
+					# Corr: tag:DT, type:A
+					@temp = ($listTags =~ /($X${l}lemma:lo\|${r})(?:$PRO${l}lemma:que\|${r})/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($X${l}lemma:lo\|${r})($PRO${l}lemma:que\|${r})/$1$2/g;
+					Corr("Head","tag:DT,type:A",\@temp);
+
+					# Single: [X]? CONJ<lemma:pero>
+					# Corr: type:S
+					@temp = ($listTags =~ /(?:$X$a2)?($CONJ${l}lemma:pero\|${r})/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($X$a2)?($CONJ${l}lemma:pero\|${r})/$1$2/g;
+					Corr("Head","type:S",\@temp);
 
 					# Single: [X]? NOUN<lemma:$AdvTemp>
 					# Corr: tag:ADV
@@ -241,13 +273,13 @@ sub parse{
 					$listTags =~ s/($X$a2)?($NOUN${l}lemma:$AdvTemp\|${r})/$1$2/g;
 					Corr("Head","tag:ADV",\@temp);
 
-					# Single: VERB<lemma:determinar|dar&mode:P> [NOUN<type:C>]
-					# Corr: tag:ADJ
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:determinar|dar)\|${b2}mode:P\|${r})(?:$NOUN${l}type:C\|${r})/g);
+					# Single: VERB<token:[cC]reo> [X]? [X<lemma:que>]
+					# Corr: lemma:creer
+					@temp = ($listTags =~ /($VERB${l}token:[cC]reo\|${r})(?:$X$a2)?(?:$X${l}lemma:que\|${r})/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:determinar|dar)\|${b2}mode:P\|${r})($NOUN${l}type:C\|${r})/$1$2/g;
-					Corr("Head","tag:ADJ",\@temp);
+					$listTags =~ s/($VERB${l}token:[cC]reo\|${r})($X$a2)?($X${l}lemma:que\|${r})/$1$2$3/g;
+					Corr("Head","lemma:creer",\@temp);
 
 					# PunctR: X Fz|Fe
 					@temp = ($listTags =~ /($X$a2)($Fz$a2|$Fe$a2)/g);
@@ -291,27 +323,6 @@ sub parse{
 					HeadDep_lex($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:(?:ser|tornar|converter|be|become)\|${r})($ADV${l}lemma:$Quant\|${r})($ADJ$a2)($CONJ$a2|$PRO${l}lemma:(?:que|como)\|${r})/$1/g;
 					LEX();
-
-					# <: ADV<lemma:antes|depois> PRP<lemma:de> [ADV<lemma:ontem|amanhã>]
-					# NEXT
-					# <: [ADV<lemma:antes|depois>] PRP<lemma:de> ADV<lemma:ontem|amanhã>
-					@temp = ($listTags =~ /($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})(?:$ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
-					$Rel =  "<";
-					DepHead_lex($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/g);
-					$Rel =  "<";
-					DepHead_lex($Rel,"",\@temp);
-					$listTags =~ s/($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/$3/g;
-					LEX();
-
-					# <: PRP<lemma:de> X<lemma:manhã|tarde|noite>
-					# Add: tag:ADV
-					@temp = ($listTags =~ /($PRP${l}lemma:de\|${r})($X${l}lemma:(?:manhã|tarde|noite)\|${r})/g);
-					$Rel =  "<";
-					DepHead_lex($Rel,"",\@temp);
-					$listTags =~ s/($PRP${l}lemma:de\|${r})($X${l}lemma:(?:manhã|tarde|noite)\|${r})/$2/g;
-					LEX();
-					Add("DepHead_lex","tag:ADV",\@temp);
 
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
 					# NEXT
@@ -604,12 +615,17 @@ sub parse{
 					$listTags =~ s/($NOUN${l}concord:1${r})($ADV$a2)?($ADJ${l}concord:1${r}|$CONJ${l}concord:1${b2}coord:adj\|${r})/$1$2/g;
 					$listTags =~ s/concord:[01]\|//g;
 
-					# AdjnR: NOUN  ADJ|CONJ<coord:adj>
+					# PunctR: NOUN Fc [ADJ|CONJ<coord:adj>]
+					# NEXT
+					# AdjnR: NOUN [Fc] ADJ|CONJ<coord:adj>
 					# Agreement: gender, number
-					@temp = ($listTags =~ /($NOUN$a2)($ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
+					@temp = ($listTags =~ /($NOUN$a2)($Fc$a2)(?:$ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
+					$Rel =  "PunctR";
+					HeadDep($Rel,"",\@temp);
+					@temp = ($listTags =~ /($NOUN$a2)(?:$Fc$a2)($ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"gender,number",\@temp);
-					$listTags =~ s/($NOUN${l}concord:1${r})($ADJ${l}concord:1${r}|$CONJ${l}concord:1${b2}coord:adj\|${r})/$1/g;
+					$listTags =~ s/($NOUN${l}concord:1${r})($Fc$a2)($ADJ${l}concord:1${r}|$CONJ${l}concord:1${b2}coord:adj\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
 
 					# AdjnR:  NOUN NOUN
@@ -783,36 +799,46 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VModalES\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
-					# VSpecLocL: VERB<lemma:ter|haver> [ADV]? PRP<lemma:de>|CONJ<lemma:que&type:S> [ADV]? VERB<mode:N>
+					# VSpecL: [VERB<lemma:tener|haber>] [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? CONJ<lemma:que&type:S> [ADV]? VERB<mode:N>
+					# NEXT
+					# VSpecL: VERB<lemma:tener|haber> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [CONJ<lemma:que&type:S>] [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:ter|haver)\|${r})(?:$ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
-					$Rel =  "VSpecLocL";
-					DepRelHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:ter|haver)\|${r})($ADV$a2)?($PRP${l}lemma:de\|${r}|$CONJ${l}lemma:que\|${b2}type:S\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5/g;
-					Inherit("DepRelHead","mode,person,tense,number",\@temp);
-
-					# VSpecLocL: VERB<lemma:comezar|acabar|finalizar|terminar|passar|estar> [ADV]? PRP<lemma:$PrepLocs> [ADV]? VERB<mode:N>
-					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})(?:$ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
-					$Rel =  "VSpecLocL";
-					DepRelHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5/g;
-					Inherit("DepRelHead","mode,person,tense,number",\@temp);
-
-					# VSpecL: VERB<lemma:ir|vir> [ADV]?  VERB<mode:N>
-					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:ir|vir)\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:tener|haber)\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:ir|vir)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:tener|haber)\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$CONJ${l}lemma:que\|${b2}type:S\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					$Rel =  "VSpecL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:(?:tener|haber)\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($CONJ${l}lemma:que\|${b2}type:S\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3$4$5$6$7$8$9$10$11$13$14/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
-					# VSpecL: VERB<lemma:estar> [ADV]? VERB<mode:G>
+					# VSpecL: [VERB<lemma:ir|venir|empezar|comenzar|acabar|finalizar|terminar|pasar|estar>] [ADV]? PRP<lemma:$PrepLocs> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:N>
+					# NEXT
+					# VSpecL: VERB<lemma:ir|deber|venir|empezar|comenzar|acabar|finalizar|terminar|pasar|estar> [ADV]? [PRP<lemma:$PrepLocs>] [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:estar\|${r})(?:$ADV$a2)?($VERB${l}mode:G\|${r})/g);
+					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:ir|venir|empezar|comenzar|acabar|finalizar|terminar|pasar|estar)\|${r})(?:$ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:estar\|${r})($ADV$a2)?($VERB${l}mode:G\|${r})/$2$3/g;
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:ir|deber|venir|empezar|comenzar|acabar|finalizar|terminar|pasar|estar)\|${r})(?:$ADV$a2)?(?:$PRP${l}lemma:$PrepLocs\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					$Rel =  "VSpecL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:(?:ir|deber|venir|empezar|comenzar|acabar|finalizar|terminar|pasar|estar)\|${r})($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5/g;
+					Inherit("DepHead","mode,person,tense,number",\@temp);
+
+					# VSpecL: VERB<lemma:querer|desear|pensar|soler|acostumbrar> [ADV]? VERB<mode:N>
+					# Inherit: mode, person, tense, number
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:querer|desear|pensar|soler|acostumbrar)\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					$Rel =  "VSpecL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:(?:querer|desear|pensar|soler|acostumbrar)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
+					Inherit("DepHead","mode,person,tense,number",\@temp);
+
+					# VSpecL: VERB<lemma:estar> [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? [ADV]? VERB<mode:G>
+					# Inherit: mode, person, tense, number
+					@temp = ($listTags =~ /($VERB${l}lemma:estar\|${r})(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?(?:$ADV$a2)?($VERB${l}mode:G\|${r})/g);
+					$Rel =  "VSpecL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:estar\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB${l}mode:G\|${r})/$2$3$4$5$6$7$8$9$10$11$12/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
 					# PunctL: [ADV<pos:0>] Fc VERB
@@ -980,6 +1006,8 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUN${l}type:C\|${r})($PRP${l}lemma:$PrepRA\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
+					}
+{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:de> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -992,8 +1020,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5$6$7/g;
 
-					}
-{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:de> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:de\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -1127,21 +1153,21 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($CONJ${l}coord:noun\|${r})/$2/g;
 
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa|Fca NOUNCOORD|CARD|ADJ|PRO<type:D|P|I|X> [Fc|Fpt|Fct]
+					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa|Fca NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc|Fpa|Fca] NOUNCOORD|CARD|ADJ|PRO<type:D|P|I|X> Fc|Fpt|Fct
+					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc|Fpa|Fca] NOUNCOORD|PRO<type:D|P|I|X>|CARD Fc|Fpt|Fct
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc|Fpa|Fca] NOUNCOORD|CARD|ADJ|PRO<type:D|P|I|X> [Fc|Fpt|Fct]
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$CARD$a2|ADJ|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc|Fpa|Fca] NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$CARD$a2|ADJ|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$CARD$a2|ADJ|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpt$a2|Fct)/g);
+					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)(?:$Fc$a2|$Fpt$a2|Fct)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$CARD$a2|ADJ|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpt$a2|Fct)/$1/g;
+					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2|$Fpa$a2|Fca)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$CARD$a2)($Fc$a2|$Fpt$a2|Fct)/$1/g;
 
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa|Fca [PRP] NOUNCOORD|PRO<type:D|P|I|X>|CARD [Fc|Fpt|Fct]
 					# NEXT
@@ -1182,48 +1208,48 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$SubcatClaus\|${r})($ADJ$a2)($PRO${l}type:R\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($VERB${l}mode:[^PNG]\|${r})/$1$2$3$4$5/g;
 					Corr("Head","tag:CONJ,type:S",\@temp);
 
-					# SubjL: [NOUNCOORD] PRO<type:R|W> VERB|CONJ<coord:verb>
+					# SubjL: [NOUN] PRO<type:R|W> VERB|CONJ<coord:verb>
 					# NEXT
-					# AdjnR: NOUNCOORD [PRO<type:R|W>] VERB|CONJ<coord:verb>
+					# AdjnR: NOUN [PRO<type:R|W>] VERB|CONJ<coord:verb>
 					# NoUniq
-					@temp = ($listTags =~ /(?:$NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($NOUN$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3/g;
+					$listTags =~ s/($NOUN$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3/g;
 
-					# DobjL: [NOUNCOORD] PRO<type:R|W> [NOUNCOORD|PRO<type:D|P|I|X>] VERB|CONJ<coord:verb>
+					# DobjL: [NOUN] PRO<type:R|W> [NOUNCOORD|PRO<type:D|P|I|X>] VERB|CONJ<coord:verb>
 					# NEXT
-					# AdjnR: NOUNCOORD [PRO<type:R|W>] [NOUNCOORD|PRO<type:D|P|I|X>] VERB|CONJ<coord:verb>
+					# AdjnR: NOUN [PRO<type:R|W>] [NOUNCOORD|PRO<type:D|P|I|X>] VERB|CONJ<coord:verb>
 					# NoUniq
-					@temp = ($listTags =~ /(?:$NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2)($PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "DobjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD)(?:$PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($NOUN$a2)(?:$PRO${l}type:(?:R|W)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD)($PRO${l}type:(?:R|W)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
+					$listTags =~ s/($NOUN$a2)($PRO${l}type:(?:R|W)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
 
-					# CircL: [NOUNCOORD|PRO<type:D|P|I|X>]  PRP PRO<type:R|W> VERB|CONJ<coord:verb>
+					# CircL: [NOUN|PRO<type:D|P|I|X>]  PRP PRO<type:R|W> VERB|CONJ<coord:verb>
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>
+					# AdjnR: NOUN|PRO<type:D|P|I|X> [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>
 					# NoUniq
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
+					$listTags =~ s/($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})/$1$2$3$4/g;
 
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X>  VERB<mode:[GP]>|CONJ<coord:verb>
+					# AdjnR: NOUN|PRO<type:D|P|I|X>  VERB<mode:[GP]>|CONJ<coord:verb>
 					# NoUniq
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/$1$2/g;
+					$listTags =~ s/($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/$1$2/g;
 
 					# CircR: VERB<mode:P> [NOUNCOORD|PRO<type:D|P|I|X>] PRP<lemma:por|by> NOUNCOORD|PRO<type:D|P|I|X>|ADV
 					@temp = ($listTags =~ /($VERB${l}mode:P\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP${l}lemma:(?:por|by)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$ADV$a2)/g);
@@ -1278,30 +1304,23 @@ sub parse{
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($CONJ${l}coord:cprep\|${r})/$1/g;
 
 					# SubjL: PRO<sust:yes>  VERB
-					# Add: nomin:yes adsubj:yes
+					# Add: nomin:yes
 					# Inherit: number, person
 					@temp = ($listTags =~ /($PRO${l}sust:yes\|${r})($VERB$a2)/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($PRO${l}sust:yes\|${r})($VERB$a2)/$2/g;
 					Inherit("DepHead","number,person",\@temp);
-					Add("DepHead","nomin:yes,adsubj:yes",\@temp);
+					Add("DepHead","nomin:yes",\@temp);
 
-					# SpecL: PRO<sust:yes> [NOUNCOORD|PRO<type:D|P|I|X>] [VERB]
-					# NEXT
 					# SubjL: [PRO<sust:yes>] NOUNCOORD|PRO<type:D|P|I|X> VERB
-					# Add: adsubj:yes
 					# NEXT
 					# DobjL: PRO<sust:yes> [NOUNCOORD|PRO<type:D|P|I|X>] VERB
 					# Add: nomin:yes
 					# Inherit: number, person
-					@temp = ($listTags =~ /($PRO${l}sust:yes\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$VERB$a2)/g);
-					$Rel =  "SpecL";
-					DepHead($Rel,"",\@temp);
 					@temp = ($listTags =~ /(?:$PRO${l}sust:yes\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2)/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					Add("DepHead","adsubj:yes",\@temp);
 					@temp = ($listTags =~ /($PRO${l}sust:yes\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2)/g);
 					$Rel =  "DobjL";
 					DepHead($Rel,"",\@temp);
@@ -1311,33 +1330,33 @@ sub parse{
 
 					# SubjR: VERB<lemma:$VS> NOUNCOORD|PRO<type:D|P|I|X>
 					# Agr: number, person
-					# Add: adsubj:yes
 					@temp = ($listTags =~ /($VERB${l}lemma:$VS\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "SubjR";
 					HeadDep($Rel,"number,person",\@temp);
 					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$VS\|${r})($NOUNCOORD|$PRO${l}concord:1${b2}type:(?:D|P|I|X)\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
-					Add("HeadDep","adsubj:yes",\@temp);
 
 					# SubjR: VERB<se:yes&lemma:$VSrefleja> NOUNCOORD|PRO<type:D|P|I|X>
 					# Agr: number, person
-					# Add: adsubj:yes
 					@temp = ($listTags =~ /($VERB${l}lemma:$VSrefleja\|${b2}se:yes\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "SubjR";
 					HeadDep($Rel,"number,person",\@temp);
 					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$VSrefleja\|${b2}se:yes\|${r})($NOUNCOORD|$PRO${l}concord:1${b2}type:(?:D|P|I|X)\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
-					Add("HeadDep","adsubj:yes",\@temp);
 
 					# SubjR: VERB<ind:yes&lemma:$VSind> NOUNCOORD|PRO<type:D|P|I|X>
 					# Agr: number, person
-					# Add: adsubj:yes
 					@temp = ($listTags =~ /($VERB${l}ind:yes\|${b2}lemma:$VSind\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "SubjR";
 					HeadDep($Rel,"number,person",\@temp);
 					$listTags =~ s/($VERB${l}concord:1${b2}ind:yes\|${b2}lemma:$VSind\|${r})($NOUNCOORD|$PRO${l}concord:1${b2}type:(?:D|P|I|X)\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
-					Add("HeadDep","adsubj:yes",\@temp);
+
+					# DobjPrepR: VERB<lemma:$SubcatTr> PRP<lemma:a> NOUNCOORD|PRO<type:D|P|I|X>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatTr\|${r})($PRP${l}lemma:a\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
+					$Rel =  "DobjPrepR";
+					HeadRelDep($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$SubcatTr\|${r})($PRP${l}lemma:a\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
 					# AtrR: VERB<lemma:ser> NOUNCOORD|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /($VERB${l}lemma:ser\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
@@ -1369,11 +1388,11 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatA\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:a\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# CregR: VERB<lemma:$SubcatEM>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:em> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatEM\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:em\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
+					# CregR: VERB<lemma:$SubcatEN>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:en> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatEN\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:en\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatEM\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:em\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
+					$listTags =~ s/($VERB${l}lemma:$SubcatEN\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:en\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
 					# CregR: VERB<lemma:$SubcatDE>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:de> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatDE\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:de\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -1381,11 +1400,11 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatDE\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:de\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# CregR: VERB<lemma:$SubcatCOM>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:com> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatCOM\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:com\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
+					# CregR: VERB<lemma:$SubcatCON>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:con> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatCON\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:con\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatCOM\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:com\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
+					$listTags =~ s/($VERB${l}lemma:$SubcatCON\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:con\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
 					# CregR: VERB<lemma:$SubcatPOR>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:por> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatPOR\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:por\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -1393,11 +1412,11 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatPOR\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:por\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# CregR: VERB<lemma:$SubcatPARA>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:para> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatPARA\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:para\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
+					# CregR: VERB<lemma:$SubcatHACIA>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:hacia> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatHACIA\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:hacia\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatPARA\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:para\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
+					$listTags =~ s/($VERB${l}lemma:$SubcatHACIA\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:hacia\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
 					# CregR: VERB<lemma:$SubcatSOBRE>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:sobre> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatSOBRE\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -1650,43 +1669,43 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?/$1/g;
 
-					# PunctL: [PRP<pos:0>] [NOUNCOORD|PRO<type:D|P|I|X>] Fc  VERB|CONJ<coord:verb>
+					# PunctL: [PRP<pos:0>] [NOUNCOORD|PRO<type:D|P|I|X>] Fc  VERB<mode:[^PNG]>|CONJ<coord:verb>
 					# NEXT
-					# CircL: PRP<pos:0> NOUNCOORD|PRO<type:D|P|I|X> [Fc]?  VERB|CONJ<coord:verb>
-					@temp = ($listTags =~ /(?:$PRP${l}pos:0\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					# CircL: PRP<pos:0> NOUNCOORD|PRO<type:D|P|I|X> [Fc]?  VERB<mode:[^PNG]>|CONJ<coord:verb>
+					@temp = ($listTags =~ /(?:$PRP${l}pos:0\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($PRP${l}pos:0\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($PRP${l}pos:0\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					$listTags =~ s/($PRP${l}pos:0\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/$4/g;
+					$listTags =~ s/($PRP${l}pos:0\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/$4/g;
 
-					# PunctL: Fc [PRP] [NOUNCOORD|PRO<type:D|P|I|X> ] [Fc]?  VERB|CONJ<coord:verb>
+					# PunctL: Fc [PRP] [NOUNCOORD|PRO<type:D|P|I|X> ] [Fc]?  VERB<mode:[^PNG]>|CONJ<coord:verb>
 					# NEXT
-					# PunctL: [Fc]? [PRP] [NOUNCOORD|PRO<type:D|P|I|X> ] Fc  VERB|CONJ<coord:verb>
+					# PunctL: [Fc]? [PRP] [NOUNCOORD|PRO<type:D|P|I|X> ] Fc  VERB<mode:[^PNG]>|CONJ<coord:verb>
 					# NEXT
-					# CircL: [Fc]? PRP NOUNCOORD|PRO<type:D|P|I|X>  [Fc]?  VERB|CONJ<coord:verb>
+					# CircL: [Fc]? PRP NOUNCOORD|PRO<type:D|P|I|X>  [Fc]?  VERB<mode:[^PNG]>|CONJ<coord:verb>
 					# Recursivity:1
-					@temp = ($listTags =~ /($Fc$a2)(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])(?:$Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /($Fc$a2)(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])(?:$Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$Fc$a2)?(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])($Fc$a2)($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$Fc$a2)?(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])($Fc$a2)($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/$5/g;
-					@temp = ($listTags =~ /($Fc$a2)(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])(?:$Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/$5/g;
+					@temp = ($listTags =~ /($Fc$a2)(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])(?:$Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$Fc$a2)?(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])($Fc$a2)($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$Fc$a2)?(?:$PRP$a2)([NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(])($Fc$a2)($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/g);
+					@temp = ($listTags =~ /(?:$Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/$5/g;
+					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB${l}mode:[^PNG]\|${r}|$CONJ${l}coord:verb\|${r})/$5/g;
 
 					# AtrR: VERB<lemma:$SubcatAtr>  VERB<mode:[PNG]>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/g);
@@ -1702,33 +1721,29 @@ sub parse{
 
 					# SubjR: VERB<lemma:$VS> VERB<mode:N>
 					# Agr: number, person
-					# Add: adsubj:yes
 					@temp = ($listTags =~ /($VERB${l}lemma:$VS\|${r})($VERB${l}mode:N\|${r})/g);
 					$Rel =  "SubjR";
 					HeadDep($Rel,"number,person",\@temp);
 					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$VS\|${r})($VERB${l}concord:1${b2}mode:N\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
-					Add("HeadDep","adsubj:yes",\@temp);
 
+					}
+{#<function>
 					# SubjR: VERB<se:yes&lemma:$VSrefleja> VERB<mode:N>
 					# Agr: number, person
-					# Add: adsubj:yes
 					@temp = ($listTags =~ /($VERB${l}lemma:$VSrefleja\|${b2}se:yes\|${r})($VERB${l}mode:N\|${r})/g);
 					$Rel =  "SubjR";
 					HeadDep($Rel,"number,person",\@temp);
 					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$VSrefleja\|${b2}se:yes\|${r})($VERB${l}concord:1${b2}mode:N\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
-					Add("HeadDep","adsubj:yes",\@temp);
 
 					# SubjR: VERB<ind:yes&lemma:$VSind> VERB<mode:N>
 					# Agr: number, person
-					# Add: adsubj:yes
 					@temp = ($listTags =~ /($VERB${l}ind:yes\|${b2}lemma:$VSind\|${r})($VERB${l}mode:N\|${r})/g);
 					$Rel =  "SubjR";
 					HeadDep($Rel,"number,person",\@temp);
 					$listTags =~ s/($VERB${l}concord:1${b2}ind:yes\|${b2}lemma:$VSind\|${r})($VERB${l}concord:1${b2}mode:N\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
-					Add("HeadDep","adsubj:yes",\@temp);
 
 					# DobjR: VERB VERB<mode:N>
 					@temp = ($listTags =~ /($VERB$a2)($VERB${l}mode:N\|${r})/g);
@@ -1736,8 +1751,6 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($VERB${l}mode:N\|${r})/$1/g;
 
-					}
-{#<function>
 					# AdjnR:  VERB<mode:[^PNG]> DATE
 					@temp = ($listTags =~ /($VERB${l}mode:[^PNG]\|${r})($DATE$a2)/g);
 					$Rel =  "AdjnR";
@@ -1769,34 +1782,32 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$SubcatClaus\|${r})($PRO${l}type:R\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($VERB${l}mode:[^PNG]\|${r})/$1$2$3$4/g;
 					Corr("Head","tag:CONJ,type:S",\@temp);
 
-					# SpecL: [VERB] CONJ<type:S>  VERB<mode:[^PNG]>
+					# SpecL: [VERB] CONJ<lemma:que|si> VERB<mode:[^PNG]>
 					# NEXT
-					# DobjR: VERB  [CONJ<type:S>] VERB<mode:[^PNG]>
-					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}type:S\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					# DobjR: VERB  [CONJ<lemma:que|si>] VERB<mode:[^PNG]>
+					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}lemma:(?:que|si)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "SpecL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}type:S\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}lemma:(?:que|si)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CONJ${l}type:S\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($CONJ${l}lemma:(?:que|si)\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
 
-					# SpecL: [VERB]  CONJ<type:S>  [NOUNCOORD|PRO<type:D|P|I|X>] VERB<mode:[^PNG]>
+					# SpecL: [VERB]  CONJ<lemma:que|si>  [NOUNCOORD|PRO<type:D|P|I|X>] VERB<mode:[^PNG]>
 					# NEXT
-					# SubjL:  [VERB]  [CONJ<type:S>]  NOUNCOORD|PRO<type:D|P|I|X> VERB<mode:[^PNG]
-					# Add: adsubj:yes
+					# SubjL:  [VERB]  [CONJ<lemma:que|si>]  NOUNCOORD|PRO<type:D|P|I|X> VERB<mode:[^PNG]>
 					# NEXT
-					# DobjR: VERB   [CONJ<type:S>] [NOUNCOORD|PRO<type:D|P|I|X>] VERB<mode:[^PNG]>
-					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}type:S\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					# DobjR: VERB   [CONJ<lemma:que|si>] [NOUNCOORD|PRO<type:D|P|I|X>] VERB<mode:[^PNG]>
+					@temp = ($listTags =~ /(?:$VERB$a2)($CONJ${l}lemma:(?:que|si)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "SpecL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$CONJ${l}type:S\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB$a2${l}mode:[^PNG])/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)(?:$CONJ${l}lemma:(?:que|si)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					Add("DepHead","adsubj:yes",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}type:S\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$CONJ${l}lemma:(?:que|si)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/g);
 					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CONJ${l}type:S\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($CONJ${l}lemma:(?:que|si)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PNG]\|${r})/$1/g;
 
 					# SpecL: [VERB] [PRP] CONJ<lemma:que> VERB<mode:[^PNG]>
 					# NEXT
@@ -2027,20 +2038,20 @@ sub parse{
 					$listTags =~ s/($Fc$a2)($CONJ${l}coord:verb\|${r})/$2/g;
 
 					# SubjL: NOUN<type:P> VERB<mode:[^PG]>|CONJ<coord:verb&mode:[^PG]>
-					# Add: adsubj:yes
+					# Add: subj:yes
 					@temp = ($listTags =~ /($NOUN${l}type:P\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN${l}type:P\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/$2/g;
-					Add("DepHead","adsubj:yes",\@temp);
+					Add("DepHead","subj:yes",\@temp);
 
 					# SubjL: NOMINAL|PRO<type:D|P|I|X> VERB<mode:[^PG]>|CONJ<coord:verb&mode:[^PG]>
-					# Add: adsubj:yes
+					# Add: subj:yes
 					@temp = ($listTags =~ /($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/$2/g;
-					Add("DepHead","adsubj:yes",\@temp);
+					Add("DepHead","subj:yes",\@temp);
 
 					# SubjR: VERB<lemma:$VS> NOMINAL|PRO<type:D|P|I|X>
 					# Agr: number, person
@@ -2096,11 +2107,11 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatA\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:a\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# CregR: VERB<lemma:$SubcatEM>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:em> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatEM\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:em\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
+					# CregR: VERB<lemma:$SubcatEN>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:en> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatEN\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:en\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatEM\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:em\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
+					$listTags =~ s/($VERB${l}lemma:$SubcatEN\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:en\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
 					# CregR: VERB<lemma:$SubcatDE>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:de> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatDE\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:de\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -2108,11 +2119,11 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatDE\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:de\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# CregR: VERB<lemma:$SubcatCOM>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:com> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatCOM\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:com\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
+					# CregR: VERB<lemma:$SubcatCON>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:con> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatCON\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:con\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatCOM\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:com\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
+					$listTags =~ s/($VERB${l}lemma:$SubcatCON\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:con\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
 					# CregR: VERB<lemma:$SubcatPOR>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:por> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatPOR\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:por\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -2120,11 +2131,11 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatPOR\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:por\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# CregR: VERB<lemma:$SubcatPARA>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:para> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatPARA\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:para\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
+					# CregR: VERB<lemma:$SubcatHACIA>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:hacia> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatHACIA\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:hacia\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatPARA\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:para\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
+					$listTags =~ s/($VERB${l}lemma:$SubcatHACIA\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:hacia\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
 					# CregR: VERB<lemma:$SubcatSOBRE>  [NOMINAL|PRO<type:D|P|I|X>]? PRP<lemma:sobre> NOMINAL|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatSOBRE\|${r})(?:$NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -2132,68 +2143,68 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatSOBRE\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRO<type:R|W>] VERB<adsubj:yes>|CONJ<adsubj:yes&coord:verb>    [Fc]?
+					# PunctL: [NOUN|PRO<type:D|P|I|X>] Fc [PRO<type:R|W>] VERB<subj:yes>|CONJ<subj:yes&coord:verb>    [Fc]?
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc] [PRO<type:R|W>] VERB<adsubj:yes>|CONJ<adsubj:yes&coord:verb>   Fc
+					# PunctR: [NOUN|PRO<type:D|P|I|X>] [Fc] [PRO<type:R|W>] VERB<subj:yes>|CONJ<subj:yes&coord:verb>   Fc
 					# NEXT
-					# DobjL: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]? PRO<type:R|W> VERB<adsubj:yes>|CONJ<adsubj:yes&coord:verb>    [Fc]?
+					# DobjL: [NOUN|PRO<type:D|P|I|X>] [Fc]? PRO<type:R|W> VERB<subj:yes>|CONJ<subj:yes&coord:verb>    [Fc]?
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc]? [PRO<type:R|W>] VERB<adsubj:yes>|CONJ<adsubj:yes&coord:verb>    [Fc]?
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB${l}adsubj:yes\|${r}|$CONJ${l}adsubj:yes\|${b2}coord:verb\|${r})(?:$Fc$a2)?/g);
+					# AdjnR: NOUN|PRO<type:D|P|I|X> [Fc]? [PRO<type:R|W>] VERB<subj:yes>|CONJ<subj:yes&coord:verb>    [Fc]?
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB${l}subj:yes\|${r}|$CONJ${l}subj:yes\|${b2}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB${l}adsubj:yes\|${r}|$CONJ${l}adsubj:yes\|${b2}coord:verb\|${r})($Fc$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB${l}subj:yes\|${r}|$CONJ${l}subj:yes\|${b2}coord:verb\|${r})($Fc$a2)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB${l}adsubj:yes\|${r}|$CONJ${l}adsubj:yes\|${b2}coord:verb\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB${l}subj:yes\|${r}|$CONJ${l}subj:yes\|${b2}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "DobjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRO${l}type:(?:R|W)\|${r})($VERB${l}adsubj:yes\|${r}|$CONJ${l}adsubj:yes\|${b2}coord:verb\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRO${l}type:(?:R|W)\|${r})($VERB${l}subj:yes\|${r}|$CONJ${l}subj:yes\|${b2}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB${l}adsubj:yes\|${r}|$CONJ${l}adsubj:yes\|${b2}coord:verb\|${r})($Fc$a2)?/$1/g;
+					$listTags =~ s/($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB${l}subj:yes\|${r}|$CONJ${l}subj:yes\|${b2}coord:verb\|${r})($Fc$a2)?/$1/g;
 
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRO<type:R|W>] VERB|CONJ<coord:verb>   [Fc]?
+					# PunctL: [NOUN|PRO<type:D|P|I|X>] Fc [PRO<type:R|W>] VERB|CONJ<coord:verb>   [Fc]?
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]? [PRO<type:R|W>] VERB|CONJ<coord:verb> Fc
+					# PunctR: [NOUN|PRO<type:D|P|I|X>] [Fc]? [PRO<type:R|W>] VERB|CONJ<coord:verb> Fc
 					# NEXT
-					# SubjL: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]? PRO<type:R|W> VERB|CONJ<coord:verb>   [Fc]?
+					# SubjL: [NOUN|PRO<type:D|P|I|X>] [Fc]? PRO<type:R|W> VERB|CONJ<coord:verb>   [Fc]?
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc]? [PRO<type:R|W>] VERB|CONJ<coord:verb>  [Fc]?
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
+					# AdjnR: NOUN|PRO<type:D|P|I|X> [Fc]? [PRO<type:R|W>] VERB|CONJ<coord:verb>  [Fc]?
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)?/$1/g;
+					$listTags =~ s/($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)?/$1/g;
 
-					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>   [Fc]?
+					# PunctL: [NOUN|PRO<type:D|P|I|X>] Fc [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>   [Fc]?
 					# NEXT
-					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]?  [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb> Fc
+					# PunctR: [NOUN|PRO<type:D|P|I|X>] [Fc]?  [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb> Fc
 					# NEXT
-					# CircL: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]? PRP PRO<type:R|W> VERB|CONJ<coord:verb>  [Fc]?
+					# CircL: [NOUN|PRO<type:D|P|I|X>] [Fc]? PRP PRO<type:R|W> VERB|CONJ<coord:verb>  [Fc]?
 					# NEXT
-					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc]? [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>  [Fc]?
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
+					# AdjnR: NOUN|PRO<type:D|P|I|X> [Fc]? [PRP] [PRO<type:R|W>] VERB|CONJ<coord:verb>  [Fc]?
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)?/$1/g;
+					$listTags =~ s/($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRP$a2)($PRO${l}type:(?:R|W)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)?/$1/g;
 
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc VERB<mode:[GP]>|CONJ<coord:verb>
 					# NEXT
