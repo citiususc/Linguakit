@@ -37,7 +37,7 @@ my $DET = "DT_[0-9]+";#<string>
 my $PRO = "PRO_[0-9]+";#<string>
 my $VERB = "VERB_[0-9]+";#<string>
 my $I = "I_[0-9]+";#<string>
-my $DATE = "DATE_[0-9]+";#<string>
+my $DATE = "W_[0-9]+";#<string>
 my $POS = "POS_[0-9]+";#<string>
 my $PCLE = "PCLE_[0-9]+";#<string>
 my $EX = "EX_[0-9]+";#<string>
@@ -243,29 +243,13 @@ sub parse{
 					$listTags =~ s/($X$a2)?($NOUN${l}lemma:$AdvTemp\|${r})/$1$2/g;
 					Corr("Head","tag:ADV",\@temp);
 
-					# Single: VERB<token:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes> [X<token:a>] [NOUN<type:P>]
-					# Corr: lemma:ir
-					@temp = ($listTags =~ /($VERB${l}token:(?:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes)\|${r})(?:$X${l}token:a\|${r})(?:$NOUN${l}type:P\|${r})/g);
+					# Single: X<token:–> [X]
+					# Corr: tag:Fe
+					@temp = ($listTags =~ /($X${l}token:–\|${r})(?:$X$a2)/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}token:(?:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes)\|${r})($X${l}token:a\|${r})($NOUN${l}type:P\|${r})/$1$2$3/g;
-					Corr("Head","lemma:ir",\@temp);
-
-					# Single: VERB<token:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes> [PRP<lemma:a>]
-					# Corr: lemma:ir
-					@temp = ($listTags =~ /($VERB${l}token:(?:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes)\|${r})(?:$PRP${l}lemma:a\|${r})/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}token:(?:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes)\|${r})($PRP${l}lemma:a\|${r})/$1$2/g;
-					Corr("Head","lemma:ir",\@temp);
-
-					# Single: VERB<token:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes> [PRO<lemma:se>]
-					# Corr: lemma:ir
-					@temp = ($listTags =~ /($VERB${l}token:(?:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes)\|${r})(?:$PRO${l}lemma:se\|${r})/g);
-					$Rel =  "Single";
-					Head($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}token:(?:[Ff]un|[Ff]oi|[Ff]omos|[Ff]oran|[Ff]uches|[Ff]ose|[Ff]osem|[Ff]ostes)\|${r})($PRO${l}lemma:se\|${r})/$1$2/g;
-					Corr("Head","lemma:ir",\@temp);
+					$listTags =~ s/($X${l}token:–\|${r})($X$a2)/$1$2/g;
+					Corr("Head","tag:Fe",\@temp);
 
 					# PunctR: X Fz|Fe|Frc
 					@temp = ($listTags =~ /($X$a2)($Fz$a2|$Fe$a2|$Frc$a2)/g);
@@ -318,6 +302,18 @@ sub parse{
 					$listTags =~ s/($X${l}lemma:(?:momento|minuto|segundo|hora|día|mes|ano|semana|século)\|${r})($X${l}lemma:(?:antes|despois)\|${r})/$2/g;
 					LEX();
 					Add("DepHead_lex","tag:DATE",\@temp);
+
+					# >: X<lemma:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|luns|martes|mércores|xoves|venres|sábado|domingo> Fc [DATE]
+					# NEXT
+					# <: X<lemma:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|luns|martes|mércores|xoves|venres|sábado|domingo> [Fc]? DATE
+					@temp = ($listTags =~ /($X${l}lemma:(?:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|luns|martes|mércores|xoves|venres|sábado|domingo)\|${r})($Fc$a2)(?:$DATE$a2)/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					@temp = ($listTags =~ /($X${l}lemma:(?:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|luns|martes|mércores|xoves|venres|sábado|domingo)\|${r})(?:$Fc$a2)?($DATE$a2)/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					$listTags =~ s/($X${l}lemma:(?:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|luns|martes|mércores|xoves|venres|sábado|domingo)\|${r})($Fc$a2)?($DATE$a2)/$3/g;
+					LEX();
 
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
 					# NEXT
@@ -628,6 +624,12 @@ sub parse{
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUN$a2)($NOUN$a2)/$1/g;
+
+					# AdjnL: CARD NOUN
+					@temp = ($listTags =~ /($CARD$a2)($NOUN$a2)/g);
+					$Rel =  "AdjnL";
+					DepHead($Rel,"",\@temp);
+					$listTags =~ s/($CARD$a2)($NOUN$a2)/$2/g;
 
 					# Single: [DET] ADJ [PRP]
 					# Corr: tag:NOUN
@@ -1131,18 +1133,12 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($ADJ$a2|$ADV$a2|$DATE$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X|)\|${r})/$1/g;
 
-					# CprepR: NOUN|CONJ<coord:noun> PRP VERB<mode:N>
-					@temp = ($listTags =~ /($NOUN$a2|$CONJ${l}coord:noun\|${r})($PRP$a2)($VERB${l}mode:N\|${r})/g);
-					$Rel =  "CprepR";
-					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2|$CONJ${l}coord:noun\|${r})($PRP$a2)($VERB${l}mode:N\|${r})/$1/g;
-
-					# CprepR: ADJ|ADV|NOUN|DATE PRP VERB<mode:N>
+					# CprepR: ADJ|ADV|DATE PRP VERB<mode:N>
 					# NoUniq
-					@temp = ($listTags =~ /($ADJ$a2|$ADV$a2|$NOUN$a2|DATE)($PRP$a2)($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($ADJ$a2|$ADV$a2|$DATE$a2)($PRP$a2)($VERB${l}mode:N\|${r})/g);
 					$Rel =  "CprepR";
 					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2|$ADV$a2|$NOUN$a2|DATE)($PRP$a2)($VERB${l}mode:N\|${r})/$1$2$3/g;
+					$listTags =~ s/($ADJ$a2|$ADV$a2|$DATE$a2)($PRP$a2)($VERB${l}mode:N\|${r})/$1$2$3/g;
 
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc|Fpa|Fca NOUNCOORD|CARD|ADJ|PRO<type:D|P|I|X> [Fc|Fpt|Fct]
 					# NEXT
@@ -1242,12 +1238,6 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[GP]\|${r}|$CONJ${l}coord:verb\|${r})/$1$2/g;
 
-					# CircR: VERB<voice:passive> [X]? [X]? [X]? [X]? PRP<lemma:por> NOUNCOORD|PRO<type:D|P|I|X>
-					@temp = ($listTags =~ /($VERB${l}voice:passive\|${r})(?:$X$a2)?(?:$X$a2)?(?:$X$a2)?(?:$X$a2)?($PRP${l}lemma:por\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "CircR";
-					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}voice:passive\|${r})($X$a2)?($X$a2)?($X$a2)?($X$a2)?($PRP${l}lemma:por\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5/g;
-
 					# CircR: VERB<mode:P> [NOUNCOORD|PRO<type:D|P|I|X>] PRP<lemma:por|by> NOUNCOORD|PRO<type:D|P|I|X>|ADV
 					@temp = ($listTags =~ /($VERB${l}mode:P\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP${l}lemma:(?:por|by)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$ADV$a2)/g);
 					$Rel =  "CircR";
@@ -1264,6 +1254,44 @@ sub parse{
 					$Rel =  "CircR";
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)?($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP${l}lemma:$PrepMA\|${r})($CARD$a2|$DATE$a2)/$1$3/g;
+
+					# PunctR: VERB Fc [PRP] [DATE]
+					# NEXT
+					# CircR: VERB [Fc]? PRP DATE
+					@temp = ($listTags =~ /($VERB$a2)($Fc$a2)(?:$PRP$a2)(?:$DATE$a2)/g);
+					$Rel =  "PunctR";
+					HeadDep($Rel,"",\@temp);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)?($PRP$a2)($DATE$a2)/g);
+					$Rel =  "CircR";
+					HeadRelDep($Rel,"",\@temp);
+					$listTags =~ s/($VERB$a2)($Fc$a2)?($PRP$a2)($DATE$a2)/$1/g;
+
+					# PunctL: [PRP] [DATE] Fc VERB
+					# NEXT
+					# CircL: PRP DATE [Fc]? VERB
+					@temp = ($listTags =~ /(?:$PRP$a2)(?:$DATE$a2)($Fc$a2)($VERB$a2)/g);
+					$Rel =  "PunctL";
+					DepHead($Rel,"",\@temp);
+					@temp = ($listTags =~ /($PRP$a2)($DATE$a2)(?:$Fc$a2)?($VERB$a2)/g);
+					$Rel =  "CircL";
+					RelDepHead($Rel,"",\@temp);
+					$listTags =~ s/($PRP$a2)($DATE$a2)($Fc$a2)?($VERB$a2)/$4/g;
+
+					# PunctR: VERB Fc [PRP] [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]
+					# NEXT
+					# PunctR: VERB [Fc] [PRP] [NOUNCOORD|PRO<type:D|P|I|X>] Fc
+					# NEXT
+					# CircR: VERB [Fc] PRP NOUNCOORD|PRO<type:D|P|I|X> [Fc]
+					@temp = ($listTags =~ /($VERB$a2)($Fc$a2)(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)/g);
+					$Rel =  "PunctR";
+					HeadDep($Rel,"",\@temp);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)/g);
+					$Rel =  "PunctR";
+					HeadDep($Rel,"",\@temp);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)/g);
+					$Rel =  "CircR";
+					HeadRelDep($Rel,"",\@temp);
+					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)/$1/g;
 
 					# CprepR: CARD PRP<lemma:de|entre|sobre|of|about|between> NOUNCOORD|PRO
 					@temp = ($listTags =~ /($CARD$a2)($PRP${l}lemma:(?:de|entre|sobre|of|about|between)\|${r})($NOUNCOORD|$PRO$a2)/g);
@@ -1374,11 +1402,11 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($ADJ$a2|$CONJ${l}coord:adj\|${r})/$1/g;
 
-					# DobjR: VERB CARD|NOUN|CONJ<coord:noun>|PRO<type:D|P|I|X>
-					@temp = ($listTags =~ /($VERB$a2)($CARD$a2|$NOUN$a2|$CONJ${l}coord:noun\|${r}|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
+					# DobjR: VERB NOUNCOORD|PRO<type:D|P|I|X>
+					@temp = ($listTags =~ /($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($CARD$a2|$NOUN$a2|$CONJ${l}coord:noun\|${r}|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
 					# IobjR: VERB<lemma:($SubcatIND)|(SubcatBitr)>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:a> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatIND\|${r}|$VERB${l}SubcatBitr\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:a\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
@@ -1717,14 +1745,14 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/$1/g;
 
+					}
+{#<function>
 					# Circ2R: VERB VERB<mode:[GP]>
 					@temp = ($listTags =~ /($VERB$a2)($VERB${l}mode:[GP]\|${r})/g);
 					$Rel =  "Circ2R";
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($VERB${l}mode:[GP]\|${r})/$1/g;
 
-					}
-{#<function>
 					# SubjR: VERB<lemma:$VS> VERB<mode:N>
 					# Agr: number, person
 					# Add: adsubj:yes
@@ -2154,12 +2182,6 @@ sub parse{
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatSOBRE\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
-
-					# CprepR: ADJ|ADV|DATE PRP VERB<mode:N>
-					@temp = ($listTags =~ /($ADJ$a2|$ADV$a2|$DATE$a2)($PRP$a2)($VERB${l}mode:N\|${r})/g);
-					$Rel =  "CprepR";
-					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($ADJ$a2|$ADV$a2|$DATE$a2)($PRP$a2)($VERB${l}mode:N\|${r})/$1/g;
 
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRO<type:R|W>] VERB<adsubj:yes>|CONJ<adsubj:yes&coord:verb>    [Fc]?
 					# NEXT
@@ -3394,7 +3416,18 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+                                        my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					my $feat2 = $feat;
+					$feat2 =~ s/\|/\\|/g;
+					$listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					my @feat = split ('\|', $feat); 
+					push (@feat,$info);
+					@feat = sort (@feat); 
+					$feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;    
+
 					$ATTR[$n1]{$atr} = $value;
 					if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
@@ -3431,9 +3464,20 @@ sub Add {
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 					#print STDERR "$atr - $value : #$l# - #$r#";
 					} else {
-						$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-						$ATTR[$n1]{$atr} = $value;
-						if ($atr eq "lemma") {
+					    my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					    #$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+
+					     $ATTR[$n1]{$atr} = $value;
+					     if ($atr eq "lemma") {
 							$Lemma[$n1] = $ATTR[$n1]{"lemma"};
 				}
 				if ($atr eq "token") {
@@ -3469,14 +3513,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value; 
-					if ($atr eq "lemma") {
+					    my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value; 
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+				            }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3506,14 +3561,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+					 my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3543,14 +3609,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+					 my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3581,14 +3658,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+					 my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					 
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3619,14 +3707,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+					 my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3656,14 +3755,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+				            my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3693,14 +3803,25 @@ sub Add {
 				}
 				$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+				            my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3730,14 +3851,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}$info\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+				            my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 				}
 			}
 		}
@@ -3769,14 +3901,25 @@ sub Add {
 					}
 					$listTags =~ s/($Tag[$n1]_${n1}${l})${atr}:[^|]*\|/${1}${info}\|/;
 				} else {
-					$listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
-					$ATTR[$n1]{$atr} = $value;
-					if ($atr eq "lemma") {
+				            my ($feat) = $listTags =~/$Tag[$n1]_${n1}_<([^>]+)>/;
+					    my $feat2 = $feat;
+					    $feat2 =~ s/\|/\\|/g;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)$feat2/${1}/;
+					   
+					    my @feat = split ('\|', $feat); 
+					    push (@feat,$info);
+					    @feat = sort (@feat); 
+					    $feat = join("|",@feat);
+					   # $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}$info\|/;
+					    $listTags =~ s/($Tag[$n1]_${n1}_<)/${1}${feat}\|/;
+					
+					    $ATTR[$n1]{$atr} = $value;
+					    if ($atr eq "lemma") {
 						$Lemma[$n1] = $ATTR[$n1]{"lemma"};
-					}
-					if ($atr eq "token") {
+					    }
+					    if ($atr eq "token") {
 						$Token[$n1] = $ATTR[$n1]{"token"};
-					}
+					    }
 					#print STDERR "$atr - $value ::: #$l# - #$r#";
 				}
 			}

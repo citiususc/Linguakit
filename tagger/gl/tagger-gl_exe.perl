@@ -456,11 +456,16 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 		$result = 1;
 	}
 	##impedir um "a" como prep diante dum DP(seu)
-	if ($cat =~ /^SP/ && $feat eq "R_DP") {
+	elsif ($cat =~ /^SP/ && $feat eq "R_DP") {
 		$result = 1;
 	}
 	##aquela apos PRP no e verbo
-	if ($cat =~ /^V/   && $feat =~ /L_SP_aquela/  ) {
+	elsif ($cat =~ /^V/   && $feat =~ /L_SP_aquela/  ) {
+		$result = 1;
+	}
+
+        #impedir forma os/as prome seguido de Nome
+	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as)" ) {
 		$result = 1;
 	}
 	#impedir pronome 'se' nao  hai verbo a esquerda nem a direita

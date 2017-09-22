@@ -455,6 +455,11 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	elsif ($cat =~ /^D/ && ($feat eq "R_END" || $feat eq "R_SP" || $feat eq "R_CC") ) {
 		$result = 1;
 	}
+        #impedir forma os/as prome seguido de Nome
+	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as)" ) {
+		$result = 1;
+	}
+        
 	return $result;
 }
 
