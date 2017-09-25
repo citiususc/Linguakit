@@ -244,7 +244,7 @@ sub triples {
 						##PRED
 						foreach my $const  (sort { $a <=> $b } keys %{$Unit{$head}}) {
 							# print STDERR "-- PRED: HEAD###$Token[$Circ]### ::: DEP: #$Token[$const]# --\n";
-							if ($const eq $head ||  ( ($Dep[$const] =~ /(VSpec|Clit)/ || $Lemma[$const] =~ /^(not|no|never|nunca|n\'t)$/ ) && ($Const{$head}{$const} || ($Const{$head}{$Head[$const]} && $Dep[$Head[$const]] =~ /VSpec/) ) ) )  {
+							if ($const eq $head ||  ( ($Dep[$const] =~ /(VSpec|Clit)/ || $Lemma[$const] =~ /^(não|not|no|never|nunca|n\'t)$/ ) && ($Const{$head}{$const} || ($Const{$head}{$Head[$const]} && $Dep[$Head[$const]] =~ /VSpec/) ) ) )  {
 								#if ($const eq $head ||  ($Dep[$const] =~ /VSpec/ && $Const{$head}{$const} ) )  {
 								$pred =   $pred .  " " . $Token[$const];
 								$pred_l = $pred_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $head); 

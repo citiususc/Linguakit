@@ -1346,28 +1346,28 @@ sub parse{
 
 					# SubjL: [VERB] [X<lemma:what>] NOUNCOORD|PRO<type:D|P|I|S> VERB
 					# NEXT
-					# DobjL: [VERB] X<lemma:what> [NOUNCOORD|PRO<type:D|P|I|S] VERB
+					# DobjL: [VERB] X<lemma:what> [NOUNCOORD|PRO<type:D|P|I|S>] VERB
 					# Add: compl:yes
 					@temp = ($listTags =~ /(?:$VERB$a2)(?:$X${l}lemma:what\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($X${l}lemma:what\|${r})(?:$NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($X${l}lemma:what\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/g);
 					$Rel =  "DobjL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($X${l}lemma:what\|${r})($NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/$1$4/g;
+					$listTags =~ s/($VERB$a2)($X${l}lemma:what\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/$1$4/g;
 					Add("DepHead","compl:yes",\@temp);
 
 					# AdjnL:  [VERB] [X<lemma:where|when>] NOUNCOORD|PRO<type:D|P|I|S> VERB
 					# NEXT
-					# DobjL: [VERB] X<lemma:where|when> [NOUNCOORD|PRO<type:D|P|I|S] VERB
+					# DobjL: [VERB] X<lemma:where|when> [NOUNCOORD|PRO<type:D|P|I|S>] VERB
 					# Add: compl:yes
 					@temp = ($listTags =~ /(?:$VERB$a2)(?:$X${l}lemma:(?:where|when)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/g);
 					$Rel =  "AdjnL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)($X${l}lemma:(?:where|when)\|${r})(?:$NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/g);
+					@temp = ($listTags =~ /(?:$VERB$a2)($X${l}lemma:(?:where|when)\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/g);
 					$Rel =  "DobjL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($X${l}lemma:(?:where|when)\|${r})($NOUNCOORD|$PRO$a2${l}type:D|P|I|S)($VERB$a2)/$1$4/g;
+					$listTags =~ s/($VERB$a2)($X${l}lemma:(?:where|when)\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB$a2)/$1$4/g;
 					Add("DepHead","compl:yes",\@temp);
 
 					# CircR: [VERB] [NOUN]  VERB<compl:yes&mode:[^PNG]> PRP NOUNCOORD|PRO<type:D|P|I|X>
@@ -1388,19 +1388,19 @@ sub parse{
 
 					# CircR: [VERB<lemma:say|think>]  [NOUN]  VERB<mode:[^PNG]> PRP NOUNCOORD|PRO<type:D|P|I|X>
 					# NEXT
-					# SubjL: [VERB<lemma:say|think>] NOUN VERB<mode:[^PNG]> [PRP] NOUNCOORD|PRO<type:D|P|I|X>]
+					# SubjL: [VERB<lemma:say|think>] NOUN VERB<mode:[^PNG]> [PRP] [NOUNCOORD|PRO<type:D|P|I|X>]
 					# NEXT
-					# DobjComplR: VERB<lemma:say|think> [NOUN]? VERB<mode:[^PNG]>  [PRP] NOUNCOORD|PRO<type:D|P|I|X>]
+					# DobjComplR: VERB<lemma:say|think> [NOUN]? VERB<mode:[^PNG]>  [PRP] [NOUNCOORD|PRO<type:D|P|I|X>]
 					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:say|think)\|${r})(?:$NOUN$a2)($VERB${l}mode:[^PNG]\|${r})($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CircR";
 					HeadRelDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)($VERB${l}mode:[^PNG]\|${r})(?:$PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/g);
+					@temp = ($listTags =~ /(?:$VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)($VERB${l}mode:[^PNG]\|${r})(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:say|think)\|${r})(?:$NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})(?:$PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:say|think)\|${r})(?:$NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "DobjComplR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}])/$1/g;
+					$listTags =~ s/($VERB${l}lemma:(?:say|think)\|${r})($NOUN$a2)?($VERB${l}mode:[^PNG]\|${r})($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
 					# Dobj2R: VERB NOUNCOORD|PRO<type:P|X> [NOUNCOORD|PRO<type:D|I|X>]
 					# NEXT
