@@ -405,6 +405,7 @@ if($MOD eq "dep"){
 	Nbayes::load($LING);
 
 	while(my $line = <$input>){
+	    if ($line !~ /\w/){next}
 		my $result = Nbayes::nbayes(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))));
 		print "$result\n";
 	}

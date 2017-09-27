@@ -129,14 +129,15 @@ sub nbayes{
 	my $NEG_EMOT=0;#<integer>
 	my %Compound=();#<hash><boolean>
 	my @A=();#<list><string>
+	my $lines="";#string
 
 	foreach my $line (@{$text}) {
 		chomp $line;
-
+	
 		if ($line !~ /\w/) {next;}
 		my ($token, $lemma, $tag) = split (" ", $line);#<string>
 		#print STDERR "#$token# - #$lemma# - #$tag#\n" ;
-
+		$lines .= $token . " ";
 		if ($token eq "EMOT_POS") { ##Contar os emoticons positivos
 			$POS_EMOT++;
 			#print STDERR "LEX:#$lemma#\n";
@@ -205,12 +206,12 @@ sub nbayes{
 
 	if ($POS_EMOT > $NEG_EMOT){ #if there is more positive emoticons: positive
 		#$logger -> debug("OKKKK: POS : #$POS_EMOT# - NEG: #$NEG_EMOT#"); 
-		return "POSITIVE\t1";
+		return "$lines\tPOSITIVE\t1";
 	} elsif ($POS_EMOT < $NEG_EMOT){#if there is more negative emoticons: negative
 		#$logger -> debug("OKKKK: NEG"); 
-		return "NEGATIVE\t1";
+		return "$lines\tNEGATIVE\t1";
 	} elsif (!$LEX) {
-		return "$default_value\t1"; #if there is no lemma from the polartity lexicon: NONE.
+		return "$lines\t$default_value\t1"; #if there is no lemma from the polartity lexicon: NONE.
 	}
 
 	my $smooth = 1/$N;#<double>
@@ -253,7 +254,7 @@ sub nbayes{
 		return "$default_value\t1"; 
 	} else {
 		foreach my $c (sort {$PostProb{$b} <=> $PostProb{$a} } keys %PostProb ) {
-			return "$c\t$PostProb{$c}";
+			return "$lines\t$c\t$PostProb{$c}";
 		}
 	}
 }
