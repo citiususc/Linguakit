@@ -251,7 +251,7 @@ sub nbayes{
 	}
 
 	if (!$found) {
-		return "$default_value\t1"; 
+		return "$lines\t$default_value\t1"; 
 	} else {
 		foreach my $c (sort {$PostProb{$b} <=> $PostProb{$a} } keys %PostProb ) {
 			return "$lines\t$c\t$PostProb{$c}";
