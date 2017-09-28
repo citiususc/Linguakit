@@ -41,7 +41,7 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 
 * **Keyword extraction** (parameter `key`): Extracts keywords (lexemes and proper names) from PoS tagged text and ranked them using a reference corpus and chisquare. 
 
-* **Sentiment analysis** (parameter `sent`): Returns POSITIVE, NONE (neutral) or NEGATIVE, using a polarity lexicon and a classifier trained from annotated tweets. Given an input text, this module returns a polarity value for each paragraph, namely it returns three columns for each paragraph: the text in the first column, the polarity (pos, neg, none) in the second column, and the polarity weight (from 0 to 1) in the third column.
+* **Sentiment analysis** (parameter `sent`): Returns POSITIVE, NONE (neutral) or NEGATIVE, using a polarity lexicon and a classifier trained from annotated tweets. Given an input text, this module returns a polarity value for each paragraph, namely it returns three columns for each paragraph: the text in the first column, the polarity (pos, neg, none) in the second column, and the polarity score (from 0 to 1) in the third column. The last line of the output returns the overall score computed as the average of all paragraphs. 
 
 * **Relation extraction** (parameter `rel`): Returns triples SUBJECT - RELATION - OBJECT using methods based on Open Information Extraction. 
 
