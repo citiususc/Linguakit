@@ -417,7 +417,7 @@ sub classif {
 			  #print STDERR "RULES NEG:: ----#$cat# - #$feat# PriorProb=#$PriorProb{$cat}{$feat}# \n";
 			}
 			elsif (!$unk->[$pos] && rules_pos ($cat, $feat)) {
-			  $PriorProb{$cat}{$feat}  = 1;  
+			  $PriorProb{$cat}{$feat}  = 1000;  
 			  #print STDERR "RULES POS:: ----#$cat# - #$feat# PriorProb=#$PriorProb{$cat}{$feat}# \n";
 			}
 			$found{$cat}=1; 
@@ -473,6 +473,10 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	if ($cat =~ /^RN/   && $feat =~ /R_V/  ) {
 	 $result = 1;
 	}
+	elsif ($cat =~ /^DA/   && $feat =~ /R_NC_a/  ) {
+	 $result = 1;
+	}
+
 	return $result;
 }
 
