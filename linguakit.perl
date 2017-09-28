@@ -409,6 +409,8 @@ if($MOD eq "dep"){
 		my $result = Nbayes::nbayes(Tagger::tagger(Ner::ner(Splitter::splitter(Tokens::tokens(Sentences::sentences([$line]))))));
 		print "$result\n";
 	}
+	my $result = Nbayes::end();
+	print $result;
 
 
 }elsif($MOD eq "recog"){  ##language recognition

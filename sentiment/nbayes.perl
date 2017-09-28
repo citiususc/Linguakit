@@ -27,6 +27,9 @@ my %PriorProb=();#<hash><hash><double>
 my %featFreq=();#<hash><integer>
 my %list=();#<hash><string>
 my $N=1;#<integer>
+my $total=0;#<integer>
+my $peso_total=0;#<double>
+my $result=0;#<double>
 
 sub load{
 	my ($lang) = @_;#<string>
@@ -130,6 +133,8 @@ sub nbayes{
 	my %Compound=();#<hash><boolean>
 	my @A=();#<list><string>
 	my $lines="";#string
+	
+
 
 	foreach my $line (@{$text}) {
 		chomp $line;
@@ -137,6 +142,7 @@ sub nbayes{
 		if ($line !~ /\w/) {next;}
 		my ($token, $lemma, $tag) = split (" ", $line);#<string>
 		#print STDERR "#$token# - #$lemma# - #$tag#\n" ;
+		$token =~ s/<blank>/ /;
 		$lines .= $token . " ";
 		if ($token eq "EMOT_POS") { ##Contar os emoticons positivos
 			$POS_EMOT++;
@@ -205,12 +211,15 @@ sub nbayes{
  
 
 	if ($POS_EMOT > $NEG_EMOT){ #if there is more positive emoticons: positive
-		#$logger -> debug("OKKKK: POS : #$POS_EMOT# - NEG: #$NEG_EMOT#"); 
+		$total++;
+		$peso_total += 1;
 		return "$lines\tPOSITIVE\t1";
 	} elsif ($POS_EMOT < $NEG_EMOT){#if there is more negative emoticons: negative
-		#$logger -> debug("OKKKK: NEG"); 
+		$total++;
+		$peso_total -= 1;
 		return "$lines\tNEGATIVE\t1";
 	} elsif (!$LEX) {
+	        $total++;
 		return "$lines\t$default_value\t1"; #if there is no lemma from the polartity lexicon: NONE.
 	}
 
@@ -251,12 +260,46 @@ sub nbayes{
 	}
 
 	if (!$found) {
+	        $total++;
 		return "$lines\t$default_value\t1"; 
 	} else {
 		foreach my $c (sort {$PostProb{$b} <=> $PostProb{$a} } keys %PostProb ) {
+		        #$total++;
+			if ($c eq "POSITIVE") {
+			    $peso_total += $PostProb{$c};
+			    $total++;
+			}
+			elsif ($c eq "NEGATIVE") {
+			    $peso_total -= $PostProb{$c};
+			    $total++;
+			}
 			return "$lines\t$c\t$PostProb{$c}";
 		}
 	}
+	
+}
+
+sub end {
+    #print STDERR "total=#$total# -- peso=#$peso_total#\n";
+    my $c=0;#<doubled>
+    if ($total == 1 && $peso_total == 0) {
+	   return "TOTAL\tNONE\t1\n"; 
+    }
+    else {
+        $result = $peso_total / $total;
+	
+	if ($peso_total >= 0) {
+	   $c = "POSITIVE"
+	}
+	elsif ($peso_total <= 0) {
+	   $c = "NEGATIVE"
+	}
+	else {
+	   $c = "NONE"
+	}
+	$result = abs ($result);
+	return "TOTAL\t$c\t$result\n";
+    }
 }
 
 #<ignore-block>
