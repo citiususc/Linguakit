@@ -94,6 +94,10 @@ sub triples {
 				$Args[$l] = $args;
 				$Dep[$l] = $dep;
 
+				##mudamos o tag de PRP no contexto "prep+pron-rel" a PRP-REL
+				if ($Tag[$l-1] =~ /PRP/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /lemma:que|quem|quen|quien|that|which/) ) {
+				   $Tag[$l-1] = "PRP-REL"; 
+				} 
 				##construimos os hashes de head-dependent
 				if ($head != 0 ) {
 					$Const_dep{$head}{$l} = $dep;
@@ -180,7 +184,7 @@ sub triples {
 
 					if ($Const_dep{$head}{$const} =~ /Dobj[LR]/)   {
 						#print STDERR "Dobj: HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# --\n";
-						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o sujeito e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
+						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o cdir e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
 							$Dobj =  $Head[$head]; 
 						} else {
 						$Dobj = $const  if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
@@ -189,7 +193,7 @@ sub triples {
 
 					if ($Const_dep{$head}{$const} =~ /Dobj2R/)   {
 						#print STDERR "Dobj: HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# --\n";
-						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o sujeito e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
+						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o cdir e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
 							$Dobj2 =  $Head[$head]; 
 						} else {
 							$Dobj2 = $const  if ($Args[$const] !~ /type:[RW]/);
@@ -198,7 +202,7 @@ sub triples {
 
 					if ($Const_dep{$head}{$const} =~ /DobjCompl/)   {
 						#print STDERR "Dobj: HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# --\n";
-						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o sujeito e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
+						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o cdir e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
 							$DobjCompl =  $Head[$head]; 
 						} else {
 							$DobjCompl = $const if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
@@ -206,8 +210,15 @@ sub triples {
 					} 
 
 					if ($Const_dep{$head}{$const} =~ /Circ/)   {
+                                               ##fazer uma funçom relative-rel onde so se tome em conta prep+pron-rel e chama-la com os circunstanciais...
+					       #print STDERR "HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# HeadHead : $Lemma[$Head[$head]] --\n";
+					    	if (relative_circ ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o circ e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
+							$Circ .=  $Head[$head] . "|"; 
+						} else {
 						#print STDERR "Circ: HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# --\n";
-						$Circ .= $const . "|" if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
+							$Circ .= $const . "|" if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
+						#        print STDERR "Circ: #$Circ# -- HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# HeadHead : $Lemma[$Head[$head]] --\n";
+						}
 					}
 
 				}
@@ -255,14 +266,23 @@ sub triples {
 						##CIRC
 						foreach my $const  (sort { $a <=> $b } keys %{$Unit{$CircN}}) {
 							# print STDERR "-- Circ: HEAD###$Token[$Circ]### ::: DEP: #$Token[$const]# --\n";
-							if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep) || subordin($const, \@Tag, \@Head, \%Const_dep)) {last;}
-							if ($CircN eq $const && $Tag[$CircN] =~ /^PRP/) { ###colocar a prep do circ no predicate
+							if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep) || subordin($const, \@Tag, \@Head, \%Const_dep)) {
+							    if (relative_circ ($const, \@Tag, \@Args) && $CircN+1 eq $const && $Tag[$CircN+1] =~ /^PRP/) { ###colocar a prep do circ no predicate
 								$pred = $pred . " " . $Token[$const];
 								$pred_l = $pred_l . " " . $Lemma[$const]  . "_" . $Tag[$const] ;
+							    }
+							    last;
 							} else {
+							     if ($CircN eq $const && $Tag[$CircN] =~ /^PRP/) { ###colocar a prep do circ no predicate
+								$pred = $pred . " " . $Token[$const];
+								$pred_l = $pred_l . " " . $Lemma[$const]  . "_" . $Tag[$const] ;
+							     }
+							     else {
+							    
 								$circ =   $circ .  " " . $Token[$const] ;   
 								$circ_l = $circ_l . " " . $Lemma[$const] . "_" . $Tag[$const] if  ($CircN != $Head[$const]);
 								$circ_l = $circ_l . " " . $Lemma[$const] . "_" . $Tag[$const]  . "-H" if  ($CircN == $Head[$const]);         
+							     }
 							}
 						}
 
@@ -370,11 +390,12 @@ sub triples {
 
 					##SUBJ 
 					foreach my $const  (sort { $a <=> $b } keys %{$Unit{$Subj}}) {
-						#print STDERR "Subj: HEAD###$Token[$Subj]### ::: DEP: #$Token[$const]# --\n";
+					#	print STDERR "Subj: HEAD###$Token[$Subj]### ::: DEP: #$Token[$const]# --\n";
 						if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep) || subordin($const, \@Tag, \@Head, \%Const_dep)) {last;}
 						$subj =   $subj . " " . $Token[$const]; 
 						$subj_l = $subj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $Subj) ; 
 						$subj_l = $subj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $Subj) ; ##marcamos o head
+					#	print STDERR "#$subj#\n";
 					}
 
 					##PRED
@@ -523,15 +544,25 @@ sub triples {
 						##CIRC
 						foreach my $const  (sort { $a <=> $b } keys %{$Unit{$CircN}}) {
 							#print STDERR "Circ: HEAD###$Token[$Circ]### ::: DEP: #$Token[$const]# --\n";
-							if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep)  || subordin($const, \@Tag, \@Head, \%Const_dep)) {last;}
-							if ($CircN eq $const && $Tag[$CircN] =~ /^PRP/) { ###colocar a prep do circ no predicate
+						    if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep) || subordin($const, \@Tag, \@Head, \%Const_dep)) {
+							    if (relative_circ ($const, \@Tag, \@Args) && $CircN+1 eq $const && $Tag[$CircN+1] =~ /^PRP/) { ###colocar a prep do circ no predicate
 								$pred = $pred . " " . $Token[$const];
 								$pred_l = $pred_l . " " . $Lemma[$const]  . "_" . $Tag[$const] ;
-							} else {
+							    }
+							    last;
+						     } else {
+							     if ($CircN eq $const && $Tag[$CircN] =~ /^PRP/) { ###colocar a prep do circ no predicate
+								$pred = $pred . " " . $Token[$const];
+								$pred_l = $pred_l . " " . $Lemma[$const]  . "_" . $Tag[$const] ;
+							     }
+							     else {
+							    
 								$circ =   $circ .  " " . $Token[$const] ;   
 								$circ_l = $circ_l . " " . $Lemma[$const] . "_" . $Tag[$const] if  ($CircN != $Head[$const]);
 								$circ_l = $circ_l . " " . $Lemma[$const] . "_" . $Tag[$const]  . "-H" if  ($CircN == $Head[$const]);         
+							     }
 							}
+
 						}
 
 						$subj = trim ($subj);
@@ -731,7 +762,8 @@ sub relative {
 	my $Tag = $_[1];#<ref><list><string>
 	my $Args = $_[2];#<ref><list><string>
 
-	if ($Tag->[$x] =~ /^PRO/ && $Args->[$x] =~ /type:[RW]/ ) {
+	if ( ($Tag->[$x] =~ /^PRO/ && ($Args->[$x] =~ /type:[RW]/ || $Args->[$x] =~ /lemma:(que|quem)/)) || ($Tag->[$x] =~ /^PRP-REL/) ) {
+	    # print STDERR "OOOOKKKK- RELATIVE --> $Tag->[$x]\n";
 		#foreach my $y (keys %{$Const_tag{$x}}) {
 			#print STDERR "REL:: #$Tag[$x]#  -- #$Tag[$y]#\n";
 			#if ($Tag[$y] =~ /^DT/) {
@@ -743,7 +775,19 @@ sub relative {
 		return 0;
 	}
 }
+sub relative_circ {
+	my ($x) = @_ ;#<string>
+	my $Tag = $_[1];#<ref><list><string>
+	my $Args = $_[2];#<ref><list><string>
 
+	if ($Tag->[$x] =~ /^PRP-REL/ ) {
+	    #print STDERR "OOOOKKKK- RELATIVE-CIRC --> $Tag->[$x]\n";
+	
+		return 1;
+	} else {
+		return 0;
+	}
+}
 
 sub subordin {
 	my ($x) = @_ ;#<string> 
