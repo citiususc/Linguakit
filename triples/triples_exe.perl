@@ -95,7 +95,7 @@ sub triples {
 				$Dep[$l] = $dep;
 
 				##mudamos o tag de PRP no contexto "prep+pron-rel" a PRP-REL
-				if ($Tag[$l-1] =~ /PRP/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /lemma:que|quem|quen|quien|that|which/) ) {
+				if ($Tag[$l-1] =~ /PRP/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /lemma:que|quem|quen|quien|that|which|who/) ) {
 				   $Tag[$l-1] = "PRP-REL"; 
 				  
 				} 
@@ -771,7 +771,7 @@ sub relative {
 	my $Tag = $_[1];#<ref><list><string>
 	my $Args = $_[2];#<ref><list><string>
 
-	if ( ($Tag->[$x] =~ /^PRO/ && ($Args->[$x] =~ /type:[RW]/ || $Args->[$x] =~ /lemma:(que|quem)/)) || ($Tag->[$x] =~ /^PRP-REL/) ) {
+	if ( ($Tag->[$x] =~ /^PRO/ && ($Args->[$x] =~ /type:[RW]/ || $Args->[$x] =~ /lemma:(que|quem|quen|quien|which|that|who)/)) || ($Tag->[$x] =~ /^PRP-REL/) ) {
 	    # print STDERR "OOOOKKKK- RELATIVE --> $Tag->[$x]\n";
 		#foreach my $y (keys %{$Const_tag{$x}}) {
 			#print STDERR "REL:: #$Tag[$x]#  -- #$Tag[$y]#\n";
