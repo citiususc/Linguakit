@@ -1486,33 +1486,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})($PRP$a2)($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP$a2)?($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?/$1$2/g;
 
-					# AdjnR: NOUN [VERB<lemma:be>] NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# AtrR: [NOUN] VERB<lemma:be> NOUNCOORD|PRO<type:D|P|I|X>
-					# NEXT
-					# SubjL: NOUN VERB<lemma:be> [NOUNCOORD|PRO<type:D|P|I|X>]
-					# AdjnR: NOUN [VERB<lemma:be>] ADJ|CONJ<coord:adj>
-					# NEXT
-					# AtrR: [NOUN] VERB<lemma:be> ADJ|CONJ<coord:adj>
-					# NEXT
-					# SubjL: NOUN VERB<lemma:be> [ADJ|CONJ<coord:adj>]
-					@temp = ($listTags =~ /($NOUN$a2)(?:$VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "AdjnR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUN$a2)($VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "AtrR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUN$a2)($VERB${l}lemma:be\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUN$a2)($VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
-					$Rel =  "AtrR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($NOUN$a2)($VERB${l}lemma:be\|${r})(?:$ADJ$a2|$CONJ${l}coord:adj\|${r})/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($NOUN$a2)($VERB${l}lemma:be\|${r})($ADJ$a2|$CONJ${l}coord:adj\|${r})/$2/g;
-
 					# AtrR: VERB<lemma:be> NOUNCOORD|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /($VERB${l}lemma:be\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "AtrR";
@@ -1838,8 +1811,6 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/$1/g;
 
-					}
-{#<function>
 					# AdjnL: [Fc] VERB<mode:P> [Fc] VERB
 					# NEXT
 					# PunctL: Fc [VERB<mode:P>] [Fc] VERB
@@ -1856,6 +1827,8 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($VERB${l}mode:P\|${r})($Fc$a2)($VERB$a2)/$4/g;
 
+					}
+{#<function>
 					# CoordL: VERB CONJ<coord:no&lemma:and|or|y|e|et|o|ou> [VERB]
 					# NEXT
 					# CoordR: [VERB]  CONJ<coord:no&lemma:and|or|y|e|et|o|ou> VERB
@@ -1946,11 +1919,13 @@ sub parse{
 					Add("HeadDep","coord:verb",\@temp);
 
 					# SubjL: [NOUNCOORD] NOMINAL|PRO<type:D|P|I|S>  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
+					# Add: adsubj:yes
 					# NEXT
 					# AdjnR: NOUNCOORD [NOMINAL|PRO<type:D|P|I|S>]  VERB<mode:[^G]>|CONJ<coord:verb&mode:[^G]>
 					@temp = ($listTags =~ /(?:$NOUNCOORD)($NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
+					Add("DepHead","adsubj:yes",\@temp);
 					@temp = ($listTags =~ /($NOUNCOORD)(?:$NOMINAL|$PRO${l}type:(?:D|P|I|S)\|${r})($VERB${l}mode:[^G]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^G]\|${r})/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
