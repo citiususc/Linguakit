@@ -75,7 +75,7 @@ sub triples {
 			$tag = $tag . $class if ($class);
 		}
 
-		#print STDERR "#$tag#\n";
+	
 		##construimos os vectores da oracao
 		if ($tag !~  /^$Border$/) {
 			if ($dep !~ /[\<\>]/) { ##saltar dependencias lexicais   
@@ -97,7 +97,16 @@ sub triples {
 				##mudamos o tag de PRP no contexto "prep+pron-rel" a PRP-REL
 				if ($Tag[$l-1] =~ /PRP/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /lemma:que|quem|quen|quien|that|which/) ) {
 				   $Tag[$l-1] = "PRP-REL"; 
+				  
 				} 
+				## "para o que"
+				elsif ($Tag[$l-2] =~ /PRP/ && $Lemma[$l-1] =~ /^o$/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /l
+emma:que|quem|quen|quien/) ) {
+				   $Tag[$l-2] = "PRP-REL"; 
+				   
+				} 
+
+
 				##construimos os hashes de head-dependent
 				if ($head != 0 ) {
 					$Const_dep{$head}{$l} = $dep;
