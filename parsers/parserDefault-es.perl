@@ -2203,20 +2203,20 @@ sub parse{
 					$listTags =~ s/($Fc$a2)($CONJ${l}coord:verb\|${r})/$2/g;
 
 					# SubjL: NOUN<type:P> VERB<mode:[^PG]>|CONJ<coord:verb&mode:[^PG]>
-					# Add: subj:yes
+					# Add: adsubj:yes
 					@temp = ($listTags =~ /($NOUN${l}type:P\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOUN${l}type:P\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/$2/g;
-					Add("DepHead","subj:yes",\@temp);
+					Add("DepHead","adsubj:yes",\@temp);
 
 					# SubjL: NOMINAL|PRO<type:D|P|I|X> VERB<mode:[^PG]>|CONJ<coord:verb&mode:[^PG]>
-					# Add: subj:yes
+					# Add: adsubj:yes
 					@temp = ($listTags =~ /($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/g);
 					$Rel =  "SubjL";
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($NOMINAL|$PRO${l}type:(?:D|P|I|X)\|${r})($VERB${l}mode:[^PG]\|${r}|$CONJ${l}coord:verb\|${b2}mode:[^PG]\|${r})/$2/g;
-					Add("DepHead","subj:yes",\@temp);
+					Add("DepHead","adsubj:yes",\@temp);
 
 					# SubjR: VERB<lemma:$VS> NOMINAL|PRO<type:D|P|I|X>
 					# Agr: number, person
