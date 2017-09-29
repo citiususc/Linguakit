@@ -338,6 +338,18 @@ sub parse{
 					$listTags =~ s/($ADV${l}lemma:(?:antes|depois)\|${r})($PRP${l}lemma:de\|${r})($ADV${l}lemma:(?:ontem|amanhã)\|${r})/$3/g;
 					LEX();
 
+					# <: X<token:[Aa]> X<lemma:partir> [PRP<lemma:de>]
+					# NEXT
+					# <: [X<token:[Aa]>] X<lemma:partir> PRP<lemma:de>
+					@temp = ($listTags =~ /($X${l}token:[Aa]\|${r})($X${l}lemma:partir\|${r})(?:$PRP${l}lemma:de\|${r})/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					@temp = ($listTags =~ /(?:$X${l}token:[Aa]\|${r})($X${l}lemma:partir\|${r})($PRP${l}lemma:de\|${r})/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					$listTags =~ s/($X${l}token:[Aa]\|${r})($X${l}lemma:partir\|${r})($PRP${l}lemma:de\|${r})/$3/g;
+					LEX();
+
 					# <: PRP<lemma:de> X<lemma:manhã|tarde|noite>
 					# Add: tag:ADV
 					@temp = ($listTags =~ /($PRP${l}lemma:de\|${r})($X${l}lemma:(?:manhã|tarde|noite)\|${r})/g);
@@ -748,6 +760,14 @@ sub parse{
 					Inherit("DepHead","number,person",\@temp);
 					Add("DepHead","sust:yes",\@temp);
 
+					# Single: [PRP] PRO<sust:yes>
+					# Add: sust:no
+					@temp = ($listTags =~ /(?:$PRP$a2)($PRO${l}sust:yes\|${r})/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($PRP$a2)($PRO${l}sust:yes\|${r})/$1$2/g;
+					Add("Head","sust:no",\@temp);
+
 					# SpecL: DET<type:[AD]>|PRO<type:D> PRP<lemma:de> [NOUNSINGLE|PRO<type:D|P|I|X>]
 					# Add: nomin:yes
 					# Inherit: number, person
@@ -941,6 +961,8 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($ADV$a2|$CONJ${l}coord:adv\|${r})($VERB$a2)/$2/g;
 
+					}
+{#<function>
 					# TermR: PRP NOUN [Fc] [PRP] [NOUN] [CONJ<lemma:$CCord>] [PRP] [NOUN]
 					# NEXT
 					# CoordL: PRP [NOUN] [Fc] [PRP] [NOUN] CONJ<lemma:$CCord> [PRP] [NOUN]
@@ -1011,8 +1033,6 @@ sub parse{
 					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUN$a2)($CONJ${l}lemma:$CCord\|${r})($PRP$a2)($NOUN$a2)/$1$4/g;
 					Add("HeadDep","coord:cprep",\@temp);
 
-					}
-{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] NOUN<type:C> PRP<lemma:$PrepRA> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUN${l}type:C\|${r})($PRP${l}lemma:$PrepRA\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -1306,9 +1326,6 @@ sub parse{
 					# NEXT
 					# CircL: [NOUNCOORD|PRO<type:D|P|I|X>]  [Fc]? PRP PRO<type:R|W>|PRO<lemma:que|quem> VERB|CONJ<coord:verb> [Fc]?
 					# NEXT
-					# SubjL: [NOUNCOORD|PRO<type:D|P|I|X>]  [Fc]? [PRP] PRO<type:R|W>|PRO<lemma:que|quem> VERB|CONJ<coord:verb> [Fc]?
-					# Add: adsubj:yes
-					# NEXT
 					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc]? [PRP] [PRO<type:R|W>|PRO<lemma:que|quem>] VERB|CONJ<coord:verb> [Fc]?
 					# NoUniq
 					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
@@ -1320,10 +1337,6 @@ sub parse{
 					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRP$a2)($PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)($PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
-					Add("DepHead","adsubj:yes",\@temp);
 					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
@@ -1704,6 +1717,8 @@ sub parse{
 					Inherit("HeadDep","mode,tense",\@temp);
 					Add("HeadDep","coord:verb",\@temp);
 
+					}
+{#<function>
 					# PunctL: Fc CONJ<coord:verb>
 					@temp = ($listTags =~ /($Fc$a2)($CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
@@ -1716,8 +1731,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}voice:passive\|${r})($X$a2)?($X$a2)?($X$a2)?($X$a2)?($PRP${l}lemma:por\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1$2$3$4$5/g;
 
-					}
-{#<function>
 					# CircR: [VERB|CONJ<coord:verb>] [PRP] VERB|CONJ<coord:verb> [PRP] [CARD|NOUNCOORD|PRO<type:D|P|I|X>] PRP CARD|NOUNCOORD|PRO<type:D|P|I|X>
 					# Recursivity: 1
 					@temp = ($listTags =~ /(?:$VERB$a2|$CONJ${l}coord:verb\|${r})(?:$PRP$a2)($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$PRP$a2)(?:$CARD$a2|$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($PRP$a2)($CARD$a2|$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
@@ -2363,8 +2376,6 @@ sub parse{
 					# NEXT
 					# CircL: [NOUNCOORD|PRO<type:D|P|I|X>]  [Fc]? PRP PRO<type:R|W>|PRO<lemma:que|quem> VERB|CONJ<coord:verb> [Fc]?
 					# NEXT
-					# SubjL: [NOUNCOORD|PRO<type:D|P|I|X>]  [Fc]? [PRP] PRO<type:R|W>|PRO<lemma:que|quem> VERB|CONJ<coord:verb> [Fc]?
-					# NEXT
 					# AdjnR: NOUNCOORD|PRO<type:D|P|I|X> [Fc]? [PRP] [PRO<type:R|W>|PRO<lemma:que|quem>] VERB|CONJ<coord:verb> [Fc]?
 					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "PunctL";
@@ -2375,9 +2386,6 @@ sub parse{
 					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?($PRP$a2)($PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "CircL";
 					RelDepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)($PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
-					$Rel =  "SubjL";
-					DepHead($Rel,"",\@temp);
 					@temp = ($listTags =~ /($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?(?:$PRP$a2)(?:$PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
