@@ -100,7 +100,7 @@ sub triples {
 				  
 				} 
 				## "para o que"
-				elsif ($Tag[$l-2] =~ /PRP/ && $Lemma[$l-1] =~ /^o$/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /l
+				elsif ($Tag[$l-2] =~ /PRP/ && $Lemma[$l-1] =~ /^(o|el)$/ && $Tag[$l] =~ /PRO/ && ($Args[$l] =~ /type:R|W/ || $Args[$l] =~  /l
 emma:que|quem|quen|quien/) ) {
 				   $Tag[$l-2] = "PRP-REL"; 
 				   
