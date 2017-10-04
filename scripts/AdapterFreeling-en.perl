@@ -35,7 +35,7 @@ sub adapter {
 		
 		if ($line eq "" && $FoundFinal) {
 			next;
-		} elsif ($line eq "" && !$FoundFinal) {##se hai um final de linha sem ponto final. So tem sentido com --flush
+		}elsif ($line eq "" && !$FoundFinal) {##se hai um final de linha sem ponto final. So tem sentido com --flush
 			# $Pos++;
 			$out = "\.\tlemma:\.|tag:SENT|pos:$Pos|token:\.|\n";
 			$FoundFinal = 1;
@@ -333,14 +333,17 @@ sub adapter {
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
 				$Exp{"tag"} =  "PCLE";
-			} elsif ($token =~ /^\.$|^\?$|^\!$/) { ##final de frase (.)
-				#print STDERR "--$lemma -- $tag\n";       
+			}elsif  ($tag =~ /^Fp$|^Fit$|^Fat$/)  {##final de frase (.)
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
 				$Exp{"tag"} =  "SENT";
 				$Exp{"pos"} =  $Pos;
 				$Pos=0;
 				$FoundFinal=1;
+			} elsif  ($tag =~ /^F/)  {
+				$Exp{"lemma"} = $lemma;
+				$Exp{"token"} = $token;
+				$Exp{"tag"} =  $tag;
 			} else {
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
