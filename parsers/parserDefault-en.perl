@@ -33,7 +33,7 @@ my $PRP = "PRP_[0-9]+";#<string>
 my $ADV = "ADV_[0-9]+";#<string>
 my $CARD = "CARD_[0-9]+";#<string>
 my $CONJ = "CONJ_[0-9]+";#<string>
-my $DET = "DT_[0-9]+";#<string>
+my $DET = "DET_[0-9]+";#<string>
 my $PRO = "PRO_[0-9]+";#<string>
 my $VERB = "VERB_[0-9]+";#<string>
 my $I = "I_[0-9]+";#<string>
@@ -285,6 +285,14 @@ sub parse{
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($X${l}token:–\|${r})($X$a2)/$1$2/g;
 					Corr("Head","tag:Fe",\@temp);
+
+					# Single: [X<lemma:este>] X<lemma:january|february|march|april|may|june|july|august|september|october|november|december>
+					# Corr: tag:DATE
+					@temp = ($listTags =~ /(?:$X${l}lemma:este\|${r})($X${l}lemma:(?:january|february|march|april|may|june|july|august|september|october|november|december)\|${r})/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($X${l}lemma:este\|${r})($X${l}lemma:(?:january|february|march|april|may|june|july|august|september|october|november|december)\|${r})/$1$2/g;
+					Corr("Head","tag:DATE",\@temp);
 
 					# PunctR: X Fz|Fe|Frc
 					@temp = ($listTags =~ /($X$a2)($Fz$a2|$Fe$a2|$Frc$a2)/g);
@@ -965,6 +973,8 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($PRP$a2)($NOUN$a2)($Fc$a2)($PRP$a2)($NOUN$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($PRP$a2)($NOUN$a2)/$4$5$6$7$8$9/g;
 
+					}
+{#<function>
 					# CoordL: [Fc]? PRP [NOUN] [Fc] CONJ<lemma:and|or|y|e|et|o|ou> [PRP] [NOUN]
 					# NEXT
 					# TermR: [Fc]? [PRP] [NOUN] [Fc] [CONJ<lemma:and|or|y|e|et|o|ou>] PRP NOUN
@@ -993,8 +1003,6 @@ sub parse{
 					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUN$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($PRP$a2)($NOUN$a2)/$1$5/g;
 					Add("HeadDep","coord:cprep",\@temp);
 
-					}
-{#<function>
 					# CprepR: [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] [NOUNSINGLE] [PRP] NOUNSINGLE PRP<lemma:$PrepRA> NOUNSINGLE|PRO<type:D|P|I|X>
 					@temp = ($listTags =~ /(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)(?:$NOUNSINGLE$a2)(?:$PRP$a2)($NOUNSINGLE$a2)($PRP${l}lemma:$PrepRA\|${r})($NOUNSINGLE$a2|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "CprepR";
@@ -1498,11 +1506,11 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($ADJ$a2|$CONJ${l}coord:adj\|${r})/$1/g;
 
-					# DobjR: VERB NOUNCOORD|PRO<type:D|P|I|X>
-					@temp = ($listTags =~ /($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
+					# DobjR: VERB CARD|NOUN|CONJ<coord:noun>|PRO<type:D|P|I|X>
+					@temp = ($listTags =~ /($VERB$a2)($CARD$a2|$NOUN$a2|$CONJ${l}coord:noun\|${r}|$PRO${l}type:(?:D|P|I|X)\|${r})/g);
 					$Rel =  "DobjR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
+					$listTags =~ s/($VERB$a2)($CARD$a2|$NOUN$a2|$CONJ${l}coord:noun\|${r}|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
 					# CoordL: VERB CONJ<coord:no&lemma:and|or|y|e|et|o|ou> [VERB]
 					# NEXT
@@ -1733,22 +1741,22 @@ sub parse{
 					RelDepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)($VERB$a2)/$5/g;
 
-					# AdjnR:  VERB<mode:[^PNG]> DATE
-					@temp = ($listTags =~ /($VERB${l}mode:[^PNG]\|${r})($DATE$a2)/g);
+					# AdjnR:  VERB DATE
+					@temp = ($listTags =~ /($VERB$a2)($DATE$a2)/g);
 					$Rel =  "AdjnR";
 					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}mode:[^PNG]\|${r})($DATE$a2)/$1/g;
+					$listTags =~ s/($VERB$a2)($DATE$a2)/$1/g;
 
-					# PunctL: Fc [DATE] VERB<mode:[^PNG]>
+					# PunctL: Fc [DATE] VERB
 					# NEXT
-					# AdjnL:  [Fc]? DATE VERB<mode:[^PNG]>
-					@temp = ($listTags =~ /($Fc$a2)(?:$DATE$a2)($VERB${l}mode:[^PNG]\|${r})/g);
+					# AdjnL:  [Fc]? DATE VERB>
+					@temp = ($listTags =~ /($Fc$a2)(?:$DATE$a2)($VERB$a2)/g);
 					$Rel =  "PunctL";
 					DepHead($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$Fc$a2)?($DATE$a2)($VERB${l}mode:[^PNG]\|${r})/g);
+					@temp = ($listTags =~ /(?:$Fc$a2)?($DATE$a2)($VERB$a2\|${r})/g);
 					$Rel =  "AdjnL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($Fc$a2)?($DATE$a2)($VERB${l}mode:[^PNG]\|${r})/$3/g;
+					$listTags =~ s/($Fc$a2)?($DATE$a2)($VERB$a2\|${r})/$3/g;
 
 					# CprepR: NOUNCOORD PRP NOUNCOORD
 					@temp = ($listTags =~ /($NOUNCOORD)($PRP$a2)($NOUNCOORD)/g);
@@ -1811,6 +1819,8 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/$1/g;
 
+					}
+{#<function>
 					# AdjnL: [Fc] VERB<mode:P> [Fc] VERB
 					# NEXT
 					# PunctL: Fc [VERB<mode:P>] [Fc] VERB
@@ -1827,8 +1837,6 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($VERB${l}mode:P\|${r})($Fc$a2)($VERB$a2)/$4/g;
 
-					}
-{#<function>
 					# CoordL: VERB CONJ<coord:no&lemma:and|or|y|e|et|o|ou> [VERB]
 					# NEXT
 					# CoordR: [VERB]  CONJ<coord:no&lemma:and|or|y|e|et|o|ou> VERB
@@ -3746,6 +3754,14 @@ sub activarTags {
 	##numbers
 	elsif ($x =~  /^CARD/) {
 		$TagStr{"number"} = "P";
+		$TagStr{"person"} = 0;
+		$TagStr{"gender"} = 0;
+		$TagStr{"pos"} = $pos;
+		return 1;
+	}
+	##dates
+	elsif ($x =~  /^DATE/) {
+		$TagStr{"number"} = 0;
 		$TagStr{"person"} = 0;
 		$TagStr{"gender"} = 0;
 		$TagStr{"pos"} = $pos;

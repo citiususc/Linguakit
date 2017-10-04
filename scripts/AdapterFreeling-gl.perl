@@ -116,6 +116,15 @@ sub adapter {
 				$Exp{"person"} = 0;
 				$Exp{"gender"} = 0;
 				# $Exp{"type"} = $tmp[1];
+			} elsif ($tag =~  /^W/) { ##dates
+				my @tmp = split ("", $tag);#<array><string>
+				$Exp{"lemma"} = $lemma;
+				$Exp{"token"} = $token;
+				$Exp{"tag"} =  "DATE";
+				$Exp{"number"} = 0;
+				$Exp{"person"} = 0;
+				$Exp{"gender"} = 0;
+				#$Exp{"type"} = $tmp[1];
 			} elsif ($tag =~ /^A/) {
 				my @tmp = split ("", $tag);#<array><string>
 				$Exp{"lemma"} = $lemma;
@@ -152,7 +161,7 @@ sub adapter {
 				my @tmp = split ("", $tag);#<array><string>
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
-				$Exp{"tag"} =  "DT";
+				$Exp{"tag"} =  "DET";
 				$Exp{"type"} = $tmp[1];
 				$Exp{"person"} = $tmp[2];
 				$Exp{"gender"} = $tmp[3];

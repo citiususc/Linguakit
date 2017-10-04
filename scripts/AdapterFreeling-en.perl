@@ -81,10 +81,12 @@ sub adapter {
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
 				$Exp{"tag"} =  "DATE";
-				$Exp{"number"} = "S";        
+				$Exp{"person"} = 0;
+				$Exp{"gender"} = 0;
+				$Exp{"number"} = 0;     
 			}
 	 
-			if ($tag =~ /^PRP$/) {
+			elsif ($tag =~ /^PRP$/) {
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
 				$Exp{"tag"} =  "PRO";
@@ -198,7 +200,7 @@ sub adapter {
 				#my @tmp = split ("", $tag);
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
-				$Exp{"tag"} =  "DT";
+				$Exp{"tag"} =  "DET";
 				$Exp{"type"} = 0;
 				$Exp{"person"} = 0;
 				$Exp{"gender"} = 0;

@@ -33,11 +33,11 @@ my $PRP = "PRP_[0-9]+";#<string>
 my $ADV = "ADV_[0-9]+";#<string>
 my $CARD = "CARD_[0-9]+";#<string>
 my $CONJ = "CONJ_[0-9]+";#<string>
-my $DET = "DT_[0-9]+";#<string>
+my $DET = "DET_[0-9]+";#<string>
 my $PRO = "PRO_[0-9]+";#<string>
 my $VERB = "VERB_[0-9]+";#<string>
 my $I = "I_[0-9]+";#<string>
-my $DATE = "W_[0-9]+";#<string>
+my $DATE = "DATE_[0-9]+";#<string>
 my $POS = "POS_[0-9]+";#<string>
 my $PCLE = "PCLE_[0-9]+";#<string>
 my $EX = "EX_[0-9]+";#<string>
@@ -282,6 +282,14 @@ sub parse{
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($X${l}token:–\|${r})($X$a2)/$1$2/g;
 					Corr("Head","tag:Fe",\@temp);
+
+					# Single: [X<lemma:este>] X<lemma:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|sábado|domingo>
+					# Corr: tag:DATE
+					@temp = ($listTags =~ /(?:$X${l}lemma:este\|${r})($X${l}lemma:(?:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|sábado|domingo)\|${r})/g);
+					$Rel =  "Single";
+					Head($Rel,"",\@temp);
+					$listTags =~ s/($X${l}lemma:este\|${r})($X${l}lemma:(?:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|sábado|domingo)\|${r})/$1$2/g;
+					Corr("Head","tag:DATE",\@temp);
 
 					# PunctR: X Fz|Fe|Frc
 					@temp = ($listTags =~ /($X$a2)($Fz$a2|$Fe$a2|$Frc$a2)/g);
@@ -950,6 +958,8 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($ADV$a2|$CONJ${l}coord:adv\|${r})/$1$2/g;
 
+					}
+{#<function>
 					# AdjnL:  ADV|CONJ<coord:adv>  VERB
 					# Recursivity: 1
 					@temp = ($listTags =~ /($ADV$a2|$CONJ${l}coord:adv\|${r})($VERB$a2)/g);
@@ -961,8 +971,6 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($ADV$a2|$CONJ${l}coord:adv\|${r})($VERB$a2)/$2/g;
 
-					}
-{#<function>
 					# TermR: PRP NOUN [Fc] [PRP] [NOUN] [CONJ<lemma:$CCord>] [PRP] [NOUN]
 					# NEXT
 					# CoordL: PRP [NOUN] [Fc] [PRP] [NOUN] CONJ<lemma:$CCord> [PRP] [NOUN]
@@ -1702,6 +1710,8 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}nomin:no\|${r})($Fc$a2)($VERB${l}nomin:no\|${r})($CONJ${l}type:C\|${r}|$CONJ${l}lemma:$CCord\|${r})($VERB${l}nomin:no\|${r})/$3$4$5/g;
 
+					}
+{#<function>
 					# CoordL: [Fc]? VERB<nomin:no> CONJ<(type:C)|(lemma:$CCord)> [VERB<nomin:no>]
 					# NEXT
 					# CoordR: [Fc]? [VERB<nomin:no>] CONJ<(type:C)|(lemma:$CCord)> VERB<nomin:no>
@@ -1717,8 +1727,6 @@ sub parse{
 					Inherit("HeadDep","mode,tense",\@temp);
 					Add("HeadDep","coord:verb",\@temp);
 
-					}
-{#<function>
 					# PunctL: Fc CONJ<coord:verb>
 					@temp = ($listTags =~ /($Fc$a2)($CONJ${l}coord:verb\|${r})/g);
 					$Rel =  "PunctL";
@@ -4139,6 +4147,14 @@ sub activarTags {
 	##numbers
 	elsif ($x =~  /^CARD/) {
 		$TagStr{"number"} = "P";
+		$TagStr{"person"} = 0;
+		$TagStr{"gender"} = 0;
+		$TagStr{"pos"} = $pos;
+		return 1;
+	}
+	##dates
+	elsif ($x =~  /^DATE/) {
+		$TagStr{"number"} = 0;
 		$TagStr{"person"} = 0;
 		$TagStr{"gender"} = 0;
 		$TagStr{"pos"} = $pos;

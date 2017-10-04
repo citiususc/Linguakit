@@ -94,15 +94,7 @@ sub adapter {
 				} else {
 					$Exp{"politeness"} = 0
 				}  
-			} elsif ($tag eq "W") { ##dates
-				$lemma =~ s/[\[\]]//g;
-				$lemma =~ s/\:/\,/g;
-				my @tmp = split ("", $tag);#<array><string>
-				$Exp{"lemma"} = $token;
-				$Exp{"token"} = $token;
-				$Exp{"tag"} =  "DATE";
-				$Exp{"number"} = "S";        
-			} elsif ($tag =~ /^C/) { ##conjunctions:
+			}elsif ($tag =~ /^C/) { ##conjunctions:
 			my @tmp = split ("", $tag);#<array><string>
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
@@ -121,6 +113,15 @@ sub adapter {
 				$Exp{"token"} = $token;
 				$Exp{"tag"} =  "CARD";
 				$Exp{"number"} = "P";
+				$Exp{"person"} = 0;
+				$Exp{"gender"} = 0;
+				#$Exp{"type"} = $tmp[1];
+			} elsif ($tag =~  /^W/) { ##dates
+				my @tmp = split ("", $tag);#<array><string>
+				$Exp{"lemma"} = $lemma;
+				$Exp{"token"} = $token;
+				$Exp{"tag"} =  "DATE";
+				$Exp{"number"} = 0;
 				$Exp{"person"} = 0;
 				$Exp{"gender"} = 0;
 				#$Exp{"type"} = $tmp[1];
@@ -160,7 +161,7 @@ sub adapter {
 				my @tmp = split ("", $tag);#<array><string>
 				$Exp{"lemma"} = $lemma;
 				$Exp{"token"} = $token;
-				$Exp{"tag"} =  "DT";
+				$Exp{"tag"} =  "DET";
 				$Exp{"type"} = $tmp[1];
 				$Exp{"person"} = $tmp[2];
 				$Exp{"gender"} = $tmp[3];
