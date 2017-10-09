@@ -422,7 +422,7 @@ sub classif {
 			}
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-			#print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+#			print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -455,8 +455,8 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	elsif ($cat =~ /^D/ && ($feat eq "R_END" || $feat eq "R_SP" || $feat eq "R_CC") ) {
 		$result = 1;
 	}
-        #impedir forma os/as prome seguido de Nome
-	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as)" ) {
+        #impedir forma os/as /aquele/aquelas prome seguido de Nome
+	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as|aquele|aqueles|aquela|aquelas)" ) {
 		$result = 1;
 	}
         
