@@ -237,7 +237,7 @@ sub ner {
 			$Tag{$tokens[$i]} = "Z"; 
 		}         
 		##MEAUSURES
-		elsif  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
+		if  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] ;
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: kg=kilogramo,...
 			$Tag{$tokens[$i]} = "Zu"; 

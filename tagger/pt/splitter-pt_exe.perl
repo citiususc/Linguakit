@@ -26,7 +26,7 @@ my $pipe = !defined (caller);#<ignore-line>
 
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
-my $pron = "(me|te|mos|mas|mo|ma|tos|tas|to|ta|o|os|a|as|se|lhe|lhes|lho|lha|lhos|lhas|nos|vos|no-lo|no-los|no-la|no-las|vo-lo|vo-los|vo-la|vo-las|se-nos|se-vos|se-lhe|se-lhes|se-lho|se-lhos|se-lha|se-lhas)";#<string>
+my $pron = "(me|te|mos|mas|mo|ma|tos|tas|to|ta|o|os|a|as|lo|la|las|los|se|lhe|lhes|lho|lha|lhos|lhas|nos|vos|no-lo|no-los|no-la|no-las|vo-lo|vo-los|vo-la|vo-las|se-nos|se-vos|se-lhe|se-lhes|se-lho|se-lhos|se-lha|se-lhas)";#<string>
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
@@ -37,7 +37,7 @@ sub splitter {
 	
 	foreach my $token (@{$text}) {
 		chomp $token;
-
+		
 		###############Verbos + procliticos######################
 		##caso m-no -> m-o
 		$token =~ s/m\-n([oa])\b/m\-$1/g;
@@ -48,11 +48,10 @@ sub splitter {
 		$token =~ s/^(no|vo)-l([oa])(s?)/$1s $2$3/g;
 		$token =~ s/^(se)-(n[oa]s|lh[eoa]s)/$1 $2/g;
 
-
 		##separar procliticos de verbos
-		$token =~ s/([^\-\s]+)\-$pron/$1 $2/g;
 		$token =~ s/([^\-\s]+)\-$pron$/$1 $2/g;
-
+		$token =~ s/([^\-\s]+)\-$pron$/$1 $2/g;
+		#print STDERR "#$token#\n";
 		##separar cliticos compostos: mo, mos, to, tos, lho, lhos..
 		$token =~ s/\bmo\b/me o/g;
 		$token =~ s/\bmos\b/me os/g;
@@ -72,7 +71,6 @@ sub splitter {
 		#$token =~ s/\bcha\b/che a/g;
 		#$token =~ s/\bchas\b/che as/g;
 		##########################################################
-
 
 
 		###############separar contraçoes nao ambiguas###########

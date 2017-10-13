@@ -61,7 +61,7 @@ my $Art = "(o|a|os|as)";#<string> ##artigos que fazem parte dum NP composto
 my $Det = "(o|a|os|as|um|uma|uns|umas|algum|alguns|alguma|algumas|todo|todos|toda|todas|vários|várias)";#<string> ##determinantes par ver o contexto das ambiguas: desse, pelo...
 my $currency = "(euro|euros|dólar|dólares|peseta|pesetas|yen|yenes|escudo|escudos|franco|francos|real|reais|€)";#<string>
 my $measure = "(kg|kilogramo|quilogramo|gramo|g|centímetro|cm|hora|segundo|minuto|tonelada|tn|metro|m|km|kilómetro|quilómetro|%)";#<string>
-my $quant = "(cento|centos|miles|millão|millões|billão|billões|trillão|trillões)"; #<string>
+my $quant = "(cento|centos|miles|milhão|milhões|bilhão|bilhões|trilhão|trilhões)"; #<string>
 my $cifra = "(dois|três|quatro|cinco|seis|sete|oito|nove|dez|cem|mil)";#<string>  ##hai que criar as cifras básicas: once, doce... veintidós, treinta y uno...
 my $meses =  "(Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)";#<string>
 ######################info dependente da língua!!!####################################################################################
@@ -92,7 +92,7 @@ sub ner {
 		}
 		my $k = $i - 1;#<string>
 		my $j = $i + 1;#<string>
-   
+
 		####CADEA COM TODAS PALAVRAS EM MAIUSCULA
 		if ($tokens[$i] =~ /^$UpperCase+$/ && $tokens[$j] =~ /^$UpperCase+$/ && $Lex->{$lowercase} && $Lex->{lowercase($tokens[$j])} ) {
 			$Tag{$tokens[$i]} = "UNK"; ##identificamos cadeas de tokens so em maiusculas e estao no dicionario
@@ -203,7 +203,7 @@ sub ner {
 		
 		}
 		###FIM CONSTRUÇAO DOS NP COMPOSTOS##############################
-
+		
 		##NP se é composto
 		if ($tokens[$i] =~ /[^\s]_[^\s]/ ) { 
 			$Tag{$tokens[$i]} = "NP00000" ;
@@ -226,14 +226,15 @@ sub ner {
 		}
 		$adiantar=0;
 		##os numeros, medidas e datas #USAR O FICHEIRO QUANTITIES.DAT##################
-
+	
 		##CIFRAS OU NUMEROS
 		if ($tokens[$i] =~ /[0-9]+/ || $tokens[$i] =~ /^$cifra$/) {
 			$token = $tokens[$i];
 			$Tag{$tokens[$i]} = "Z"; 
+		       #	print STDERR "OKKK-$Tag{$tokens[$i]} -$tokens[$i+1] - $tokens[$i+2] - $tokens[$i+3]\n"  if($tokens[$i+3] =~ /^$currency$/i);
 		}         
 		##MEAUSURES
-		elsif  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
+		if  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] ;
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: kg=kilogramo,...
 			$Tag{$tokens[$i]} = "Zu"; 
