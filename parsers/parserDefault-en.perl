@@ -841,6 +841,13 @@ sub parse{
 					$listTags =~ s/($VERB$a2)($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB$a2)/$2$3$4$5$6$7$8$9$10$11$13$14$15$16$17$18$19$20$21$22$23/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
+					# >: VERB<lemma:$VPhAbout> [NOUN|PRO<type:D|P|I|X>]? X<lemma:about>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAbout\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:about\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhAbout\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:about\|${r})/$1$2/g;
+					LEX();
+
 					# >: VERB<lemma:$VPhAway> [NOUN|PRO<type:D|P|I|X>]? X<lemma:away>
 					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAway\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:away\|${r})/g);
 					$Rel =  ">";
@@ -890,6 +897,15 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VPhOut\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:out\|${r})/$1$2/g;
 					LEX();
 
+					}
+{#<function>
+					# >: VERB<lemma:$VPhOver> [NOUN|PRO<type:D|P|I|X>]? X<lemma:over>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhOver\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:over\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhOver\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:over\|${r})/$1$2/g;
+					LEX();
+
 					# >: VERB<lemma:$VPhUp> [NOUN|PRO<type:D|P|I|X>]? X<lemma:up>
 					@temp = ($listTags =~ /($VERB${l}lemma:$VPhUp\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:up\|${r})/g);
 					$Rel =  ">";
@@ -897,8 +913,6 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VPhUp\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:up\|${r})/$1$2/g;
 					LEX();
 
-					}
-{#<function>
 					# PunctL: [ADV<pos:0>] Fc VERB
 					# NEXT
 					# AdjnL: ADV<pos:0> [Fc] VERB
@@ -1780,6 +1794,8 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?/$1/g;
 
+					}
+{#<function>
 					# PunctL: [PRP<pos:0>] [NOUNCOORD|PRO<type:D|P|I|X>] Fc  VERB
 					# NEXT
 					# CircL: PRP<pos:0> NOUNCOORD|PRO<type:D|P|I|X> [Fc]?  VERB
@@ -1807,8 +1823,6 @@ sub parse{
 					RelDepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)($VERB$a2)/$5/g;
 
-					}
-{#<function>
 					# AdjnR:  VERB DATE
 					@temp = ($listTags =~ /($VERB$a2)($DATE$a2)/g);
 					$Rel =  "AdjnR";
