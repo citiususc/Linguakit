@@ -80,6 +80,14 @@ my $VModalEN  = "(?:can\|cannot\|should\|must\|shall\|will\|would\|may\|might\|)
 my $Vpass  = "(?:ser\|be\|être\|)";#<string>
 my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
 my $VTwoObj  = "(?:give\|lend\|offer\|pass\|post\|read\|sell\|send\|show\|promise\|tell\|bring\|buy\|cost\|get\|leave\|make\|owe\|pay\|play\|read\|refuse\|show\|sing\|take\|teach\|wish\|write\|)";#<string>
+my $VPhAway  = "(?:give\|)";#<string>
+my $VPhBack  = "(?:get\|)";#<string>
+my $VPhDown  = "(?:let\|take\|write\|)";#<string>
+my $VPhIn  = "(?:get\|)";#<string>
+my $VPhOff  = "(?:get\|put\|sit\|turn\|)";#<string>
+my $VPhOn  = "(?:go\|put\|take\|turn\|try\|)";#<string>
+my $VPhOut  = "(?:figure\|give\|put\|spell\|throw\|)";#<string>
+my $VPhUp  = "(?:cancell\|cheer\|chop\|come\|do\|give\|make\|pick\|)";#<string>
 
 
 ####################################END CODE BY COMPI################################################
@@ -831,6 +839,64 @@ sub parse{
 					$listTags =~ s/($VERB$a2)($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($ADV$a2)?($VERB$a2)/$2$3$4$5$6$7$8$9$10$11$13$14$15$16$17$18$19$20$21$22$23/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
+					# >: VERB<lemma:$VPhAway> [NOUN|PRO<type:D|P|I|X>]? X<lemma:away>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAway\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:away\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhAway\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:away\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhBack> [NOUN|PRO<type:D|P|I|X>]? X<lemma:back>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhBack\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:back\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhBack\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:back\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhDown> [NOUN|PRO<type:D|P|I|X>]? X<lemma:down>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhDown\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:down\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhDown\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:down\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhIn> [NOUN|PRO<type:D|P|I|X>]? X<lemma:in>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhIn\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:in\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhIn\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:in\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhOff> [NOUN|PRO<type:D|P|I|X>]? X<lemma:off>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhOff\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:off\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhOff\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:off\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhOn> [NOUN|PRO<type:D|P|I|X>]? X<lemma:on>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhOn\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:on\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhOn\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:on\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhOut> [NOUN|PRO<type:D|P|I|X>]? X<lemma:out>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhOut\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:out\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhOut\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:out\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhUp> [NOUN|PRO<type:D|P|I|X>]? X<lemma:up>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhUp\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:up\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhUp\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:up\|${r})/$1$2/g;
+					LEX();
+
+					}
+{#<function>
 					# PunctL: [ADV<pos:0>] Fc VERB
 					# NEXT
 					# AdjnL: ADV<pos:0> [Fc] VERB
@@ -973,8 +1039,6 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($PRP$a2)($NOUN$a2)($Fc$a2)($PRP$a2)($NOUN$a2)($Fc$a2)($CONJ${l}lemma:(?:and|or|y|e|et|o|ou)\|${r})($PRP$a2)($NOUN$a2)/$4$5$6$7$8$9/g;
 
-					}
-{#<function>
 					# CoordL: [Fc]? PRP [NOUN] [Fc] CONJ<lemma:and|or|y|e|et|o|ou> [PRP] [NOUN]
 					# NEXT
 					# TermR: [Fc]? [PRP] [NOUN] [Fc] [CONJ<lemma:and|or|y|e|et|o|ou>] PRP NOUN
@@ -1741,6 +1805,8 @@ sub parse{
 					RelDepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)($VERB$a2)/$5/g;
 
+					}
+{#<function>
 					# AdjnR:  VERB DATE
 					@temp = ($listTags =~ /($VERB$a2)($DATE$a2)/g);
 					$Rel =  "AdjnR";
@@ -1819,8 +1885,6 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|S)\|${r})($Fc$a2|$Fpa$a2)($VERB$a2)($Fc$a2|$Fpt$a2)/$1/g;
 
-					}
-{#<function>
 					# AdjnL: [Fc] VERB<mode:P> [Fc] VERB
 					# NEXT
 					# PunctL: Fc [VERB<mode:P>] [Fc] VERB
