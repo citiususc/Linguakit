@@ -80,14 +80,16 @@ my $VModalEN  = "(?:can\|cannot\|should\|must\|shall\|will\|would\|may\|might\|)
 my $Vpass  = "(?:ser\|be\|être\|)";#<string>
 my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
 my $VTwoObj  = "(?:give\|lend\|offer\|pass\|post\|read\|sell\|send\|show\|promise\|tell\|bring\|buy\|cost\|get\|leave\|make\|owe\|pay\|play\|read\|refuse\|show\|sing\|take\|teach\|wish\|write\|)";#<string>
-my $VPhAway  = "(?:give\|)";#<string>
-my $VPhBack  = "(?:get\|)";#<string>
-my $VPhDown  = "(?:let\|take\|write\|)";#<string>
-my $VPhIn  = "(?:get\|)";#<string>
-my $VPhOff  = "(?:get\|put\|sit\|turn\|)";#<string>
-my $VPhOn  = "(?:go\|put\|take\|turn\|try\|)";#<string>
-my $VPhOut  = "(?:figure\|give\|put\|spell\|throw\|)";#<string>
-my $VPhUp  = "(?:cancell\|cheer\|chop\|come\|do\|give\|make\|pick\|)";#<string>
+my $VPhAbout  = "(?:bring\|)";#<string>
+my $VPhAway  = "(?:give\|put\|think\|)";#<string>
+my $VPhBack  = "(?:call\|get\|give\|put\|)";#<string>
+my $VPhDown  = "(?:let\|take\|write\|tear\|turn\|)";#<string>
+my $VPhIn  = "(?:call\|fill\|get\|hand\|turn\|)";#<string>
+my $VPhOff  = "(?:call\|dropp\|get\|put\|show\|shut\|sit\|take\|turn\|)";#<string>
+my $VPhOn  = "(?:bring\|go\|put\|take\|turn\|try\|)";#<string>
+my $VPhOut  = "(?:ask\|cross\|cut\|figure\|fill\|give\|keep\|kick\|pick\|point\|put\|spell\|take\|throw\|)";#<string>
+my $VPhOver  = "(?:do\|look\|take\|think\|)";#<string>
+my $VPhUp  = "(?:bring\|call\|cancell\|cheer\|clean\|chop\|come\|do\|give\|hang\|look\|make\|pick\|tear\|turn\|)";#<string>
 
 
 ####################################END CODE BY COMPI################################################
