@@ -219,6 +219,8 @@ sub ner {
 			if ($Lex->{$token}) {
 				$Tag{$tokens[$i]} = $Entry->{$token};
 				#print STDERR "3--: $tokens[$i] - $Tag{$tokens[$i]}\n";
+			}elsif ($tokens[$i] =~ /\-/) { ##se o token é composto, dever ser um sustantivo
+				$Tag{$tokens[$i]} = "$tokens[$i] NC00000";
 			}
 		}elsif ($Tag{$tokens[$i]} eq "NP00000") {
 			$token = lowercase ($tokens[$i]); 
