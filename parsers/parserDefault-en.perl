@@ -85,11 +85,11 @@ my $VPhAway  = "(?:give\|put\|think\|)";#<string>
 my $VPhBack  = "(?:call\|get\|give\|put\|)";#<string>
 my $VPhDown  = "(?:let\|take\|write\|tear\|turn\|)";#<string>
 my $VPhIn  = "(?:call\|fill\|get\|hand\|turn\|)";#<string>
-my $VPhOff  = "(?:call\|dropp\|get\|put\|show\|shut\|sit\|take\|turn\|)";#<string>
+my $VPhOff  = "(?:call\|drop\|get\|put\|show\|shut\|sit\|take\|turn\|)";#<string>
 my $VPhOn  = "(?:bring\|go\|put\|take\|turn\|try\|)";#<string>
 my $VPhOut  = "(?:ask\|cross\|cut\|figure\|fill\|give\|keep\|kick\|pick\|point\|put\|spell\|take\|throw\|)";#<string>
 my $VPhOver  = "(?:do\|look\|take\|think\|)";#<string>
-my $VPhUp  = "(?:bring\|call\|cancell\|cheer\|clean\|chop\|come\|do\|give\|hang\|look\|make\|pick\|tear\|turn\|)";#<string>
+my $VPhUp  = "(?:bring\|call\|cancel\|cheer\|clean\|chop\|come\|do\|give\|hang\|look\|make\|pick\|tear\|turn\|)";#<string>
 
 
 ####################################END CODE BY COMPI################################################
@@ -1752,8 +1752,8 @@ sub parse{
 					# NEXT
 					# TermR: [VERB] [Fc] PRP NOUNCOORD|PRO<type:D|P|I|X> [Fc]?
 					# NEXT
-					# CircR: VERB [Fc] PRP [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]?
-					# Recursivity:2
+					# CircR: VERB [Fc] PRP NOUNCOORD|PRO<type:D|P|I|X> [Fc]?
+					# Recursivity:1
 					@temp = ($listTags =~ /($VERB$a2)($Fc$a2)(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "PunctR";
 					HeadDep($Rel,"",\@temp);
@@ -1763,7 +1763,7 @@ sub parse{
 					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "TermR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "CircR";
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?/$1/g;
@@ -1776,20 +1776,7 @@ sub parse{
 					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "TermR";
 					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
-					$Rel =  "CircR";
-					HeadRelDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?/$1/g;
-					@temp = ($listTags =~ /($VERB$a2)($Fc$a2)(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
-					$Rel =  "PunctR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)(?:$PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)/g);
-					$Rel =  "PunctR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /(?:$VERB$a2)(?:$Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
-					$Rel =  "TermR";
-					HeadDep($Rel,"",\@temp);
-					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($PRP$a2)(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
+					@temp = ($listTags =~ /($VERB$a2)(?:$Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})(?:$Fc$a2)?/g);
 					$Rel =  "CircR";
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?/$1/g;
