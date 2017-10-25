@@ -901,12 +901,12 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:(?:comezar|acabar|finalizar|terminar|passar|estar)\|${r})($ADV$a2)?($PRP${l}lemma:$PrepLocs\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$4$5/g;
 					Inherit("DepRelHead","mode,person,tense,number",\@temp);
 
-					# VSpecL: VERB<lemma:ir|vir> [ADV]?  VERB<mode:N>
+					# VSpecL: VERB<lemma:ir|vir|ser> [ADV]?  VERB<mode:N>
 					# Inherit: mode, person, tense, number
-					@temp = ($listTags =~ /($VERB${l}lemma:(?:ir|vir)\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:(?:ir|vir|ser)\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
 					$Rel =  "VSpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:(?:ir|vir)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
+					$listTags =~ s/($VERB${l}lemma:(?:ir|vir|ser)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
 					# VSpecL: VERB<lemma:estar> [ADV]? VERB<mode:G>
