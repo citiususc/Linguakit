@@ -81,15 +81,20 @@ my $Vpass  = "(?:ser\|be\|être\|)";#<string>
 my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
 my $VTwoObj  = "(?:give\|lend\|offer\|pass\|post\|read\|sell\|send\|show\|promise\|tell\|bring\|buy\|cost\|get\|leave\|make\|owe\|pay\|play\|read\|refuse\|show\|sing\|take\|teach\|wish\|write\|)";#<string>
 my $VPhAbout  = "(?:bring\|)";#<string>
+my $VPhAgainst  = "(?:hold\|)";#<string>
+my $VPhAlong  = "(?:help\|)";#<string>
+my $VPhAround  = "(?:jerk\|knock\|)";#<string>
 my $VPhAway  = "(?:give\|put\|think\|)";#<string>
-my $VPhBack  = "(?:call\|get\|give\|put\|)";#<string>
-my $VPhDown  = "(?:let\|take\|write\|tear\|turn\|)";#<string>
-my $VPhIn  = "(?:call\|fill\|get\|hand\|turn\|)";#<string>
-my $VPhOff  = "(?:call\|drop\|get\|put\|show\|shut\|sit\|take\|turn\|)";#<string>
+my $VPhBack  = "(?:call\|get\|give\|put\|answer\|hit\|hold\|keep\|knock\|)";#<string>
+my $VPhDown  = "(?:let\|take\|write\|tear\|tur\|)";#<string>
+my $VPhFrom  = "(?:keep\|)";#<string>
+my $VPhIn  = "(?:call\|fill\|get\|hand\|turn\|ask\|deal\|do\|hand\|keep\|)";#<string>
+my $VPhOff  = "(?:call\|drop\|get\|put\|show\|shut\|sit\|take\|turn\|cross\|cut\|finish\|)";#<string>
 my $VPhOn  = "(?:bring\|go\|put\|take\|turn\|try\|)";#<string>
-my $VPhOut  = "(?:ask\|cross\|cut\|figure\|fill\|give\|keep\|kick\|pick\|point\|put\|spell\|take\|throw\|)";#<string>
+my $VPhOut  = "(?:ask\|cross\|cut\|figure\|fill\|give\|keep\|kick\|pick\|point\|put\|spell\|take\|throw\|bail\|find\|clean\|freak\|have\|hear\|help\|)";#<string>
 my $VPhOver  = "(?:do\|look\|take\|think\|)";#<string>
-my $VPhUp  = "(?:bring\|call\|cancel\|cheer\|clean\|chop\|come\|do\|give\|hang\|look\|make\|pick\|tear\|turn\|)";#<string>
+my $VPhUnder  = "(?:keep\|)";#<string>
+my $VPhUp  = "(?:bring\|call\|cancel\|cheer\|clean\|chop\|come\|do\|give\|hang\|look\|make\|pick\|tear\|turn\|ask\|beat\|brake\|cheer\|dress\|get\|harry\|)";#<string>
 
 
 ####################################END CODE BY COMPI################################################
@@ -848,6 +853,27 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VPhAbout\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:about\|${r})/$1$2/g;
 					LEX();
 
+					# >: VERB<lemma:$VPhAgainst> [NOUN|PRO<type:D|P|I|X>]? X<lemma:against>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAgainst\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:against\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhAgainst\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:against\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhAlong> [NOUN|PRO<type:D|P|I|X>]? X<lemma:along>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAlong\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:along\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhAlong\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:along\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhAround> [NOUN|PRO<type:D|P|I|X>]? X<lemma:around>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAround\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:around\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhAround\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:around\|${r})/$1$2/g;
+					LEX();
+
 					# >: VERB<lemma:$VPhAway> [NOUN|PRO<type:D|P|I|X>]? X<lemma:away>
 					@temp = ($listTags =~ /($VERB${l}lemma:$VPhAway\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:away\|${r})/g);
 					$Rel =  ">";
@@ -869,6 +895,15 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VPhDown\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:down\|${r})/$1$2/g;
 					LEX();
 
+					# >: VERB<lemma:$VPhFrom> [NOUN|PRO<type:D|P|I|X>]? X<lemma:from>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhFrom\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:from\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhFrom\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:from\|${r})/$1$2/g;
+					LEX();
+
+					}
+{#<function>
 					# >: VERB<lemma:$VPhIn> [NOUN|PRO<type:D|P|I|X>]? X<lemma:in>
 					@temp = ($listTags =~ /($VERB${l}lemma:$VPhIn\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:in\|${r})/g);
 					$Rel =  ">";
@@ -897,13 +932,18 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:$VPhOut\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:out\|${r})/$1$2/g;
 					LEX();
 
-					}
-{#<function>
 					# >: VERB<lemma:$VPhOver> [NOUN|PRO<type:D|P|I|X>]? X<lemma:over>
 					@temp = ($listTags =~ /($VERB${l}lemma:$VPhOver\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:over\|${r})/g);
 					$Rel =  ">";
 					HeadDep_lex($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$VPhOver\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:over\|${r})/$1$2/g;
+					LEX();
+
+					# >: VERB<lemma:$VPhUnder> [NOUN|PRO<type:D|P|I|X>]? X<lemma:under>
+					@temp = ($listTags =~ /($VERB${l}lemma:$VPhUnder\|${r})(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:under\|${r})/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$VPhUnder\|${r})($NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($X${l}lemma:under\|${r})/$1$2/g;
 					LEX();
 
 					# >: VERB<lemma:$VPhUp> [NOUN|PRO<type:D|P|I|X>]? X<lemma:up>
@@ -1703,6 +1743,8 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2|$CONJ${l}coord:verb\|${r})($PRP$a2)($VERB$a2|$CONJ${l}coord:verb\|${r})($PRP$a2)($CARD$a2|$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})/$1/g;
 
+					}
+{#<function>
 					# CircR: [VERB|CONJ<coord:verb>] [PRP] VERB|CONJ<coord:verb> PRP CARD|NOUNCOORD|PRO<type:D|P|I|X>
 					# NEXT
 					# CircR: VERB|CONJ<coord:verb> PRP VERB|CONJ<coord:verb> [PRP] [CARD|NOUNCOORD|PRO<type:D|P|I|X>]
@@ -1781,8 +1823,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?/$1/g;
 
-					}
-{#<function>
 					# PunctL: [PRP<pos:0>] [NOUNCOORD|PRO<type:D|P|I|X>] Fc  VERB
 					# NEXT
 					# CircL: PRP<pos:0> NOUNCOORD|PRO<type:D|P|I|X> [Fc]?  VERB
