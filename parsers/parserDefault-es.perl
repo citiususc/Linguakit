@@ -252,12 +252,12 @@ sub parse{
 					Corr("Head","tag:PRO,type:R",\@temp);
 
 					# Single: X<lemma:lo> [PRO<lemma:que>]
-					# Corr: tag:DT, type:A
+					# Corr: tag:DET, type:A
 					@temp = ($listTags =~ /($X${l}lemma:lo\|${r})(?:$PRO${l}lemma:que\|${r})/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($X${l}lemma:lo\|${r})($PRO${l}lemma:que\|${r})/$1$2/g;
-					Corr("Head","tag:DT,type:A",\@temp);
+					Corr("Head","tag:DET,type:A",\@temp);
 
 					# Single: [X]? CONJ<lemma:pero>
 					# Corr: type:S

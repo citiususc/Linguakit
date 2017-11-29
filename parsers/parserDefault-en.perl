@@ -278,20 +278,20 @@ sub parse{
 					Corr("Head","mode:0",\@temp);
 
 					# Single: PRO<type:X> [ADJ]? [NOUN]
-					# Corr: tag:DT, type:P
+					# Corr: tag:DET, type:P
 					@temp = ($listTags =~ /($PRO${l}type:X\|${r})(?:$ADJ$a2)?(?:$NOUN$a2)/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($PRO${l}type:X\|${r})($ADJ$a2)?($NOUN$a2)/$1$2$3/g;
-					Corr("Head","tag:DT,type:P",\@temp);
+					Corr("Head","tag:DET,type:P",\@temp);
 
 					# Single: X<token:a|an> [NOUN|ADJ|ADV]
-					# Corr: tag:DT, type:I, lemma:=token
+					# Corr: tag:DET, type:I, lemma:=token
 					@temp = ($listTags =~ /($X${l}token:(?:a|an)\|${r})(?:$NOUN$a2|$ADJ$a2|$ADV$a2)/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($X${l}token:(?:a|an)\|${r})($NOUN$a2|$ADJ$a2|$ADV$a2)/$1$2/g;
-					Corr("Head","tag:DT,type:I,lemma:=token",\@temp);
+					Corr("Head","tag:DET,type:I,lemma:=token",\@temp);
 
 					# Single: X<token:–> [X]
 					# Corr: tag:Fe
@@ -744,11 +744,11 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($DET$a2)($VERB${l}mode:P\|${r})($NOUN$a2)/$3/g;
 
-					# SpecL: DET CARD|DATE
-					@temp = ($listTags =~ /($DET$a2)($CARD$a2|$DATE$a2)/g);
+					# SpecL: DET CARD|DATE|ADJ
+					@temp = ($listTags =~ /($DET$a2)($CARD$a2|$DATE$a2|$ADJ$a2)/g);
 					$Rel =  "SpecL";
 					DepHead($Rel,"",\@temp);
-					$listTags =~ s/($DET$a2)($CARD$a2|$DATE$a2)/$2/g;
+					$listTags =~ s/($DET$a2)($CARD$a2|$DATE$a2|$ADJ$a2)/$2/g;
 
 					# SpecL: DET NOUN|PRO
 					# Recursivity: 1
