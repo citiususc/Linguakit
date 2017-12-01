@@ -147,7 +147,7 @@ sub tokens {
 			} elsif ($token =~ /^([Cc]oulda|[Ss]houlda|[Ww]oulda|[Mm]usta)$/) {
 				$token =~ s/^(.+)a$/$1\nhave/;
 			} else {
-				$token =~ s/([a-z])APOTEMP([a-z])/$1\n\'\2/g; # Com isto splitea tudo (mas mantém 'tok numa linha)
+				$token =~ s/([A-Za-z])APOTEMP([a-z])/$1\n\'\2/g; # Com isto splitea tudo (mas mantém 'tok numa linha)
 			}
 		
 			if($pipe){#<ignore-line>
