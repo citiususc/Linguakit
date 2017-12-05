@@ -159,7 +159,10 @@ Run `./linguakit <module> --help` to see the options of a module. These are the 
 ```
 ## Usage in Windows
 
-The same syntax with `linguakit.bat` command.
+The same syntax with `linguakit.bat` command. You must install Perl and insert the path for the corresponding interperter in `linguakit.bat` (second line). For instance:
+```
+C:\Perl64\bin\perl.exe %~dp0\linguakit.perl
+```
 
 ### Examples
 
