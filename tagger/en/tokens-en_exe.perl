@@ -73,12 +73,12 @@ sub tokens {
 		# Apóstrofo inglês: não tokeniza
 		# (só nome próprio + GEN: John's father) > Ver comentário abaixo "apóstrofo"
 		$sentence =~ s/(^| )($contr)\'s/$1$2APOTEMPs/g; #### Se se comenta isto, "She's" splitea
-		$sentence =~ s/(^| )([A-Z][a-z]+)'s/$1$2 GENs/g; #### Se se comenta isto, "John's" não splitea
-		$sentence =~ s/([Ia-z])\'(ve|ll|s|re|m|d|t)/$1APOTEMP$2/g; ### Se se comenta isto, "they're" splitea
+		$sentence =~ s/(^| )([A-Z][a-z]+)[\'\’]s/$1$2 GENs/g; #### Se se comenta isto, "John's" não splitea
+		$sentence =~ s/([Ia-z])[\'\’](ve|ll|s|re|m|d|t)/$1APOTEMP$2/g; ### Se se comenta isto, "they're" splitea
 
 		$sentence =~ s/([0-9]+)\.([0-9]+)/${1}$dot_quant$2 /g ;
 		$sentence =~ s/([0-9]+)\,([0-9]+)/${1}$comma_quant$2 /g ;
-		$sentence =~ s/([0-9]+)\'([0-9]+)/${1}$quote_quant$2 /g ;
+		$sentence =~ s/([0-9]+)[\'\’]([0-9]+)/${1}$quote_quant$2 /g ;
 
 		#print STDERR "#$sentence#\n";
 		$sentence =~ s/($Punct)/ $1 /g ;
@@ -110,7 +110,7 @@ sub tokens {
 			$token =~ s/$quote_quant/\'/;
 
 			# Apóstrofo
-			$token =~ s/GENs/'s/;
+			$token =~ s/GENs/[\'\’]s/;
 			##$token =~ s/([a-z])APOTEMP([a-z])/$1\'\2/g; # Com isto só splitea Pron+'s
 
 			# Reconstrução da forma contraida ('ve > have)
