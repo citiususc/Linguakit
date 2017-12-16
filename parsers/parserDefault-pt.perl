@@ -391,6 +391,15 @@ sub parse{
 					$listTags =~ s/($X${l}lemma:(?:segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|sábado|domingo)\|${r})($Fc$a2)?($DATE$a2)/$3/g;
 					LEX();
 
+					# <: X<lemma:dentro> PRP<lemma:de>
+					# Add: tag:PRP
+					@temp = ($listTags =~ /($X${l}lemma:dentro\|${r})($PRP${l}lemma:de\|${r})/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					$listTags =~ s/($X${l}lemma:dentro\|${r})($PRP${l}lemma:de\|${r})/$2/g;
+					LEX();
+					Add("DepHead_lex","tag:PRP",\@temp);
+
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
 					# NEXT
 					# PunctL: [ADV] Fc [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
@@ -944,6 +953,8 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($ADV$a2)($Fc$a2)/$1/g;
 
+					}
+{#<function>
 					# PunctL: Fc [ADV] [Fc] VERB
 					# NEXT
 					# PunctL: [Fc] [ADV] Fc VERB
@@ -960,8 +971,6 @@ sub parse{
 					DepHead($Rel,"",\@temp);
 					$listTags =~ s/($Fc$a2)($ADV$a2)($Fc$a2)($VERB$a2)/$4/g;
 
-					}
-{#<function>
 					# AdjnR: VERB [NOUN|PRO<type:D|P|I|X>]? ADV|CONJ<coord:adv>
 					# Recursivity: 1
 					@temp = ($listTags =~ /($VERB$a2)(?:$NOUN$a2|$PRO${l}type:(?:D|P|I|X)\|${r})?($ADV$a2|$CONJ${l}coord:adv\|${r})/g);
@@ -1622,14 +1631,14 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatPARA\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:para\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
+					}
+{#<function>
 					# CregR: VERB<lemma:$SubcatSOBRE>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:sobre> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatSOBRE\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatSOBRE\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					}
-{#<function>
 					# CoordL: NP [Fc] [NP] CONJ<(type:C)|(lemma:$CCord)> [NP]
 					# NEXT
 					# PunctL: [NP] Fc [NP] CONJ<(type:C)|(lemma:$CCord)> [NP]
@@ -2431,6 +2440,8 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($CONJ${l}type:S\|${r})($VERB$a2)/$1/g;
 
+					}
+{#<function>
 					# TermR: PRP NOUNCOORD|PRO<type:D|P|I|X>|VERB
 					# NoUniq
 					@temp = ($listTags =~ /($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB$a2)/g);
