@@ -77,7 +77,7 @@ my $cliticoind  = "(?:le\|les\|nos\|me\|te\|Le\|Les\|Nos\|Me\|Te\|)";#<string>
 my $PROperssuj = "(?:yo\|tú\|usted\|él\|ella\|nosotros\|vosotros\|ellos\|ellas\|ustedes\|eu\|ti\|tu\|vostede\|você\|ele\|ela\|nós\|vós\|eles\|elas\|vostedes\|vocês\|eles\|elas\|you\|i\|we\|they\|he\|she\|je\|il\|elle\|ils\|elles\|nous\|vous\|)";#<string>
 my $PROsujgz = "(?:eu\|ti\|tu\|vostede\|você\|el\|ele\|ela\|nós\|vós\|eles\|elas\|vostedes\|vocês\|eles\|elas\|)";#<string>
 my $VModalEN  = "(?:can\|cannot\|should\|must\|shall\|will\|would\|may\|might\|)";#<string>
-my $VModalES   = "(?:poder\|deber\|)";#<string>
+my $VModalES   = "(?:poder\|deber\|dever\|)";#<string>
 my $Vpass  = "(?:ser\|be\|être\|)";#<string>
 my $Vaux  = "(?:haber\|haver\|ter\|have\|avoir\|)";#<string>
 my $NincSp  = "(?:alusión\|comentario\|referencia\|llamamiento\|mención\|observación\|declaración\|propuesta\|pregunta\|)";#<string>
@@ -220,12 +220,12 @@ sub parse{
 ###########################BEGIN GRAMMAR#############################################
 				{#<function>
 					# Single: VERB
-					# Add: nomin:no
+					# Declare: nomin:no
 					@temp = ($listTags =~ /($VERB$a2)/g);
 					$Rel =  "Single";
 					Head($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)/$1/g;
-					Add("Head","nomin:no",\@temp);
+					Add("Head","nomin:no",\@temp) if ($listTags !~ /nomin/);
 
 					# Single: [NOUN] [Fc]? CONJ<lemma:que> [NOUN] [VERB]
 					# Corr: tag:PRO, type:R
