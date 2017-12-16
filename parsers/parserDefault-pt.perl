@@ -1908,10 +1908,12 @@ sub parse{
 					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/$5/g;
 
 					# AtrR: VERB<lemma:$SubcatAtr>  VERB<mode:[PNG]>
+					# Agr: number, person
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/g);
 					$Rel =  "AtrR";
-					HeadDep($Rel,"",\@temp);
-					$listTags =~ s/($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/$1/g;
+					HeadDep($Rel,"number,person",\@temp);
+					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$SubcatAtr\|${r})($VERB${l}concord:1${b2}mode:[PNG]\|${r})/$1/g;
+					$listTags =~ s/concord:[01]\|//g;
 
 					# Circ2R: VERB VERB<mode:[GP]>
 					@temp = ($listTags =~ /($VERB$a2)($VERB${l}mode:[GP]\|${r})/g);
