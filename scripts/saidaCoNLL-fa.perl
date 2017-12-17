@@ -19,6 +19,7 @@ sub conll{
 	my ($text) = @_;#<ref><list><string>
 
 	my $DepLex = "<|>|lex";#<string>
+	my $DepSem = "<SEM>";#<string>
 	my @listaTags;#<array><string>
 
 	my %Deps = ();#<hash><hash><string><smart>
@@ -27,6 +28,12 @@ sub conll{
 	my %Rels = ();#<hash><string>
 	my %Roots = ();#<hash><string>
 	my %Root_cats = ();#<hash><string>
+	my %DepsSem = ();#<hash><hash><string><smart>
+	my %CatsSem = ();#<hash><string>
+	my %HeadsSem = ();#<hash><string>
+	my %RelsSem = ();#<hash><string>
+	my %RootsSem = ();#<hash><string>
+	my %Root_catsSem = ();#<hash><string>
 
 	my %Tokens = ();#<hash><string>
 	my %Args = ();#<hash><string>
@@ -53,19 +60,25 @@ sub conll{
 			for (my $i=0; $i<=$#listaTags; $i++) {#<integer>
 				#print STDERR "#$i# --- #$listaTags[$i]#\n";
 				$listaTags[$i] = ConvertCharLarge($listaTags[$i]);  
-				
+				my $Sem="";#<string>
 				my $j=$i+1; #<integer>  
-				if (defined  $Deps{$i} ) { 
-					$Heads{$i} = 0 if (!defined $Heads{$i});
+				if ($Deps{$i} ) { 
+					$Heads{$i} = 0 if (!$Heads{$i});
 					$Heads{$i}++;
+					$HeadsSem{$i}++ if  ($HeadsSem{$i});;
 					my $Deps="";#<string>
 					my $Deps_lex="";#<string>
 					my $found=0;#<boolean>
+					my $found_sem=0;#<boolean>
 					foreach my $r (keys %{$Deps{$i}}) {
 						#print STDERR "$r\n";
-						if ($Deps{$i}{$r} !~ /^($DepLex)$/ ) {
+						if ($Deps{$i}{$r} !~ /^($DepLex)$/) {
 							$Deps = $r;
 							$found = 1; 
+						        if ($DepsSem{$i}{$r} =~ /($DepSem)$/) {
+							    $found_sem = 1;
+							    $Sem = $Rels{$i} . ":" . $Heads{$i} . "|" . $RelsSem{$i} . ":" . $HeadsSem{$i};
+							}
 						} else{
 							$Deps_lex = $r;
 						}
@@ -74,10 +87,14 @@ sub conll{
 						$Deps = $Deps_lex;
 						#print STDERR "--------------DEP: $Deps\n";
 					}
+					if (!$found_sem) {
+					  $Sem = $Rels{$i} . ":" . $Heads{$i};
+					  
+					}
 					if($pipe){#<ignore-line>
-						print "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}\n";#<ignore-line>
+						print "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}\t$Sem\n";#<ignore-line>
 					}else{#<ignore-line>
-						push(@saida, "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}");
+						push(@saida, "$j\t$Tokens{$i}\t$Deps\t$Cats{$i}\t$Heads{$i}\t$Args{$i}\t$Rels{$i}\t$Sem");
 					}#<ignore-line>
 				} elsif (defined $Roots{$i}) {
 					my $Roots="";#<string>
@@ -96,10 +113,11 @@ sub conll{
 					if (!$found) {
 						$Roots = $Roots_lex;      
 					}
+					$Sem =  "ROOT:0";
 					if($pipe){#<ignore-line>
-						print "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT\n";
+						print "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT\t$Sem\n";
 					}else{#<ignore-line>
-						push(@saida, "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT");
+						push(@saida, "$j\t$Tokens{$i}\t$Roots\t$Root_cats{$i}\t0\t$Args{$i}\tROOT\t$Sem");
 					}#<ignore-line>
 				} else {
 					my ($token, $tag, $ref) = split ("_", $listaTags[$i]);#<string>
@@ -115,16 +133,16 @@ sub conll{
 					if ($tag =~ /^SENT/) {
 						$tag =~ s/>//;
 						if($pipe){#<ignore-line>
-							print "$j\t$token\t$token\t$tag\t_\t$args\t_\n";  
+							print "$j\t$token\t$token\t$tag\t_\t$args\t_\t_\n";  
 						}else{#<ignore-line>
-							push(@saida, "$j\t$token\t$token\t$tag\t_\t$args\t_");
+							push(@saida, "$j\t$token\t$token\t$tag\t_\t$args\t_\t_");
 						}#<ignore-line>
 					} else {
 						$lema = ReConvertChar($lema);
 						if($pipe){#<ignore-line>
-							print "$j\t$token\t$lema\t$tag\t_\t$args\t_\n";
+							print "$j\t$token\t$lema\t$tag\t_\t$args\t_\t_\n";
 						}else{#<ignore-line>
-							push(@saida, "$j\t$token\t$lema\t$tag\t_\t$args\t_");
+							push(@saida, "$j\t$token\t$lema\t$tag\t_\t$args\t_\t_");
 						}#<ignore-line>
 					}
 				}    
@@ -135,6 +153,12 @@ sub conll{
 			%Rels = ();
 			%Roots = ();
 			%Root_cats = ();
+			%DepsSem = ();#<smart>
+			%CatsSem = ();
+			%HeadsSem = ();
+			%RelsSem = ();
+			%RootsSem = ();
+			%Root_catsSem = ();
 
 			%Tokens = ();
 			%Args = ();
@@ -145,7 +169,7 @@ sub conll{
 			$line =~ s/\)$//;
 
 			#nao tomamos em conta as dependencias semanticas
-			if ($line !~ /\-SEM/ ) {
+			if ($line !~ /\<SEM>/ ) {
 				my ($rel, $head, $dep) = split('\;', $line);#<string>
 
 
@@ -175,6 +199,39 @@ sub conll{
 
 					$Roots{$ref_h}{$head} = $rel;
 					$Root_cats{$ref_h} = $cat_h;
+				}
+			}
+
+		       	if ($line =~ /\<SEM>/ ) {
+				my ($rel, $head, $dep) = split('\;', $line);#<string>
+
+				#print STDERR "Ok: #$line#\n";
+				my ($head,$cat_h,$ref_h) = split ("_", $head);#<string>
+				my ($dep,$cat_d,$ref_d) = split ("_", $dep);#<string>
+				if ($rel =~ /_/) {
+					my ($rel,$cat_r,$ref_r) = split ("_", $rel);#<string>
+					my ($rel_name, $rel) = split ("/", $rel);#<string>
+
+					$DepsSem{$ref_d}{$dep} = $rel_name;
+					$HeadsSem{$ref_d} = $ref_r;
+					$RelsSem{$ref_d} = "Term" ;
+					$CatsSem{$ref_d} = $cat_d ;
+
+					$DepsSem{$ref_r}{$rel} = $rel_name;
+					$HeadsSem{$ref_r} = $ref_h;
+					$RelsSem{$ref_r} = $rel_name;
+					$CatsSem{$ref_r} = $cat_r ;
+
+					$RootsSem{$ref_h}{$head} = $rel_name;
+					$Root_catsSem{$ref_h} = $cat_h;
+				} else {
+					$DepsSem{$ref_d}{$dep} = $rel; 
+					$HeadsSem{$ref_d} = $ref_h;
+					$RelsSem{$ref_d} = $rel;
+					$CatsSem{$ref_d} = $cat_d;
+
+					$RootsSem{$ref_h}{$head} = $rel;
+					$Root_catsSem{$ref_h} = $cat_h;
 				}
 			}
 		} elsif  ($line =~ /^HEAD::|^DEP::|^REL::/) {
