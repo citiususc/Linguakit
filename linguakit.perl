@@ -5,7 +5,6 @@ use warnings;
 use File::Basename;
 use lib dirname(__FILE__);
 
-
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
 binmode STDERR, ':utf8';
@@ -174,12 +173,14 @@ my $KEYWORD = "keywords/keywords_exe.perl";
 my $REL = "triples/triples_exe.perl";
 my $LINK = "linking/linking_exe.perl";
 my $SUM = "summarizer/summarizer_exe.perl";
+my $SENT_SPLIT = "summarizer/Sentence.pl";
 my $CONJ = "conjugator/conjugator_exe.perl";
 
 my $QUELINGUA = "lanrecog/lanrecog.perl";
 my $QUELINGUA_LEX = "lanrecog/build_lex.perl";
 
 my $KWIC = "kwic/kwic.perl";
+
 
 
 #######################
@@ -507,16 +508,17 @@ if($MOD eq "dep"){
 	}
 
 }elsif($MOD eq "sum"){  ##summarizer
-	do $SUM;
+        do $SUM;
+	do $SENT_SPLIT;
 	if($args->percentage){
-		my @lines = <$input>;
-		my $result = Summarizer::summarizer(join("\n" ,@lines),$LING,$args->percentage);
-		print "$result\n"
+	        my @lines = <$input>;	        
+		my ($result) = Summarizer::summarizer(join("\n" ,@lines),$LING,$args->percentage);
+		print "<abstract>$result</abstract>\n";
 
 	}else{
 		my @lines = <$input>;
-		my $result = Summarizer::summarizer(join("\n" ,@lines),$LING,10);
-		print "$result\n"
+		my ($result) = Summarizer::summarizer(join("\n" ,@lines),$LING,10);
+		print "<abstract>$result</abstract>\n";
 	}
 }elsif($MOD eq "conj"){  ##conjugator
 	do $CONJ;
