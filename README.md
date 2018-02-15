@@ -29,7 +29,7 @@ LinguaKit is a Natural Language Processing tool containing several NLP modules:
 A web interface to LinguaKit is available at [LinguaKit.com](https://linguakit.com/)
 
 ## Description
-The command `linguakit` is able to process 4 languages: Portuguese, English, Spanish and Galician. The following tools are available. Scroll down for additional documentation and usage examples.
+The command `linguakit` is able to process 4 languages: Portuguese, English, Spanish and Galician. Since February 2018, a new language has been added: historical galician-portuguese (`histgz`), by Xavier Canosa. The following tools are available. Scroll down for additional documentation and usage examples.
 
 * **Dependency parser** (parameter `dep`): Runs parsers. The parsers are implemented in PERL and stored in the `parsers` file. The parsers were compiled from formal grammars ([more information](https://github.com/gamallo/DepPattern)). There are several parameters to control output: basic triplets (`-a`), triplets with morphological information (`-fa`), the same output as the input (`-c`) for correction purpose, and CoNLL format (`-conll`). These parameters are further explained in the section *Dependency Parser* below.
 
@@ -100,7 +100,7 @@ Run `./linguakit --help` to see the modules:
  cat <input> |./linguakit  <module> <lang>  [options]
    
       module = dep, tagger, mwe, recog, sent, rel, tok, seg, kwic, link, sum, conj
-      language = gl, es, en, pt
+      language = gl, es, en, pt, histgz
       input = path of the input (by default a txt file or gz/zip) 
 
       'dep'     dependency syntactic analysis
@@ -168,9 +168,9 @@ Return a dependency-based analysis in CoNLL format:
 ./linguakit dep pt test/pt.txt -conll
 ```
 
-Return the PoS tags with NEC information for named entities:
+Return the PoS tags with NEC information for named entities (in historical galician-portuguese - histgz):
 ```
- ./linguakit tagger en test/en.txt -nec
+ ./linguakit tagger histgz test/histgz.txt -nec
 ```
 
 Return the PoS tags with NEC information for named entities and Coreference Resolution:

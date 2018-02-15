@@ -46,7 +46,7 @@ my $errorPrint = "$name: ";
 my $parser = Getopt::ArgParse -> new_parser( prog => $name, help => $shortDescription, description => $longDescription, epilog => $foot, error_prefix  => $errorPrint);
 
 my @common_args = (
-	['lang', type => 'Scalar', dest => 'lang', required => 1, metavar => "<lang>", help => "Choose the language", choices_i => ["en", "es", "gl", "pt"], default => "en"],
+	['lang', type => 'Scalar', dest => 'lang', required => 1, metavar => "<lang>", help => "Choose the language", choices_i => ["en", "es", "gl", "pt", "histgz"], default => "en"],
 	['input', type => 'Scalar',  dest => 'input', metavar => "<input>", help => "Path of the input(a plain text file or gz/zip) by default STDIN"],
 	['-s', type => 'Bool',  dest => 'string', help => "Changes input from a file path to a text string"]
 );

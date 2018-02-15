@@ -1,0 +1,5 @@
+- Falta ainda fazer o ambig.txt com o galego: entradas que estao numa lista de nomes próprios e mais no dicionário de formas
+
+- Foram removidos do dicionario algumas entradas: por exemplo 'che' como letra.
+
+
