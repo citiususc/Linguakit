@@ -29,7 +29,7 @@ LinguaKit is a Natural Language Processing tool containing several NLP modules:
 A web interface to LinguaKit is available at [LinguaKit.com](https://linguakit.com/)
 
 ## Description
-The command `linguakit` is able to process 4 languages: Portuguese, English, Spanish and Galician. Since February 2018, a new language has been added: historical galician-portuguese (`histgz`), by Xavier Canosa. The following tools are available. Scroll down for additional documentation and usage examples.
+The command `linguakit` is able to process 4 languages: Portuguese, English, Spanish and Galician. Since February 2018, a new language has been added: historical galician-portuguese (`histgz`), by Xavier Canosa, which is still a prototype that will be improved. The following tools are available. Scroll down for additional documentation and usage examples.
 
 * **Dependency parser** (parameter `dep`): Runs parsers. The parsers are implemented in PERL and stored in the `parsers` file. The parsers were compiled from formal grammars ([more information](https://github.com/gamallo/DepPattern)). There are several parameters to control output: basic triplets (`-a`), triplets with morphological information (`-fa`), the same output as the input (`-c`) for correction purpose, and CoNLL format (`-conll`). These parameters are further explained in the section *Dependency Parser* below.
 
