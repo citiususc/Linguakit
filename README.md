@@ -1,6 +1,6 @@
 # LINGUAKIT
 
-Made by the ProLNat@GE Group (http://gramatica.usc.es/pln/), CiTIUS, University of Santiago de Compostela.
+Developed by ProLNat@GE Group (http://gramatica.usc.es/pln/), CiTIUS, University of Santiago de Compostela, Galiza.
 
 New more efficient version released in 22 June 2017 by César Piñeiro (also for Windows: `linguakit.bat` command).
 
