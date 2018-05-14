@@ -18,16 +18,17 @@ sub linking{
 	my $input = $_[0];
 	my $lang = $_[1]; ### es, gl, pt, en
 	my $format = $_[2]; ## -json, -xml;
-
+	my $url = "172.16.242.48:3000";
+	#my $url = "fegalaz.usc.es/nlpapi";
 	my $ua = LWP::UserAgent->new;
 	$ua->timeout(2000);
 
 	my $module = "semantic_annotator";
 	my $size = 50; ##number of keywords
-
+	
 	$format =~ s/^\-//;
 
-	my $req = POST "http://fegalaz.usc.es/nlpapi/$module", [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
+	my $req = POST "http://$url/$module", [ text => $input, lang_input =>$lang,format=>$format,size=>$size];
 
 	return decode('utf-8', $ua->request($req)->content);
 }
