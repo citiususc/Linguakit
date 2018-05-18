@@ -108,6 +108,11 @@ $link->add_args(@common_args);
 $link->add_argument('-json', type => 'Bool', dest => 'json', help => "Json output format of entity linking (by default)");
 $link->add_argument('-xml', type => 'Bool', dest => 'xml', help => "Xml output format of entity linking");
 
+my $aval= $parser->add_parser('aval', help => "Language checker: Avalingua");
+$aval->add_args(@common_args);
+$aval->add_argument('-json', type => 'Bool', dest => 'json', help => "Json output format of language checker (by default)");
+$aval->add_argument('-xml', type => 'Bool', dest => 'xml', help => "Xml output format of language checker");
+
 my $sum= $parser->add_parser('sum', help => "Text summarizer");
 $sum->add_args(@common_args);
 $sum->add_argument('-p', type => 'Scalar', dest => 'percentage', help => "Percentage of the input text that will be summarized (by default 10%)");
@@ -175,6 +180,7 @@ my $LINK = "linking/linking_exe.perl";
 my $SUM = "summarizer/summarizer_exe.perl";
 my $SENT_SPLIT = "summarizer/Sentence.pl";
 my $CONJ = "conjugator/conjugator_exe.perl";
+my $AVAL = "avalingua/avalingua_exe.perl";
 
 my $QUELINGUA = "lanrecog/lanrecog.perl";
 my $QUELINGUA_LEX = "lanrecog/build_lex.perl";
@@ -503,6 +509,22 @@ if($MOD eq "dep"){
 #		while(my $line = <$input>){
 		my @lines = <$input>;
 		my $result = Linking::linking(join("\n" ,@lines),$LING,"json");
+		print "$result\n"
+	#	}
+	}
+
+}elsif($MOD eq "aval"){  ##entity linking
+	do $AVAL;
+	if($args->xml){
+		#while(my $line = <$input>){
+		my @lines = <$input>;
+		my $result = Avalingua::avalingua(join("\n" ,@lines),$LING,"xml");
+		print "$result\n"
+	#	}
+	}else{
+#		while(my $line = <$input>){
+		my @lines = <$input>;
+		my $result = Avalingua::avalingua(join("\n" ,@lines),$LING,"json");
 		print "$result\n"
 	#	}
 	}

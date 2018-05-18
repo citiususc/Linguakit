@@ -23,6 +23,7 @@ LinguaKit is a Natural Language Processing tool containing several NLP modules:
  * Entity linking and semantic annotation
  * Summarizer
  * Verb conjugator
+ * Language checker (spelling, lexicon, grammar)
 
 ## Demo
 
@@ -60,6 +61,8 @@ The command `linguakit` is able to process 4 languages: Portuguese, English, Spa
 * **Summarizer** (parameter `sum`): Returns an abstract of the input text. You can choose the percentage of the text to be summarized by using as option a number from 1 to 100. The code was developed by Fernando Blanco Dosil when it was working in Cilenis Language Technology. 
 
 * **Conjugator** (parameter `conj`): Returns the verb inflection if you enter the infinitive form. Pay attention that the input is not a file but a string, the infinitive verb, and the module should be used like this:  `./linguakit conj pt "fazer" -s -pb`. The module is working for three languages: Galician, Spanish and Portuguese. In the case of portuguese verbs, you can choose among 4 language varieties: european portuguese after the spelling agreement (`-pe`), brasilian portuguese after the spelling agreement (`-pb`),  european portuguese before the spelling agreement (`-pen`), brasilian portuguese before the spelling agreement (`-pbn`). The output is in json format. This module requires Internet conection since it runs using a Web API.
+
+* **Language checker** (parameter `aval`): Returns the language errors found in the input sentence. Several types of errors are considered: spelling, lexical, and grammatical issues. Suggestions of correction are provided as well as a linguistic explanation for each specific type of error. Requires Internet conection since it runs via Web API service. The output can be in two formats: `json` (default) and `xml`. By now, it is only available for Galician language (`gl`).
 
 ## Requirements
 Depending on your GNU/Linux version or distribution, you may need to install some CPAN Perl modules:
@@ -118,6 +121,7 @@ Run `./linguakit --help` to see the modules:
       'sum'     text summarizer
       'conj'    verb conjugator (the input is just a verb)
       'coref'   named entity coreference solver
+      'aval'	language checker: avalingua
 ```
 Run `./linguakit <module> --help` to see the options of a module. These are the available command-line options:
 
@@ -154,6 +158,8 @@ Run `./linguakit <module> --help` to see the options of a module. These are the 
       -pb     'conj' option: the verb conjugator uses Brasilian Portuguese
       -pen    'conj' option: the verb conjugator uses European Portuguese before the spell agreement
       -pbn    'conj' option: the verb conjugator uses Brasilian Portuguese before the spell agreement
+      -json   'aval' option: json output format of language spelling (by default)
+      -xml    'aval' option: xml output format of language spelling
 
       -s      'sent', 'recog' and 'conj' option: if <input> is a string and not a file
 ```
@@ -334,4 +340,9 @@ More information on the modules can be found in papers stored in the `docs` dire
 #### Entity linking
 
 >Gamallo, Pablo and Marcos Garcia (2016). "Entity Linking with Distributional Semantics", PROPOR 2016, Lecture Notes in Computer Science,  9727. Berlin: Springer-Verlag, ISNN: 0302-9743.
+
+#### Language checker (Avalingua)
+
+>Gamallo, P., Garcia, M., del Río, I., González 2015. Avalingua: Natural Language Processing for Automatic Error Detection, In: Marcus Callies, Sandra Götz (Eds.), Learner Corpora in Language Testing and Assessment, John Benjamins Publishing Company, pp. 35-58. ISBN: 978-90-272-0378-6. 
+
 
