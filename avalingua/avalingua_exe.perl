@@ -18,7 +18,7 @@ sub avalingua{
 	my $input = $_[0];
 	my $lang = $_[1]; ### es, gl, pt, en
 	my $format = $_[2]; ## -json, -xml;
-	my $url = "172.16.242.48:3000";
+	my $url = "https://tec.citius.usc.es/linguakit";
 	#my $url = "fegalaz.usc.es/nlpapi";
 	my $ua = LWP::UserAgent->new;
 	$ua->timeout(2000);
@@ -27,7 +27,7 @@ sub avalingua{
 	my $level = "grammar"; ##
 	
 	$format =~ s/^\-//;
-	my $req = POST "http://$url/$module", [ text => $input, lang_input =>$lang,format=>$format,linguistic_level=>$level];
+	my $req = POST "$url/$module", [ text => $input, lang_input =>$lang,format=>$format,linguistic_level=>$level];
 
 	return decode('utf-8', $ua->request($req)->content);
 }

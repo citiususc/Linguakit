@@ -19,7 +19,7 @@ sub conjugator{
 	my $variety = $_[2]; 
 	my $module = "conjugator";
 	my $format = "json";
-	my $url = "172.16.242.48:3000";
+	my $url = "https://tec.citius.usc.es/linguakit";
 	#my $url = "fegalaz.usc.es/nlpapi";
 	my $ua = LWP::UserAgent->new;
 	$ua->timeout(2000);
@@ -46,7 +46,7 @@ sub conjugator{
 		$variety = "pt_pt";
 	}
 
-	my $req = POST "http://$url/$module", [ text => $input, lang_input =>$lang,format=>$format,variety=>$variety];
+	my $req = POST "$url/$module", [ text => $input, lang_input =>$lang,format=>$format,variety=>$variety];
 
 	return decode('utf-8', $ua->request($req)->content);
 }
