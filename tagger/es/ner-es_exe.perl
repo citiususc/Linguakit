@@ -38,11 +38,11 @@ binmode $AMB,  ':utf8';#<ignore-line>
 
 ##variaveis globais
 ##para sentences e tokens:
-my $UpperCase = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜ]";#<string>
-my $LowerCase = "[a-záéíóúàèìòùâêîôûñçü]";#<string>
+my $UpperCase = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜÃẼÕĨŨ]";#<string>
+my $LowerCase = "[a-záéíóúàèìòùâêîôûñçüãẽĩõũ]";#<string>
 my $Punct =  qr/[\,\;\«\»\“\”\'\"\&\$\#\=\(\)\<\>\!\¡\?\¿\\\[\]\{\}\|\^\*\€\·\¬\…\-\+]/;#<string>
 my $Punct_urls = qr/[\:\/\~]/;#<string>
-my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
+my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜÃẼÕĨŨ-záéíóúàèìòùâêîôûñçüüãẽĩõũ]";#<string>
 
 ##########CARGANDO RECURSOS COMUNS
 ##cargando o lexico freeling e mais variaveis globais

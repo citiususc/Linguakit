@@ -38,11 +38,11 @@ binmode $AMB,  ':utf8';#<ignore-line>
 
 ##variaveis globais
 ##para sentences e tokens:
-my $UpperCase = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜ]";#<string>
-my $LowerCase = "[a-záéíóúàèìòùâêîôûñçü]";#<string>
+my $UpperCase = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜÃẼÕĨŨ]";#<string>
+my $LowerCase = "[a-záéíóúàèìòùâêîôûñçüãẽĩõũ]";#<string>
 my $Punct =  qr/[\,\;\«\»\“\”\'\"\&\$\#\=\(\)\<\>\!\¡\?\¿\\\[\]\{\}\|\^\*\€\·\¬\…\-\+]/;#<string>
 my $Punct_urls = qr/[\:\/\~]/;#<string>
-my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
+my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜÃẼÕĨŨ-záéíóúàèìòùâêîôûñçüüãẽĩõũ]";#<string>
 
 ##########CARGANDO RECURSOS COMUNS
 ##cargando o lexico freeling e mais variaveis globais
@@ -94,7 +94,7 @@ sub ner {
 		}
 		my $k = $i - 1;#<string>
 		my $j = $i + 1;#<string>
-   
+		#print STDERR "-- $tokens[$i] #$Lex->{$lowercase}# #$Lex->{lowercase($tokens[$j])}# \n";
 		####CADEA COM TODAS PALAVRAS EM MAIUSCULA
 		if ($tokens[$i] =~ /^$UpperCase+$/ && $tokens[$j] =~ /^$UpperCase+$/ && $Lex->{$lowercase} && $Lex->{lowercase($tokens[$j])} ) {
 		$Tag{$tokens[$i]} = "UNK"; ##identificamos cadeas de tokens so em maiusculas e estao no dicionario
@@ -128,7 +128,7 @@ sub ner {
 		}
 		###Palavras que começam por maiúscula e nao estao no dicionario com maiusculas
 		elsif ( $tokens[$i] =~ /^$UpperCase/ && $Noamb->{$tokens[$i]} ) { ##começa por maiúscula e e um nome proprio nao ambiguo no dicionario
-			$Tag{$tokens[$i]} = "NP00000";
+			$Tag{$tokens[$i]} = "NP00000"; 
 		}elsif   ( ($tokens[$i] =~ /^$UpperCase/) &&  !$StopWords->{$lowercase} && 
 			$tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\¿|\¡|\?|\!|\:|\`\`)$/ && $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula e nao vai a principio de frase
 			$Tag{$tokens[$i]} = "NP00000"; 
@@ -487,7 +487,7 @@ sub punct {
 sub lowercase {
 	my ($x) = @_ ;#<string>
 	$x = lc ($x);
-	$x =~  tr/ÁÉÍÓÚÇÑ/áéíóúçñ/;
+	$x =~  tr/ÁÉÍÓÚÇÑÃẼĨÕŨ/áéíóúçñaeiou/;
 
 	return $x;    
 }
