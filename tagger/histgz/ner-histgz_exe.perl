@@ -95,9 +95,13 @@ sub ner {
 		my $k = $i - 1;#<string>
 		my $j = $i + 1;#<string>
 		#print STDERR "-- $tokens[$i] #$Lex->{$lowercase}# #$Lex->{lowercase($tokens[$j])}# \n";
+
+	
+
+		
 		####CADEA COM TODAS PALAVRAS EM MAIUSCULA
 		if ($tokens[$i] =~ /^$UpperCase+$/ && $tokens[$j] =~ /^$UpperCase+$/ && $Lex->{$lowercase} && $Lex->{lowercase($tokens[$j])} ) {
-		$Tag{$tokens[$i]} = "UNK"; ##identificamos cadeas de tokens so em maiusculas e estao no dicionario
+		$Tag{$tokens[$i]} = "UNK";  ##identificamos cadeas de tokens so em maiusculas e estao no dicionario
 		}elsif ($tokens[$i] =~ /^$UpperCase+$/ && $tokens[$k] =~ /^$UpperCase+$/ && $Lex->{$lowercase} && $Lex->{lowercase($tokens[$k])} &&
 		($tokens[$j] =~ /^(\#SENT\#|\<blank\>|\"|\»|\”|\.|\-|\s|\?|\!)$/ || $i == $#tokens ) ) { ##ultimo token de uma cadea com so maiusculas
 		$Tag{$tokens[$i]} = "UNK";             
@@ -215,6 +219,12 @@ sub ner {
 		##se não lhe foi assigado o tag NP, entao UNK (provisional)
 		elsif   (! $Tag{$tokens[$i]}) {
 			$Tag{$tokens[$i]} = "UNK" ; 
+		}
+
+	       ##Numeros romanos 
+		elsif ($tokens[$i] =~ /^$UpperCase/ && $Entry->{$tokens[$i]} =~ / Z$/) {
+		    $Tag{$tokens[$i]} = $Entry->{$tokens[$i]}; 
+                    #print STDERR "OKK $tokens[$i] - #$Tag{$tokens[$i]}#\n";
 		}
 
 		##se é UNK (é dizer nao é NP), entao vamos buscar no lexico
