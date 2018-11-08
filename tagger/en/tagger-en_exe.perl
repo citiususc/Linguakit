@@ -476,6 +476,10 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	#if ($cat =~ /^RN/   && $feat =~ /R_V/  ) {
 		#$result = 1;
 	#}
+        ##se only vai depois de um artigo, tem que ser adj
+        if ($cat =~ /^JJ/   && $feat =~ /L_DT_only/  ) {
+		$result = 1;
+	}
 
 	return $result;
 }
