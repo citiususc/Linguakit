@@ -228,10 +228,10 @@ sub nec{
 
 				###Caso titulo + prep. em ou de + NP: todos LOC
 
-				if ($Lema[$i] =~ /^($titulo)$/ && $Lema[$i+1] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/  && $Tag[$i+2] =~ /^NP/) {
-					$new_tag =  "NP00SP0";
-					$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1] . "_" .  $Token[$i+2] ;
-					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1] . "_" .  $Lema[$i+2] ;
+				if ($Lema[$i-2] =~ /^($titulo)$/ && $Lema[$i-1] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/  && $Tag[$i] =~ /^NP/) {
+					$new_tag =  "NP00G00";
+					#$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1] . "_" .  $Token[$i+2] ;
+					#$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1] . "_" .  $Lema[$i+2] ;
 					#print STDERR "---->>$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 					if($pipe){#<ignore-line>
 						print "$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
@@ -239,16 +239,16 @@ sub nec{
 						push (@saida, "$Token[$i] $Lema[$i] $new_tag");
 					}#<ignore-line>
 					$found=1;
-					$i+=2;
+					#$i+=2;
 					next;
 				}
 
 				###Caso titulo + prep. em ou de + artigo + NP: todos LOC
 
-				if ($Lema[$i] =~ /^($titulo)$/ && $Lema[$i+1] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/ && $Lema[$i+2] =~ /^(o|a|os|as|ho|hos)$/   && $Tag[$i+3] =~ /^NP/) {
-					$new_tag =  "NP00SP0";
-                                        $Token[$i] =  $Token[$i] . "_" .  $Token[$i+1] . "_" .  $Token[$i+2] . "_" .  $Token[$i+3];
-					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1] . "_" .  $Lema[$i+2] . "_" .  $Lema[$i+3] ;
+				if ($Lema[$i-3] =~ /^($titulo)$/ && $Lema[$i-2] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/ && $Lema[$i-1] =~ /^(o|a|os|as|ho|hos)$/   && $Tag[$i] =~ /^NP/) {
+					$new_tag =  "NP00G00";
+                                        #$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1] . "_" .  $Token[$i+2] . "_" .  $Token[$i+3];
+					#$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1] . "_" .  $Lema[$i+2] . "_" .  $Lema[$i+3] ;
 					
 					if($pipe){#<ignore-line>
 						print "$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
@@ -256,7 +256,7 @@ sub nec{
 						push (@saida, "$Token[$i] $Lema[$i] $new_tag");
 					}#<ignore-line>
 					$found=1;
-					$i+=3;
+					#$i+=3;
 					next;
 				}
 
