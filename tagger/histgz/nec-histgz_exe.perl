@@ -213,6 +213,7 @@ sub nec{
 					$new_tag =  "NP00SP0";
 					$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1];
 					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1];
+					#print STDERR "---->>$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 					if($pipe){#<ignore-line>
 						print "$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 					}else{#<ignore-line>
@@ -227,33 +228,35 @@ sub nec{
 
 				###Caso titulo + prep. em ou de + NP: todos LOC
 
-				if ($Lema[$i-2] =~ /^($titulo)$/ && $Lema[$i-1] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/  && $Tag[$i] =~ /^NP/) {
-					$new_tag =  "NP00G00";
-					$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1];
-					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1];
+				if ($Lema[$i] =~ /^($titulo)$/ && $Lema[$i+1] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/  && $Tag[$i+2] =~ /^NP/) {
+					$new_tag =  "NP00SP0";
+					$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1] . "_" .  $Token[$i+2] ;
+					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1] . "_" .  $Lema[$i+2] ;
+					#print STDERR "---->>$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 					if($pipe){#<ignore-line>
 						print "$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, "$Token[$i] $Lema[$i] $new_tag");
 					}#<ignore-line>
 					$found=1;
-					$i+=1;
+					$i+=2;
 					next;
 				}
 
 				###Caso titulo + prep. em ou de + artigo + NP: todos LOC
 
-				if ($Lema[$i-3] =~ /^($titulo)$/ && $Lema[$i-2] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/ && $Lema[$i-1] =~ /^(o|a|os|as|ho|hos)$/   && $Tag[$i] =~ /^NP/) {
-					$new_tag =  "NP00G00";
-					$Token[$i] =  $Token[$i] . "_" .  $Token[$i+1];
-					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1];
+				if ($Lema[$i] =~ /^($titulo)$/ && $Lema[$i+1] =~ /^(en|em|n.|en.|en.s|enn.|enn.s|n.s|d.|d.s|in)$/ && $Lema[$i+2] =~ /^(o|a|os|as|ho|hos)$/   && $Tag[$i+3] =~ /^NP/) {
+					$new_tag =  "NP00SP0";
+                                        $Token[$i] =  $Token[$i] . "_" .  $Token[$i+1] . "_" .  $Token[$i+2] . "_" .  $Token[$i+3];
+					$Lema[$i] =  $Lema[$i] . "_" .  $Lema[$i+1] . "_" .  $Lema[$i+2] . "_" .  $Lema[$i+3] ;
+					
 					if($pipe){#<ignore-line>
 						print "$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, "$Token[$i] $Lema[$i] $new_tag");
 					}#<ignore-line>
 					$found=1;
-					$i+=1;
+					$i+=3;
 					next;
 				}
 
@@ -267,9 +270,9 @@ sub nec{
 					#	$found=1;
 					#}
 					
-
+				       
 					###Caso NP + de (Art) + NP: todos LOC
-				
+		        
 					if ($Lema[$i-1] =~  /(os|as|a|o|\')/  && $Lema[$i-2] =~  /^(d|de)$/ && $Tag[$i-3] =~ /^NP/) {
 					$new_tag =  "NP00G00";
 					
@@ -283,6 +286,8 @@ sub nec{
 					next;
 					}
 
+                                        
+					
 					###Caso NP + de + NP: todos LOC
 
 					if ($Lema[$i-1] =~  /de/ && $Tag[$i-2] =~ /^NP/) {
@@ -297,11 +302,14 @@ sub nec{
 					$i+=1;
 					next;
 					}
+					
+                                       
 
 					## buscar NPs nao ambiguos nos gazetteers
  
 					if (!Ambiguous ($Lema[$i]) &&  Gaz ($Lema[$i]) ) {
 						$new_tag = Gaz ($Lema[$i]);
+                                                #print STDERR "NO AMBIG ---- $Token[$i] $Lema[$i] $new_tag \n";
 						if($pipe){#<ignore-line>
 							print "$Token[$i] $Lema[$i] $new_tag\n";
 						}else{#<ignore-line>
@@ -480,6 +488,7 @@ sub nec{
 					##se o NP é ambiguo (mas nao missing), e nao tem triggers nos contextos nem partes nos triggers nem nos gazetteers, entao desambiguamos
 					if (!$found && (Ambiguous ($Lema[$i]) ) ) {      
 						$new_tag = Disambiguation ($Lema[$i]);
+                                                #print STDERR "DISAMB  ---- $Token[$i] $Lema[$i] $new_tag \n";
 						if($pipe){#<ignore-line>
 							print "$Token[$i] $Lema[$i] $new_tag\n";#<ignore-line>
 						}else{#<ignore-line>
@@ -580,7 +589,7 @@ sub Ambiguous {
 	  (defined $GazLoc{$x} && defined $GazMisc{$x}) ||
 	  (defined $GazPer{$x} && defined $GazMisc{$x}) ||
 	  (defined $GazOrg{$x} && defined $GazMisc{$x})
-	) {
+	) { 
 		return 1;
 	}else {
 		return 0;
