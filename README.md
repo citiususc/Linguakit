@@ -2,11 +2,7 @@
 
 Developed by ProLNat@GE Group (http://gramatica.usc.es/pln/), CiTIUS, University of Santiago de Compostela, Galiza.
 
-As all modules are been updated regularly, please use `git` to install and update the system.
-
-New more efficient version released in 22 June 2017 by César Piñeiro (also for Windows: `linguakit.bat` command).
-
-LinguaKit is a Natural Language Processing tool containing several NLP modules:
+LinguaKit is a Natural Language Processing tool containing several NLP modules (constantly updated and improved):
 
  * Dependency parser (DepPattern)
  * PoS tagger
@@ -95,6 +91,10 @@ Download [Linguakit-master.zip](https://github.com/citiususc/Linguakit/archive/m
 ```bash
 unzip Linguakit-master.zip
 ```
+
+As all modules are been updated regularly, you'd better use `git` to install and update the system.
+
+A New more efficient version of LinguaKit was released in 22 June 2017 by César Piñeiro (also for Windows: `linguakit.bat` command).
 
 ## Usage (Linux)
 
