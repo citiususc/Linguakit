@@ -301,6 +301,8 @@ More information on the modules can be found in papers stored in the `docs` dire
 #### The toolkit
 >Gamallo P. , Garcia M. (2017) LinguaKit: uma ferramenta multilingue para a análise linguística e a extração de informação, Linguamática , 9(1).
 
+> Gamallo, Pablo, Marcos Garcia, César Piñeiro, Rodrigo Martínez-Castaño and Juan C. Pichel (2018). LinguaKit: a Big Data-based multilingual tool for linguistic analysis and information extraction. In Proceedings of The Second International Workshop on Advances in Natural Language Processing (ANLP 2018), Valencia, Spain. 
+
 #### Dependency analysis
 
 >Gamallo P. , González I. (2011) A Grammatical Formalism Based on Patterns of Part-of-Speech Tags , International Journal of Corpus Linguistics , 16(1), 45-71. ISNN:1384-6655 
