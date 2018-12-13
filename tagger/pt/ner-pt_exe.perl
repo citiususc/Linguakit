@@ -64,6 +64,7 @@ my $measure = "(kg|kilogramo|quilogramo|gramo|g|centímetro|cm|hora|segundo|minu
 my $quant = "(cento|centos|miles|milhão|milhões|bilhão|bilhões|trilhão|trilhões)"; #<string>
 my $cifra = "(dois|três|quatro|cinco|seis|sete|oito|nove|dez|cem|mil)";#<string>  ##hai que criar as cifras básicas: once, doce... veintidós, treinta y uno...
 my $meses =  "(Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)";#<string>
+my $semana = "(segunda-feira|terça-feira|quarta-feira|quinta-feira|sexta-feira|sábado|domingo)";#<string>
 ######################info dependente da língua!!!####################################################################################
 
 sub ner {
@@ -226,13 +227,16 @@ sub ner {
 		}
 		$adiantar=0;
 		##os numeros, medidas e datas #USAR O FICHEIRO QUANTITIES.DAT##################
-	
+               
 		##CIFRAS OU NUMEROS
 		if ($tokens[$i] =~ /[0-9]+/ || $tokens[$i] =~ /^$cifra$/) {
 			$token = $tokens[$i];
 			$Tag{$tokens[$i]} = "Z"; 
 		       #	print STDERR "OKKK-$Tag{$tokens[$i]} -$tokens[$i+1] - $tokens[$i+2] - $tokens[$i+3]\n"  if($tokens[$i+3] =~ /^$currency$/i);
 		}         
+              #  print STDERR "--$tokens[$i] $tokens[$i+1] - $tokens[$i+2] - $tokens[$i+3]\n" if ($tokens[$i] =~ /^$semana$/ && $Tag{$tokens[$i+1]} =~ /^Z/  && $tokens[$i+2] =~ /^de$/i && $tokens[$i+3] =~ /^$meses$/i  && $tokens[$i+4] =~ /^de$/i && $tokens[$i+5] =~ /[0-9]+/ );
+ #             print STDERR "--$tokens[$i] $tokens[$i+1]/$Tag{$tokens[$i+1]} - $tokens[$i+2] - $tokens[$i+3]\n" if ($tokens[$i] =~ /^$semana$/ );
+
 		##MEAUSURES
 		if  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] ;
@@ -280,10 +284,31 @@ sub ner {
 			$Tag{$tokens[$i]} = "Z"; 
 			$adiantar=1 ;
 		}     
-	  ##DATES
-		if ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^de$/i && $tokens[$i+2] =~ /^$meses$/i  && $tokens[$i+3] =~ /^de$/i && $tokens[$i+4] =~ /[0-9]+/) {
+	        ##DATES
+		elsif ($tokens[$i] =~ /^$semana$/i && $tokens[$i+1] =~ /\,/ && $tokens[$i+2] =~ /^[0-9]/  && $tokens[$i+3] =~ /^de$/i && $tokens[$i+4] =~ /^$meses$/i  && $tokens[$i+5] =~ /^de$/i && $tokens[$i+6] =~ /[0-9]+/) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] . "_" . $tokens[$i+4] . "_" . $tokens[$i+5] . "_" . $tokens[$i+6]  ;
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=6;   
+		}elsif ($tokens[$i] =~ /^$semana$/i && $tokens[$i+1] =~ /^[0-9]/  && $tokens[$i+2] =~ /^de$/i && $tokens[$i+3] =~ /^$meses$/i  && $tokens[$i+4] =~ /^de$/i && $tokens[$i+5] =~ /[0-9]+/) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] . "_" . $tokens[$i+4] . "_" . $tokens[$i+5]  ;
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=5;	        
+		}
+			elsif ($tokens[$i] =~ /^$semana$/i && $tokens[$i+1] =~ /\,/ && $tokens[$i+2] =~ /^[0-9]/  && $tokens[$i+3] =~ /^de$/i && $tokens[$i+4] =~ /^$meses$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] . "_" . $tokens[$i+4]  ;
-			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: kg=kilogramo,...
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=4;   
+		}elsif ($tokens[$i] =~ /^$semana$/i && $tokens[$i+1] =~ /^[0-9]/  && $tokens[$i+2] =~ /^de$/i && $tokens[$i+3] =~ /^$meses$/i ) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3]   ;
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=3;	        
+		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^de$/i && $tokens[$i+2] =~ /^$meses$/i  && $tokens[$i+3] =~ /^de$/i && $tokens[$i+4] =~ /[0-9]+/) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] . "_" . $tokens[$i+4]  ;
+			$token = lc ($tokens[$i]); 
 			$Tag{$tokens[$i]} = "W"; 
 			$adiantar=4;	        
 		}elsif ($tokens[$i] =~ /^$meses$/i  && $tokens[$i+1] =~ /^de$/i && $tokens[$i+2] =~ /^[0-9]+$/) {
@@ -293,9 +318,24 @@ sub ner {
 			$adiantar=2;   
 		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^de$/i && $tokens[$i+2] =~ /^$meses$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1]  . "_" . $tokens[$i+2] ;
-			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: kg=kilogramo,...
+			$token = lc ($tokens[$i]); 
 			$Tag{$tokens[$i]} = "W"; 
 			$adiantar=2;   
+		}elsif ($tokens[$i-1] =~ /^(em)$/i && $tokens[$i] =~ /^[12]?[0-9][0-9][0-9]$/  ) {
+			#$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3]   ;
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=0;	        
+		}elsif ($tokens[$i] =~ /^(ano|século)$/i && ($tokens[$i+1] =~ /^[0-9IXCVIM][^a-z]/ || $tokens[$i+1] =~ /^[0-9IXCVIM]$/) ) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1]    ;
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=1;	        
+		}elsif ($tokens[$i] =~ /^$semana$/i ) {
+			#$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3]   ;
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "W"; 
+			$adiantar=0;	        
 		}
 		#################################FIM DATAS E NUMEROS
 		##etiquetamos UNK_UC (Abril, Maio...)
