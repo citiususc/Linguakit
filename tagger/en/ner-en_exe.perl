@@ -222,7 +222,11 @@ sub ner {
 		elsif (! $Tag{$tokens[$i]}) {
 			$Tag{$tokens[$i]} = "UNK" ; 
 		}
-
+		##Numeros romanos 
+                elsif ($tokens[$i] =~ /^$UpperCase/ && $Entry->{$tokens[$i]} =~ / Z$/) {
+		    $Tag{$tokens[$i]} = $Entry->{$tokens[$i]};
+                    #print STDERR "OKK $tokens[$i] - #$Tag{$tokens[$i]}#\n";
+                }
 		##se é UNK (é dizer nao é NP), entao vamos buscar no lexico
 		if ($Tag{$tokens[$i]} eq "UNK") {
 			$token = lowercase ($tokens[$i]);
