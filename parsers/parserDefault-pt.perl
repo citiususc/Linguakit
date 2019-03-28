@@ -904,12 +904,12 @@ sub parse{
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 					Add("DepHead","type:perfect",\@temp);
 
-					# AtrR: VERB<lemma:$SubcatAtr>  VERB<mode:[PNG]>
+					# AtrR: VERB<lemma:$SubcatAtr>  VERB<mode:P>
 					# Agr: number, person
-					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/g);
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:P\|${r})/g);
 					$Rel =  "AtrR";
 					HeadDep($Rel,"number,person",\@temp);
-					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$SubcatAtr\|${r})($VERB${l}concord:1${b2}mode:[PNG]\|${r})/$1/g;
+					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$SubcatAtr\|${r})($VERB${l}concord:1${b2}mode:P\|${r})/$1/g;
 					$listTags =~ s/concord:[01]\|//g;
 
 					# VSpecL: VERB<lemma:$VModalES> [ADV]? VERB<mode:N>
