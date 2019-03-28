@@ -400,6 +400,24 @@ sub parse{
 					LEX();
 					Add("DepHead_lex","tag:PRP",\@temp);
 
+					# <: [Fc] PRP<lemma:com> X<lemma:efeito> [Fc]
+					# Add: tag:ADV
+					@temp = ($listTags =~ /(?:$Fc$a2)($PRP${l}lemma:com\|${r})($X${l}lemma:efeito\|${r})(?:$Fc$a2)/g);
+					$Rel =  "<";
+					DepHead_lex($Rel,"",\@temp);
+					$listTags =~ s/($Fc$a2)($PRP${l}lemma:com\|${r})($X${l}lemma:efeito\|${r})($Fc$a2)/$1$3$4/g;
+					LEX();
+					Add("DepHead_lex","tag:ADV",\@temp);
+
+					# >: [Fc] X<token:é> X<lemma:dizer|certo> [Fc]
+					# Add: tag:ADV
+					@temp = ($listTags =~ /(?:$Fc$a2)($X${l}token:é\|${r})($X${l}lemma:(?:dizer|certo)\|${r})(?:$Fc$a2)/g);
+					$Rel =  ">";
+					HeadDep_lex($Rel,"",\@temp);
+					$listTags =~ s/($Fc$a2)($X${l}token:é\|${r})($X${l}lemma:(?:dizer|certo)\|${r})($Fc$a2)/$1$2$4/g;
+					LEX();
+					Add("HeadDep_lex","tag:ADV",\@temp);
+
 					# CoordL: ADV [Fc] [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
 					# NEXT
 					# PunctL: [ADV] Fc [ADV] CONJ<(type:C)|(lemma:$CCord)> [ADV]
@@ -886,6 +904,14 @@ sub parse{
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 					Add("DepHead","type:perfect",\@temp);
 
+					# AtrR: VERB<lemma:$SubcatAtr>  VERB<mode:[PNG]>
+					# Agr: number, person
+					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/g);
+					$Rel =  "AtrR";
+					HeadDep($Rel,"number,person",\@temp);
+					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$SubcatAtr\|${r})($VERB${l}concord:1${b2}mode:[PNG]\|${r})/$1/g;
+					$listTags =~ s/concord:[01]\|//g;
+
 					# VSpecL: VERB<lemma:$VModalES> [ADV]? VERB<mode:N>
 					# Inherit: mode, person, tense, number
 					@temp = ($listTags =~ /($VERB${l}lemma:$VModalES\|${r})(?:$ADV$a2)?($VERB${l}mode:N\|${r})/g);
@@ -918,6 +944,8 @@ sub parse{
 					$listTags =~ s/($VERB${l}lemma:(?:ir|vir|ser)\|${r})($ADV$a2)?($VERB${l}mode:N\|${r})/$2$3/g;
 					Inherit("DepHead","mode,person,tense,number",\@temp);
 
+					}
+{#<function>
 					# VSpecL: VERB<lemma:estar> [ADV]? VERB<mode:G>
 					# Inherit: mode, person, tense, number
 					@temp = ($listTags =~ /($VERB${l}lemma:estar\|${r})(?:$ADV$a2)?($VERB${l}mode:G\|${r})/g);
@@ -953,8 +981,6 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($Fc$a2)($ADV$a2)($Fc$a2)/$1/g;
 
-					}
-{#<function>
 					# PunctL: Fc [ADV] [Fc] VERB
 					# NEXT
 					# PunctL: [Fc] [ADV] Fc VERB
@@ -1613,6 +1639,8 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatDE\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:de\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
+					}
+{#<function>
 					# CregR: VERB<lemma:$SubcatCOM>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:com> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatCOM\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:com\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
@@ -1631,8 +1659,6 @@ sub parse{
 					HeadRelDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB${l}lemma:$SubcatPARA\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:para\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/$1$2/g;
 
-					}
-{#<function>
 					# CregR: VERB<lemma:$SubcatSOBRE>  [NOUNCOORD|PRO<type:D|P|I|X>]? PRP<lemma:sobre> NOUNCOORD|PRO<type:D|P|I|X>|VERB<mode:N>
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatSOBRE\|${r})(?:$NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})?($PRP${l}lemma:sobre\|${r})($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB${l}mode:N\|${r})/g);
 					$Rel =  "CregR";
@@ -1908,12 +1934,10 @@ sub parse{
 					$listTags =~ s/($Fc$a2)?($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($VERB$a2|$CONJ${l}coord:verb\|${r})/$5/g;
 
 					# AtrR: VERB<lemma:$SubcatAtr>  VERB<mode:[PNG]>
-					# Agr: number, person
 					@temp = ($listTags =~ /($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/g);
 					$Rel =  "AtrR";
-					HeadDep($Rel,"number,person",\@temp);
-					$listTags =~ s/($VERB${l}concord:1${b2}lemma:$SubcatAtr\|${r})($VERB${l}concord:1${b2}mode:[PNG]\|${r})/$1/g;
-					$listTags =~ s/concord:[01]\|//g;
+					HeadDep($Rel,"",\@temp);
+					$listTags =~ s/($VERB${l}lemma:$SubcatAtr\|${r})($VERB${l}mode:[PNG]\|${r})/$1/g;
 
 					# Circ2R: VERB VERB<mode:[GP]>
 					@temp = ($listTags =~ /($VERB$a2)($VERB${l}mode:[GP]\|${r})/g);
@@ -2399,6 +2423,8 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r})($Fc$a2)?($PRO${l}type:(?:R|W)\|${r}|$PRO${l}lemma:(?:que|quem)\|${r})($VERB$a2|$CONJ${l}coord:verb\|${r})($Fc$a2)?/$1/g;
 
+					}
+{#<function>
 					# PunctL: [NOUNCOORD|PRO<type:D|P|I|X>] Fc [PRP] [PRO<type:R|W>|PRO<lemma:que|quem>] VERB|CONJ<coord:verb>   [Fc]?
 					# NEXT
 					# PunctR: [NOUNCOORD|PRO<type:D|P|I|X>] [Fc]?  [PRP] [PRO<type:R|W>|PRO<lemma:que|quem>] VERB|CONJ<coord:verb> Fc
@@ -2442,8 +2468,6 @@ sub parse{
 					HeadDep($Rel,"",\@temp);
 					$listTags =~ s/($VERB$a2)($CONJ${l}type:S\|${r})($VERB$a2)/$1/g;
 
-					}
-{#<function>
 					# TermR: PRP NOUNCOORD|PRO<type:D|P|I|X>|VERB
 					# NoUniq
 					@temp = ($listTags =~ /($PRP$a2)($NOUNCOORD|$PRO${l}type:(?:D|P|I|X)\|${r}|$VERB$a2)/g);
