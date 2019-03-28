@@ -422,7 +422,7 @@ sub classif {
 			}
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-#			print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+		#	print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -457,6 +457,11 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	}
         #impedir forma os/as /aquele/aquelas prome seguido de Nome
 	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as|aquele|aqueles|aquela|aquelas)" ) {
+		$result = 1;
+	}
+	## todo o: impedir que 'o' seja pronome diante de todo
+	#elsif ($cat =~ /^PP/ && $feat =~ "L_D[AI]_todo" ) {
+	elsif ($cat =~ /^PP/ && $feat =~ "L_D[AI]" ) {
 		$result = 1;
 	}
         
