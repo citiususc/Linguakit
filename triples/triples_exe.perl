@@ -84,7 +84,7 @@ sub triples {
 
 				$Pos[$l] = $pos ;
 				if ($lemma =~ /@/) {
-					$Token[$l] = $lemma;
+					$Token[$l] = $token;
 				} else {
 					$Token[$l] = $token;
 				}
@@ -105,7 +105,23 @@ emma:que|quem|quen|quien/) ) {
 				   $Tag[$l-2] = "PRP-REL"; 
 				   
 				} 
-
+			        ### os antecedentes de participios imos trata-los como SUBJ:
+				if ($dep =~ /AdjnR/ && $tag eq "VERB" && $Args[$l] =~ /mode:P/) {
+				    $Dep[$head] = "SubjL";
+				    $Const_dep{$l}{$head} = "SubjL" ;
+				    ####construimos todos os hashes:
+				    $Const_tag{$l}{$head} = $Tag[$head];
+				    $Const{$l}{$head}=1;
+				    $Unit{$l} = {} if (!defined $Unit{$l});
+				    $Unit{$l}{$head}=1 ;
+				    $Unit{$l}{$l}=1;
+				    
+				    $Head[$head] = $l;
+				    $Head[$l] = 0;
+				    #print STDERR "--> #$dep# - #$Dep[$head]#  - #$Lemma[$head]# head-noun:#$Head[$head]# - head-verb: #$Head[$l]#\n";
+				    $head = 0;
+				    
+				}
 
 				##construimos os hashes de head-dependent
 				if ($head != 0 ) {
