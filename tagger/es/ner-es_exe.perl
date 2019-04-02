@@ -56,7 +56,7 @@ close $AMB;
 
 
 ######################info dependente da língua!!!####################################################################################
-my $Prep = "(de|del)";#<string>   ##preposiçoes que fazem parte dum NP composto
+my $Prep = "(de|del|von)";#<string>   ##preposiçoes que fazem parte dum NP composto
 my $Art = "(el|la|los|las)";#<string>  ##artigos que fazem parte dum NP composto
 my $currency = "(euro|euros|dólar|dólares|peseta|pesetas|yen|yenes|escudo|escudos|franco|francos|real|reales|€)";#<string> 
 my $measure = "(kg|kilogramo|quilogramo|gramo|g|centímetro|cm|hora|segundo|minuto|tonelada|tn|metro|m|km|kilómetro|quilómetro|%)";#<string> 

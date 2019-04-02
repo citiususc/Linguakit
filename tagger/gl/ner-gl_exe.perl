@@ -56,7 +56,7 @@ close $AMB;
 
 
 ######################info dependente da língua!!!####################################################################################
-my $Prep = "(de|da|do)";#<string>  ##preposiçoes que fazem parte dum NP composto
+my $Prep = "(de|da|do|von)";#<string>  ##preposiçoes que fazem parte dum NP composto
 my $Art = "(o|a|os|as)";#<string> ##artigos que fazem parte dum NP composto
 my $Det = "(o|a|os|as|um|uma|uns|umas|algum|alguns|alguma|algumas|todo|todos|toda|todas|varios|varias|moito|moitos|moita|moitas)" ; #<string>#determinantes par ver o contexto das ambiguas: desse, pelo...
 my $PrepCompl = "(de|con|para|sen)";#<string>  ##preposiçoes
