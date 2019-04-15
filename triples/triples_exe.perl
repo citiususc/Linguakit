@@ -152,17 +152,18 @@ emma:que|quem|quen|quien/) ) {
 						#print STDERR "Head: $i## -- Const: ###$const###\n";
 
 						##TRATAR AS COORDINAÇOES!!! O CONST (coordenado) HERDA OS CONSTITUINTES DO HEAD (coordenador)
-						if ($Dep[$const] =~ /Coord/ && $Tag[$const] =~ /^V/) { 
+						if ($Dep[$const] =~ /Coord/ && $Tag[$const] =~ /^[V]/) { 
 							$Unit{$const}{$const}=1 ;
 							if ($const eq $i){next;}
-							#print STDERR "--COORD1: Const1:#$Lemma[$const]# -- Const2:#$Lemma[$const2]# -- Head:#$Lemma[$i]#\n"; 
+							#print STDERR "--COORD1: Const1:#$Lemma[$const]# -- Head:#$Lemma[$i]#\n"; 
 							foreach my $const2 (keys %{$Const{$i}}) {
-								#print STDERR "--COORD2: Const1:#$Lemma[$const]# -- Const2:#$Lemma[$const2]# -- Head:#$Lemma[$i]# Dep: $Dep[$const2]\n"; 
+							#	print STDERR "--COORD2: Const1:#$Lemma[$const]# -- Const2:#$Lemma[$const2]# -- Head:#$Lemma[$i]# Dep: $Dep[$const2]\n"; 
 								if ($Dep[$const2] !~ /Coord|Punct/ ) {
+								#if ($Dep[$const2] !~ /Punct/ ) {
 									$Unit{$const}{$const2}=1 ;
 									$Const_dep{$const}{$const2} = $Dep[$const2];
 									Expand ($const2, $const, \%Unit) ;
-									#print STDERR "--COORD3: Const1:#$Lemma[$const]# -- Const2:#$Lemma[$const2]# -- Head:#$Lemma[$i]#\n"; 
+								#	print STDERR "--COORD3: Const1:#$Lemma[$const]# -- Const2:#$Lemma[$const2]# -- Head:#$Lemma[$i]#\n"; 
 								}
 							}
 						} 
