@@ -44,6 +44,7 @@ sub triples {
 	my $Dobj2;#<string>
 	my $DobjCompl;#<string>
 	my $Circ;#<string>
+	my $Atr;#<string>
 
 	my $l=1; #<integer>#number of words per sentence
 	my $Size;#<integer>
@@ -80,8 +81,8 @@ sub triples {
 		if ($tag !~  /^$Border$/) {
 			if ($dep !~ /[\<\>]/) { ##saltar dependencias lexicais   
 				$dep =~ s/(Creg|Iobj|DobjPrep)/Circ/; ##normalizar complementos preposicionais...
-				$dep =~ s/(Atr)/Dobj/;
-
+				#$dep =~ s/(Atr)/Dobj/;
+				#print STDERR "Dep: #$dep#\n";
 				$Pos[$l] = $pos ;
 				if ($lemma =~ /@/) {
 					$Token[$l] = $token;
@@ -214,7 +215,7 @@ emma:que|quem|quen|quien/) ) {
 						} else {
 						$Dobj = $const  if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
 						}
-					} 
+					}
 
 					if ($Const_dep{$head}{$const} =~ /Dobj2R/)   {
 						#print STDERR "Dobj: HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# --\n";
@@ -233,7 +234,14 @@ emma:que|quem|quen|quien/) ) {
 							$DobjCompl = $const if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
 						}
 					} 
-
+					if ($Const_dep{$head}{$const} =~ /Atr/)   {
+						#print STDERR "Dobj: HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# --\n";
+						if (relative ($const, \@Tag, \@Args) && $Tag[$Head[$head]] =~ /^N/) { ##se o cdir e uma relativa entao buscamos o nome que modifica ao verbo (head-of verbo) #falta 'that-IN'
+							$Atr =  $Head[$head]; 
+						} else {
+							$Atr = $const if ($Tag[$const] !~ /^PRO/ || $Args[$const] !~ /type:[RW]/);
+						}
+					} 
 					if ($Const_dep{$head}{$const} =~ /Circ/)   {
                                                ##fazer uma funçom relative-rel onde so se tome em conta prep+pron-rel e chama-la com os circunstanciais...
 					       #print STDERR "HEAD###$Lemma[$head]### ::: DEP: #$Lemma[$const]# HeadHead : $Lemma[$Head[$head]] --\n";
@@ -411,7 +419,7 @@ emma:que|quem|quen|quien/) ) {
 				##SUBJ-PRED-CDIR
 				if ($Subj && $Dobj) {
 
-					#print STDERR "Subj-DOBJ: #source#\n";
+					#print STDERR "Subj-DOBJ: #$source#\n";
 
 					##SUBJ 
 					foreach my $const  (sort { $a <=> $b } keys %{$Unit{$Subj}}) {
@@ -469,6 +477,66 @@ emma:que|quem|quen|quien/) ) {
 					$dobj_l="";
 					$pred_l="";
 				}
+			        ##SUBJ-PRED-ATR
+				if ($Subj && $Atr) {
+
+					#print STDERR "Subj-Atr: #$source#\n";
+
+					##SUBJ 
+					foreach my $const  (sort { $a <=> $b } keys %{$Unit{$Subj}}) {
+					#	print STDERR "Subj: HEAD###$Token[$Subj]### ::: DEP: #$Token[$const]# --\n";
+						if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep) || subordin($const, \@Tag, \@Head, \%Const_dep)) {last;}
+						$subj =   $subj . " " . $Token[$const]; 
+						$subj_l = $subj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $Subj) ; 
+						$subj_l = $subj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $Subj) ; ##marcamos o head
+					#	print STDERR "#$subj#\n";
+					}
+
+					##PRED
+					foreach my $const  (sort { $a <=> $b } keys %{$Unit{$head}}) {
+						#print STDERR "Circ: HEAD###$Token[$Circ]### ::: DEP: #$Token[$const]# --\n";
+						#if ($const eq $head || ($Dep[$const] =~ /VSpec/ &&  ($Const{$head}{$const} || $Const{$head}{$Head[$const]}) ) )  {
+						if ($const eq $head ||  ( ($Dep[$const] =~ /(VSpec|Clit)/ || $Lemma[$const] =~ /^(não|not|no|never|nunca|n\'t)$/ ) && ($Const{$head}{$const} || ($Const{$head}{$Head[$const]} && $Dep[$Head[$const]] =~ /VSpec/) ) ) )  {
+							$pred =   $pred .  " " . $Token[$const];
+							$pred_l = $pred_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $head) ;    
+							$pred_l = $pred_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $head) ; ##marcamos o head
+						}
+					}
+
+					##ATR
+					foreach my $const  (sort { $a <=> $b } keys %{$Unit{$Atr}}) {
+					#	print STDERR "Atr: HEAD###$Token[$Atr]### ::: DEP: #$Token[$const]# --\n";
+						if (relative ($const, \@Tag, \@Args) || apposition($const, \@Tag, \@Head, \@Dep) || subordin($const, \@Tag, \@Head, \%Const_dep)) {last;};
+
+						$dobj =   $dobj . " " . $Token[$const]; 
+						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $Atr) ;
+						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $Atr) ; ##marcamos o head
+					}
+
+					$subj = trim ($subj);
+					$dobj = trim ($dobj);
+					$pred = trim ($pred);
+					$subj_l = trim ($subj_l);
+					$dobj_l = trim ($dobj_l);
+					$pred_l = trim ($pred_l);
+
+					$result_token =  "$subj" .  "\t" . "$pred" . "\t" . "$dobj";
+					$result_lemma =  "$subj_l" .  "\t" . "$pred_l" . "\t" . "$dobj_l";
+
+					my $saida = building_result ($k, $result_token);#<string>
+					if($pipe){#<ignore-line>
+						print "$saida\n";#<ignore-line>
+					}else{#<ignore-line>
+						push (@saida, $saida);
+					}#<ignore-line>
+
+					$subj="";
+					$dobj="";
+					$pred="";
+					$subj_l="";
+					$dobj_l="";
+					$pred_l="";
+				}
 				  
 				##SUBJ-PRED-CDIRCOMPLETIVA
 				if ($Subj && $DobjCompl) {
@@ -500,8 +568,8 @@ emma:que|quem|quen|quien/) ) {
 
 						##pensa que estuda -> cambiar na gramatica: 'que' depende de 'pensa'!!
 						$dobj =   $dobj . " " . $Token[$const]; 
-						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $Dobj) ;
-						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $Dobj) ; ##marcamos o head
+						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $DobjCompl) ;
+						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $DobjCompl) ; ##marcamos o head
 					}
 
 					$subj = trim ($subj);
@@ -659,8 +727,8 @@ emma:que|quem|quen|quien/) ) {
 
 						##pensa que estuda -> cambiar na gramatica: 'que' depende de 'pensa'!!
 						$dobj =   $dobj . " " . $Token[$const]; 
-						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $Dobj) ;
-						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $Dobj) ; ##marcamos o head
+						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const]  if  ($const != $DobjCompl) ;
+						$dobj_l = $dobj_l . " " . $Lemma[$const] . "_" . $Tag[$const] . "-H" if  ($const eq $DobjCompl) ; ##marcamos o head
 					}
 					
 					$subj = trim ($subj);
@@ -693,6 +761,7 @@ emma:que|quem|quen|quien/) ) {
 				$Dobj=0;
 				$DobjCompl=0; 
 				$Dobj2=0;
+				$Atr=0;
 			}
 			$k++;
 			
@@ -716,6 +785,7 @@ emma:que|quem|quen|quien/) ) {
 			$Dobj=0;
 			$Dobj2=0;
 			$DobjCompl=0;
+			$Atr=0;
 			$Circ="";
 
 			#Perldoop
