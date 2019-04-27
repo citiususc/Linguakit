@@ -122,6 +122,8 @@ sub lemma{
 		}
 		###Palavras que começam por maiúscula e nao estao no dicionario com maiusculas
 		elsif ( $tokens[$i] =~ /^$UpperCase/ && $Noamb->{$tokens[$i]} ) { ##começa por maiúscula e e um nome proprio nao ambiguo no dicionario
+		    $Tag{$tokens[$i]} = "NNP";
+		}elsif ( $tokens[$i] =~ /^$UpperCase/ && $Ambig{$lowercase} ) { ##começa por maiúscula e e um nome proprio ambiguo no dicionario
 			$Tag{$tokens[$i]} = "NNP";
 		}
 		elsif ( ($tokens[$i] =~ /^$UpperCase/) && !$StopWords->{$lowercase} && 
@@ -133,7 +135,7 @@ sub lemma{
 		  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&
 		  $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula ambigua, e nao vai a principio de frase
 						   $Tag{$tokens[$i]} = "NNP";
-					}
+		}
 		elsif ( ($tokens[$i] =~ /^$UpperCase/ && !$StopWords->{$lowercase} &&
 			$tokens[$k] =~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/) || ($i==0) ) { ##começa por maiúscula e vai a principio de frase 
 			#print STDERR "OKKKK- #$tokens[$i]#\n";

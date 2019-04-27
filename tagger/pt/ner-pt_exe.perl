@@ -10,6 +10,7 @@ package Ner;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+binmode STDERR, ':utf8';
 use utf8;
 #<ignore-block>
 
@@ -59,8 +60,8 @@ while (my $t = <$AMB>) {#<string>
 my $Prep = "(de|da|do|von)";#<string>  ##preposiçoes que fazem parte dum NP composto
 my $Art = "(o|a|os|as)";#<string> ##artigos que fazem parte dum NP composto
 my $Det = "(o|a|os|as|um|uma|uns|umas|algum|alguns|alguma|algumas|todo|todos|toda|todas|vários|várias)";#<string> ##determinantes par ver o contexto das ambiguas: desse, pelo...
-my $currency = "(euro|euros|dólar|dólares|peseta|pesetas|yen|yenes|escudo|escudos|franco|francos|real|reais|€)";#<string>
-my $measure = "(kg|kilogramo|quilogramo|gramo|g|centímetro|cm|hora|segundo|minuto|tonelada|tn|metro|m|km|kilómetro|quilómetro|%)";#<string>
+my $currency = "(euro|euros|dólar|dólares|peseta|pesetas|yen|yenes|escudo|escudos|franco|francos|real|reais|€|$|ރ|aed|afegane|afn|agora|all|amd|ang|aoa|apsar|ar|ariari|ars|att|aud|avo|awg|azn|b/.|baht|baisa|balboa|bam|ban|bbd|bdt|bgn|bhd|bif|birr|bmd|bnd|bob|boliviano|bolívar|br|brl|bs|bs.|bsd|btn|butu|bwp|byr|bzd|c$|cad|cdf|cedi|cent|centavo|centésimo|chetrum|chf|chon|clp|cny|colón|cop|copeque|coroa|crc|cuc|cup|cve|czk|cêntimo|córdoba|dalasi|db|deni|din|dinar|dirame|djf|dkk|dobrae|dongue|dop|dram|dzd|dólar|egp|ern|esc|escudo|etb|eur|euro|eyrir|fen|fils|fjd|fkp|florim|fr|franco|ft|gbp|gel|ghs|gip|gmd|gnf|grosz|grívnia|gtq|guarani|gurde|gyd|halala|haléř|hkd|hnl|hrk|htg|huf|hào|idr|iene|ils|imp|inr|iqd|iraimbilanja|irr|isk|iuane|jeon|jep|jmd|jod|jpy|k|kes|kgs|khoums|khr|kina|kipe|km|kmf|kn|kobo|kopiyka|kpw|kr|krw|ks|kuna|kuruş|kwacha|kwanza|kwd|kyat|kyd|kz|kzt|kč|laari|lak|lari|lbp|le|lei|lek|lempira|leone|leu|lev|libra|lilangeni|lipa|lira|lkr|loti|lrd|lsl|luma|lyd|mad|manat|marco|mdl|metical|mga|milésimo|mk|mkd|mmk|mnt|mop|mro|mt|mur|mvr|mwk|mxn|myr|mzn|möngö|nad|naira|nakfa|nehum|nfk|ngn|ngultrum|ngwee|nio|nok|npr|nu|nzd|omr|oyra|p|pab|paisa|pataca|paʻanga|pen|peseta|pesewa|peso|pgk|php|piastra|pkr|pln|pnb|ptas|pul|pula|pya|pyg|q|qar|qindarkë|quetzal|qəpik|r$|rand|real|rial|riel|ringuite|rm|ron|rp|rsd|rub|rublo|rupia|rwf|sar|satang|sbd|scr|sdg|sek|sen|sgd|sh|shp|siclo|sll|sol|som|somoni|sos|srd|ssp|std|stotinka|syp|szl|t|t$|taka|tala|tambala|tengue|tennesi|tetri|thb|thebe|tjs|tmt|tnd|toea|top|try|ttd|tugrik|twd|tyiyn|tzs|tïın|uah|uguia|ugx|um|usd|uyu|uzs|vatu|ves|vnd|vt|vuv|won|wst|xaf|xcd|xelim|xof|yer|zar|zk|zlóti|zmk|zł|£|¥|öre|øre|ƒ|condorim|maz|braça|vara|toesa|passo|palmo|polegada|linha|braça|moio|fanga|alqueire|maquia|selamim|meio-selamim|quarto|tonel|toneis|cântaro|pipa|almude|pote|canada)";#<string>
+my $measure = "(kg|kilogramo|quilogramo|gramo|g|centímetro|cm|hora|segundo|minuto|tonelada|tn|metro|m|km|kilómetro|quilómetro|µm|dia|ano|%|a|a/m|a/m²|ac|acre|ag|al|am|ampère|am²|ano|ano-luz|are|arroba|arrátel|atm|atmosfera|attograma|attolitro|attômetro|b|bar|barn|barril|becquerel|bel|bimestre|biênio|bq|byte|c|cal|caloria|candela|cavalo-vapor|cd|cd·m²|celsius|centigrama|centilitro|centipoise|centímetro|cg|cl|cm|cm/s|cmhg|cm²|cm³|corrente|coulomb|cv|d|dag|dal|dalton|dam|dam²|dam³|dau|decagrama|decalitro|decigrama|decilitro|decâmetro|decímetro|delisle|dg|dia|diel|dina|dine|dl|dm|dm²|dm³|dracma|dunam|dyn|eb|eg|ehz|eib|el|electrão­volt|em|em²|era|escrópulo|esterradiano|ev|ev/c²|exabyte|exagrama|exahercio|exalitro|exametro|exbibyte|f|fahrenheit|farad|femtograma|femtolitro|femtômetro|fentômetro|fg|fl|fm|fm²|frigurina|ft|ft/s|ft²|furlong|g|g/ml|galão|gauss|gb|gf|gg|ghz|gib|gibibyte|gigabyte|gigagrama|gigahercio|gigalitro|gigametro|gigapascal|gill|gl|gm|gm²|gpa|gradiano|grado|grama|grau|gray|grão|gy|h|habitante|hectare|hectograma|hectolitro|hectômetro|henry|hertz|hg|hl|hm|hm²|hm³|homestead|hora|hz|in²|ipc|j|jarda|joule|k|kat|katal|kb|kcal|kelvin|kg/l|kg/m³|kgf|kib|kibibyte|kilobyte|kilonewton|kj|kl|km|km/h|km/s|km²|km³|kn|kpa|kw|kwh|l|lb|lb/bu|lb/ft³|lb/gal|lb/in³|lb/yd³|lbf|libra|libra-força|litro|lm|lux|lx|légua|lúmen|m|mca|m/s|mag|mb|mebibyte|megabyte|megagrama|megahert|megalitro|megametro|megapascal|megawatt|meio-quartilho|mercúrio|metro|mg|mhz|mib|micrograma|microlitro|micrômetro|mil|milha|miligrama|mililitro|milénio|milênio|milímetro|min|minim|minuto|miriagrama|ml|mm|mm/s|mmhg|mm²|mm³|mol|mol/m³|mpa|mph|mps|mwt|m²|m³|métrico|mês|n|n/m³|nanograma|nanolitro|nanômetro|neper|newton|newton/metro|ng|nl|nm|nm²|np|nó|ohm|oitava|onça|oz|oz/in³|p|pa|parsec|pascal|pascal-segundo|pb|pe|pebibyte|petabyte|petagrama|petahercio|petalitro|petametro|pg|phz|pib|picograma|picolitro|picômetro|pinto|pl|pm|pm²|poise|polegada|ponto|pé|q|quadrimestre|quadriênio|quartilho|quarto|quilate|quilocaloria|quilograma|quilojoule|quilolitro|quilopascal|quilowatt|quilômetro|quinquênio|quintal|quintais|quintalejo|quinzena|rad|rad/s|rad/s²|radiano|rankine|rod|rood|rotação|rpm|réaumur|rø|rømer|s|saeculum|segundo|semana|semestre|siemens|sievert|slug|slug/ft³|sr|stoke|sv|século|t|tb|tebibyte|terabyte|teragrama|terahercio|teralitro|terametro|termia|tesla|tex|tg|thz|tib|tl|tm|tm²|tonelada|trimestre|triênio|ua|unidade-astronômica|v|va|vintém-de-ouro|volt|volt-ampère|voltampere|w|w/m²watt|watt|wb|weber|yb|yottabyteipm|yd|yd²|yg|yib|yl|ym|ym²|yobibyte|yoctograma|yoctolitro|yoctômetro|yottagrama|yottalitro|yottametro|zb|zebibyte|zeptograma|zeptolitro|zeptômetro|zettabyte|zettagrama|zettalitro|zettametro|zg|zib|zl|zm|zm²|°|°c|°d|°f|°n|°ra|°ré|µg|µl|µm|µm²|ω)";#<string>
 my $quant = "(cento|centos|miles|milhão|milhões|bilhão|bilhões|trilhão|trilhões)"; #<string>
 my $cifra = "(dois|três|quatro|cinco|seis|sete|oito|nove|dez|cem|mil)";#<string>  ##hai que criar as cifras básicas: once, doce... veintidós, treinta y uno...
 my $meses =  "(Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)";#<string>
@@ -93,7 +94,7 @@ sub ner {
 		}
 		my $k = $i - 1;#<string>
 		my $j = $i + 1;#<string>
-
+		
 		####CADEA COM TODAS PALAVRAS EM MAIUSCULA
 		if ($tokens[$i] =~ /^$UpperCase+$/ && $tokens[$j] =~ /^$UpperCase+$/ && $Lex->{$lowercase} && $Lex->{lowercase($tokens[$j])} ) {
 			$Tag{$tokens[$i]} = "UNK"; ##identificamos cadeas de tokens so em maiusculas e estao no dicionario
@@ -127,6 +128,8 @@ sub ner {
 		}
 		###Palavras que começam por maiúscula e nao estao no dicionario com maiusculas
 		elsif ( $tokens[$i] =~ /^$UpperCase/ && $Noamb->{$tokens[$i]} ) { ##começa por maiúscula e e um nome proprio nao ambiguo no dicionario
+		    $Tag{$tokens[$i]} = "NP00000";
+		}elsif ( $tokens[$i] =~ /^$UpperCase/ && $Ambig{$lowercase} ) { ##começa por maiúscula e e um nome proprio ambiguo no dicionario
 			$Tag{$tokens[$i]} = "NP00000";
 		}elsif (($tokens[$i] =~ /^$UpperCase/) &&  !$StopWords->{$lowercase} && 
 			$tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\¿|\¡|\?|\!|\:|\`\`)$/ && $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula e nao vai a principio de frase
@@ -231,7 +234,7 @@ sub ner {
 		}
 		$adiantar=0;
 		##os numeros, medidas e datas #USAR O FICHEIRO QUANTITIES.DAT##################
-               
+		#print STDERR "token1->#$tokens[$i]# tag1->#$Tag{$tokens[$i]}#\n";
 		##CIFRAS OU NUMEROS
 		if ($tokens[$i] =~ /[0-9]+/ || $tokens[$i] =~ /^$cifra$/) {
 			$token = $tokens[$i];
@@ -242,10 +245,23 @@ sub ner {
  #             print STDERR "--$tokens[$i] $tokens[$i+1]/$Tag{$tokens[$i+1]} - $tokens[$i+2] - $tokens[$i+3]\n" if ($tokens[$i] =~ /^$semana$/ );
 
 		##MEAUSURES
-		if  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
+		if ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i && $tokens[$i+2] =~ /^(quadrado|cúbico)(s)?$/i) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1]  . "_" . $tokens[$i+2];
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "Zu"; 
+			$adiantar=2 ;
+		}  
+		elsif ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i && $tokens[$i+2] =~ /^por$/ && $tokens[$i+3] =~ /^$measure(s|\.)?$/i && $tokens[$i+4] =~ /^(quadrado|cúbico)(s)?$/i) {
+			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1]  . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] . "_" . $tokens[$i+4];
+			$token = lc ($tokens[$i]); 
+			$Tag{$tokens[$i]} = "Zu"; 
+			$adiantar=4 ;
+		}  
+		elsif  ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$measure(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] ;
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: kg=kilogramo,...
-			$Tag{$tokens[$i]} = "Zu"; 
+			$Tag{$tokens[$i]} = "Zu";
+			print STDERR "measure-->#$tokens[$i]#\n";
 			$adiantar=1 ;
 		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^$quant$/i &&  $tokens[$i+2] =~ /^$measure(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2]  ;
@@ -254,7 +270,7 @@ sub ner {
 			$adiantar=2;	        
 		}
 		##CURRENCY
-		elsif ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$currency$/i) {
+		elsif ($Tag{$tokens[$i]} =~ /^Z/ && $tokens[$i+1] =~ /^$currency(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1];
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: euros=euro...
 			$Tag{$tokens[$i]} = "Zm"; 
@@ -265,17 +281,17 @@ sub ner {
 			$Tag{$tokens[$i]} = "Zm"; 
 			$adiantar=1;	        
 			#print STDERR "OK2: #$tokens[$i]# #$tokens[$i+1]#\n";
-		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^$quant$/i && $tokens[$i+2] =~ /^de$/i && $tokens[$i+3] =~ /^$currency$/i) {
+		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^$quant$/i && $tokens[$i+2] =~ /^de$/i && $tokens[$i+3] =~ /^$currency(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] ;
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: euros=euro...
 			$Tag{$tokens[$i]} = "Zm"; 
 			$adiantar=3;	        
-		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^$quant$/i && $tokens[$i+2] =~ /^$currency$/i) {
+		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^$quant$/i && $tokens[$i+2] =~ /^$currency(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2]  ;
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: euros=euro...
 			$Tag{$tokens[$i]} = "Zm"; 
 			$adiantar=2;	        
-		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^de$/i && $tokens[$i+2] =~ /^$currency$/i) {
+		}elsif ($Tag{$tokens[$i]} =~ /^Z/  && $tokens[$i+1] =~ /^de$/i && $tokens[$i+2] =~ /^$currency(s|\.)?$/i) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] ;
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: euros=euro...
 			$Tag{$tokens[$i]} = "Zm"; 
@@ -287,7 +303,8 @@ sub ner {
 			$token = lc ($tokens[$i]); ##haveria que lematizar/normalizar o token: kg=kilogramo,...
 			$Tag{$tokens[$i]} = "Z"; 
 			$adiantar=1 ;
-		}     
+		}   
+		
 	        ##DATES
 		elsif ($tokens[$i] =~ /^$semana$/i && $tokens[$i+1] =~ /\,/ && $tokens[$i+2] =~ /^[0-9]/  && $tokens[$i+3] =~ /^de$/i && $tokens[$i+4] =~ /^$meses$/i  && $tokens[$i+5] =~ /^de$/i && $tokens[$i+6] =~ /[0-9]+/) {
 			$tokens[$i] = $tokens[$i] . "_" . $tokens[$i+1] . "_" . $tokens[$i+2] . "_" . $tokens[$i+3] . "_" . $tokens[$i+4] . "_" . $tokens[$i+5] . "_" . $tokens[$i+6]  ;
@@ -363,10 +380,10 @@ sub ner {
 		##as linhas em branco eliminam-se 
 		if ($tokens[$i] eq  "#SENT#") {
 			next;
-		} 
-
+		}
+		#print STDERR "token2->#$tokens[$i]# tag2->#$Tag{$tokens[$i]}#\n"; 
 		#################CASOS AMBIGUOS (desse(s), deste(s) pelo, pela(s)...)
-
+	#	if (0) { ##multiline comments
 		if ($tokens[$i] =~ /^desse$/i && $tokens[$i+1] !~ /^$Det$/i) {
 			if($pipe){#<ignore-line>
 				print "de de SPS00\n";#<ignore-line>
@@ -424,6 +441,7 @@ sub ner {
 				push(@saida,"por por SPS00");
 				push(@saida,"as o DA0FP0");
 			}#<ignore-line>
+	#	} ##end comment
 		}else {
 			##parte final..
 			$Tag{$tokens[$i]} = $token . " " . $Tag{$tokens[$i]} if ( $Tag{$tokens[$i]} =~ /^(UNK|F|NP|Z|W)/  );
