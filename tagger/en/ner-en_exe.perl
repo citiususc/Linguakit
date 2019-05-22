@@ -243,7 +243,7 @@ sub ner {
 		##os numeros, medidas e datas #USAR O FICHEIRO QUANTITIES.DAT##################
 
 		##CIFRAS OU NUMEROS
-		if ($tokens[$i] =~ /[0-9]+/ || $tokens[$i] =~ /^$cifra$/) {
+		if ($tokens[$i] =~ /^[0-9]+$/ || $tokens[$i] =~ /^$cifra$/) {
 			$token = $tokens[$i];
 			$Tag{$tokens[$i]} = "Z"; 
 		}
