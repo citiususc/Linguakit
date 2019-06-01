@@ -47,7 +47,7 @@ sub keywords {
 
 	my $texto = $_ [0];#<ref><array><string>
 	my $lang = $_ [1];#<string>
-	my $th = 100;#<integer>
+	my $th = 30;#<integer>
 
 	if (@_ > 2 && $_[2]){
 		$th = $_[2];
@@ -93,6 +93,8 @@ sub keywords {
 		next if ($token =~ /^($ErrosNP)(s?)$/ && ($tag =~ /^NP/ || $tag =~ /^NNP/));
 		next if ($lemma =~ /^($Stopwords)$/);
 		next if ($lemma =~ /([0-9]+)/) ;
+		next if ($token =~ /^[\(\)\[\]]/) ;
+		next if ($lemma =~ /^[a-z]$/) ;
 
 		if ( $tag =~ /^V|^N|^AQ|^JJ/) {
 			#print STDERR "TAG: #$tag#\n";

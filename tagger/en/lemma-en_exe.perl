@@ -127,7 +127,7 @@ sub lemma{
 			$Tag{$tokens[$i]} = "NNP";
 		}
 		elsif ( ($tokens[$i] =~ /^$UpperCase/) && !$StopWords->{$lowercase} && 
-		  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&  !$Lex->{$tokens[$i]} &&
+		  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&  $Entry->{$tokens[$i]} !~ /( NN | NN$)/ &&
 		  $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula e nao vai a principio de frase
 			$Tag{$tokens[$i]} = "NNP";
 		}

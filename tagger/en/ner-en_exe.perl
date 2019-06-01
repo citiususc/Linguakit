@@ -134,7 +134,7 @@ sub ner {
 		    $Tag{$tokens[$i]} = "NNP";
 		}elsif ( $tokens[$i] =~ /^$UpperCase/ && $Ambig{$lowercase} ) { ##começa por maiúscula e e um nome proprio ambiguo no dicionario
 			$Tag{$tokens[$i]} = "NNP";
-		}elsif ( ($tokens[$i] =~ /^$UpperCase/) && !$StopWords->{$lowercase} &&  !$Lex->{$tokens[$i]} &&
+		}elsif ( ($tokens[$i] =~ /^$UpperCase/) && !$StopWords->{$lowercase} &&  $Entry->{$tokens[$i]} !~ /( NN | NN$)/ &&
 		  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&
 		  $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula e nao vai a principio de frase
 			$Tag{$tokens[$i]} = "NNP"; 
@@ -164,7 +164,8 @@ sub ner {
 
 		##caso que seja maiuscula
 		###construimos candidatos para os NOMES PROPRIOS COMPOSTOS#############################################################
-		elsif ($tokens[$i] =~ /^$UpperCase$LowerCase+/) {
+		elsif ($tokens[$i] =~ /^$UpperCase$LowerCase+/ || $tokens[$i] =~ /^$UpperCase+/ ) {
+		
 			$Candidate = $tokens[$i]  ;
 			#$Candidate = $tokens[$i];
 			#$Nocandidate = $tokens[$i] ;
@@ -178,7 +179,7 @@ sub ner {
 				  ($tokens[$j] =~ /^($Art)$/i && $tokens[$j-1] !~ /^($Prep)$/i) ) {
 					#se chegamos ao final de uma frase sem ponto ou se temos um artigo sem uma preposiçao precedente, paramos (Pablo el muchacho)
 					$found=1;
-				}elsif ( ($tokens[$j] !~ /^$UpperCase$LowerCase+/ ||  $Candidate =~ /($Punct)|($Punct_urls)/ ) &&
+				}elsif ( ($tokens[$j] !~ /^$UpperCase$LowerCase+/ || $tokens[$j] !~ /^$UpperCase+/ ||  $Candidate =~ /($Punct)|($Punct_urls)/ ) &&
 				  #($tokens[$j] !~ /^($Prep)$/ && $tokens[$j+1] !~ /^($Art)$/ && $tokens[$j+1] !~ /^$UpperCase$LowerCase+/ )  )  { 
 				  ($tokens[$j] !~ /^($Prep)$/i && $tokens[$j] !~ /^($Art)$/i )  )  { 
 					$found = 1;
