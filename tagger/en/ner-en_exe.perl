@@ -134,10 +134,10 @@ sub ner {
 		    $Tag{$tokens[$i]} = "NNP";
 		}elsif ( $tokens[$i] =~ /^$UpperCase/ && $Ambig{$lowercase} ) { ##começa por maiúscula e e um nome proprio ambiguo no dicionario
 			$Tag{$tokens[$i]} = "NNP";
-		}elsif ( ($tokens[$i] =~ /^$UpperCase/) && !$StopWords->{$lowercase} && 
+		}elsif ( ($tokens[$i] =~ /^$UpperCase/) && !$StopWords->{$lowercase} &&  !$Lex->{$tokens[$i]} &&
 		  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&
 		  $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula e nao vai a principio de frase
-			$Tag{$tokens[$i]} = "NNP";
+			$Tag{$tokens[$i]} = "NNP"; 
 		}elsif ( ($tokens[$i] =~ /^$UpperCase/) && $Ambig{$lowercase} && 
 		  $tokens[$k] !~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\?|\!|\:|\`\`)$/ &&
 		  $tokens[$k] !~ /^\.\.\.$/  && $i>0 ) { ##começa por maiúscula ambigua, e nao vai a principio de frase
