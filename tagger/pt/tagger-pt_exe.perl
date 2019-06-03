@@ -105,14 +105,22 @@ sub tagger {
 	###############################
 
 	foreach my $line (@{$text}) {
-		if ($line !~ /\w/ || $line =~ /^[ ]$/) {
-			next;
-		}
+	    #if ($line !~ /\w/ || $line =~ /^[ ]$/) {
+	    #if ($line =~ /^[ ]$/ || $line eq "") {
+	#	$line = "";
+	#	next;
+	   # }
  
 		my @entry = split (" ", $line);#<array><string>  
   
 		if ($entry[2] !~ /^$Border$/) {
-			$Token[$pos] = $entry[0];     
+		    #print STDERR "---#$entry[0]#\n";
+		        
+			$Token[$pos] = $entry[0];
+			if ($entry[0] && !$entry[1]) {
+			    $entry[1] = $entry[0];
+			    $entry[2] = "Fz";
+			}
 			my $i=1;#<integer>
 			while ($i<=$#entry) {
 				 $Lema[$pos] =  $entry[$i];
@@ -317,8 +325,12 @@ sub tagger {
 						$Tag[$pos] = $Tag{$pos}{$tag} ;
 					}
 					###RESULTADO:
+					if (!$Token[$pos]) {
+					    print "\n";
+					    next
+					}
 					if($pipe){#<ignore-line>
-						print "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n";#<ignore-line>
+					    print "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n";#<ignore-line>
 					}else{#<ignore-line>
 						push (@saida, "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]"); 
 					}#<ignore-line>
@@ -334,6 +346,7 @@ sub tagger {
 				}
 			}
 			###RESULTADO:
+			
 			if($pipe){#<ignore-line>
 				print "$last_entry\n\n";#<ignore-line>
 			}else{#<ignore-line>

@@ -107,14 +107,19 @@ sub tagger {
 	###############################
 
 	foreach my $line (@{$text}) {
-		if ($line !~ /\w/ || $line =~ /^[ ]$/) {
-			next;
-		}
+#		if ($line !~ /\w/ || $line =~ /^[ ]$/) {
+#			next;
+#		}
  
 		my @entry = split (" ", $line);#<array><string> 
   
 		if ($entry[2] !~ /^$Border$/) {
-			$Token[$pos] = $entry[0];     
+			$Token[$pos] = $entry[0];
+			if ($entry[0] && !$entry[1]) {
+ 			    $entry[1] = $entry[0];
+			    $entry[2] = "Fz";
+			}
+
 			my $i=1;#<integer>
 			while ($i<=$#entry) {
 				 $Lema[$pos] =  $entry[$i];
