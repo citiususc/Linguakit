@@ -27,7 +27,9 @@ my $pipe = !defined (caller);#<ignore-line>
 my $VERB;#<file>
 open ($VERB, $abs_path."/lexicon/verbos-es.txt") or die "O ficheiro verbos-es não pode ser aberto: $!\n";
 binmode VERB,  ':utf8';#<ignore-line>
-
+my $IMP;#<file>
+open ($IMP, $abs_path."/lexicon/imperativos-es.txt") or die "O ficheiro verbos-es não pode ser aberto: $!\n";
+binmode IMP,  ':utf8';#<ignore-line>
 
 ##variaveis globais
 ##para sentences e tokens:
@@ -55,6 +57,15 @@ while(my $verb = <$VERB>){#<string>
 }
 close $VERB;
 
+my %Imp;#<hash><integer>
+while(my $verb = <$IMP>){#<string>
+	chomp $verb;
+	$Imp{$verb}++;
+	#if ($verb eq "comer") {print "PROPONER: #$verb#\n";}
+	#print STDERR "TOKEN:: #$verb#\n";
+}
+close $IMP;
+
 sub splitter {
 
 	my ($tokens) = @_;#<ref><list><string>
@@ -75,9 +86,8 @@ sub splitter {
 		my $tmp2;#<string>
 		my $found=0;#<boolean>
 		###################separar verbos em infinitivo dos cliticos compostos oslo, noslo, selo, ... 
-		###FALTA TRATAR OS IMPERATIVOS!!!!! incluiremos em verbos-es.txt a lista de formas em imperativo!
 		
-		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|los|las|los)$/i) {
+		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|los|las|los)$/i ) {
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+r)(nos|os|se|te|me)(lo|los|las|los)$/i;
 
 			#print STDERR "---#$verb# - - #$tmp1# - #$tmp2#\n";
@@ -97,10 +107,112 @@ sub splitter {
 				$found=1;
 			}
 
-		} 
+		}
+		#imperativo 2 pessoa singular: cómetelo
+			#print STDERR "----> #$token# #$found#\n";
+		if (!$found && $token =~ /^(\w+)(nos|os|se|te|me)(lo|los|las|los)$/i && $token =~ /[áéíóú]/) {
+		    if ($token =~ /nos(lo|los|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+)(nos)(lo|los|las|los)$/i;
+		    }
+		    else{
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+)(os|se|te|me)(lo|los|las|los)$/i;
+		    }
+			$verb =~ y/áéíóú/aeiou/;
+			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
+			if ($Imp{lowercase($verb)}) {
+			 
+			
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+					push (@saida, $tmp2);
+				}#<ignore-line>
+				$found=1;
+			}
+
+		}
+		#imperativo 2 pessoa plural
+		if (!$found && ( $token =~ /^(\w+[aeí]os)(lo|los|las|los)$/i || $token =~ /^(\w+d)(nos|os|se|te|me)(lo|los|las|los)$/i) 
+			    && $token =~ /[áéíóú]/ ) {
+		    if ( $token =~ /^(\w+[aeí]os)(lo|los|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+[aeí])(os)(lo|los|las|los)$/i;
+			$verb =~ s/$/d/;
+		    }
+		    elsif ($token =~ /^(\w+d)(nos|os|se|te|me)(lo|los|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+d)(nos|os|se|te|me)(lo|los|las|los)$/i;
+		    }
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
+		    if ($Imp{lowercase($verb)}) {
+			 
+			
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+					push (@saida, $tmp2);
+				}#<ignore-line>
+				$found=1;
+			}
+
+		}	
 		
-		################separar cliticos simples de verbos  em infinitivo ###FALTA TRATAR OS IMPERATIVOS!!!!!
-		if (!$found && $token =~ /^(\w+r)($pron)$/i) {
+		#imperativo: 1 pessoa plural
+		if (!$found &&  $token =~ /^(\w+mo(s)?)(nos|os|se|te|me)(lo|los|las|los)$/i  && $token =~ /[áéíóú]/ ) {
+		     if ($token =~ /nos(lo|los|las|los)$/i) {
+			($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mo)(nos)(lo|los|las|los)$/i;
+			$verb =~ s/$/s/;
+		    }
+		    else {
+			($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mos)(nos|os|se|te|me)(lo|los|las|los)$/i;
+		    }
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
+		    if ($Imp{lowercase($verb)}) {
+			 
+			
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+					push (@saida, $tmp2);
+				}#<ignore-line>
+				$found=1;
+			}
+
+		}
+
+		#imperativo: 3 pessoa plural
+		if (!$found &&  $token =~ /^(\w+n)(nos|os|se|te|me)(lo|los|las|los)$/i  && $token =~ /[áéíóú]/ ) {
+		    if ($token =~ /nos(lo|los|las|los)$/i) {
+			 ($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mos)(nos|os|se|te|me)(lo|los|las|los)$/i;
+		    }
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
+		    if ($Imp{lowercase($verb)}) {
+			 
+			
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+					push (@saida, $tmp2);
+				}#<ignore-line>
+				$found=1;
+			}
+
+		}	
+		
+
+	      
+		
+		################separar cliticos simples de verbos  em infinitivo 
+		if (!$found && $token =~ /^(\w+r)($pron)$/i && $token !~ /[áéíóú]/) {
 			($verb,$tmp1) =  $token =~ /^(\w+r)($pron)$/i;
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 			if ($Verb{lowercase($verb)}) {
@@ -114,7 +226,113 @@ sub splitter {
 				$found=1;
 			} 
 		}
-  
+		##imperativo 2 pessoa singular: cómelo (falta tratar monósilabos: vete, dale...)
+		if (!$found && $token =~ /^(\w+)($pron)$/i && $token =~ /[áéíóú]/) {
+		    if ($token =~ /nos$/i) {
+			($verb,$tmp1) =  $token =~ /^(\w+)(nos)$/i;
+		    }
+		    else {
+			($verb,$tmp1) =  $token =~ /^(\w+)($pron)$/i;
+		    }
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
+		    if ($Imp{lowercase($verb)}) {
+				
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+				}#<ignore-line>    
+				$found=1;
+			} 
+		}
+		##imperativo 2 pessoa singular monosilabos: vete, dale...)
+		if (!$found && $token =~ /^(vete|dale)$/i) {
+		   ($verb,$tmp1) =  $token =~ /^(\w+)(te|le|nos|os)$/i;
+		
+		    if ($Imp{lowercase($verb)}) {
+				
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+				}#<ignore-line>    
+				$found=1;
+			} 
+		}
+		##imperativo 2 pessoa plural: comedlo, arrodillaos (falta tratar monósilabos: vete...)
+		if (!$found && $token =~ /[aeí]os$/i) {
+			($verb,$tmp1) =  $token =~ /^(\w+[aeí])(os)$/i;
+			$verb =~ y/í/i/;
+			$verb =~ s/$/d/;
+			if ($Imp{lowercase($verb)}) {
+				
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+				}#<ignore-line>    
+				$found=1;
+			} 
+		}
+		if (!$found && $token =~ /^(\w+[aei]d)($pron)$/i) {
+			($verb,$tmp1) =  $token =~ /^(\w+[aei]d)($pron)$/i;
+		    
+			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
+		    if ($Imp{lowercase($verb)}) {
+				
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+				}#<ignore-line>    
+				$found=1;
+			} 
+		}
+
+		##imperativo 1 pessoa plural: comámoslo, comámonos
+		if (!$found && $token =~ /^(\w+mo(s)?)($pron)$/i && $token =~ /[áéíóú]/) {
+		    if ($token =~ /nos$/i) {
+			($verb,$tmp1) =  $token =~ /^(\w+mo)(nos)$/i;
+			$verb =~ s/$/s/;
+		    }
+		    else {
+			($verb,$tmp1) =  $token =~ /^(\w+mos)($pron)$/i;
+		    }
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
+		    if ($Imp{lowercase($verb)}) {
+				
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+				}#<ignore-line>    
+				$found=1;
+			} 
+		}
+		
+		##imperativo 3 pessoa plural: cómanlo, véanlo
+		if (!$found && $token =~ /^(\w+n)($pron)$/i && $token =~ /[áéíóú]/) {
+		    ($verb,$tmp1) =  $token =~ /^(\w+n)($pron)$/i;
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
+		    if ($Imp{lowercase($verb)}) {
+				
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+				}#<ignore-line>    
+				$found=1;
+			} 
+		}
 		##############separar o gerundio dos pronomes
 		##pronomes compostos
 		if (!$found && $token =~ /^(\w+iéndo|\w+ándo)(nos|os|se|te|me)(lo|los|las|los)$/i) {
