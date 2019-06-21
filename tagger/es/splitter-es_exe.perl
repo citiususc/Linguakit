@@ -227,7 +227,8 @@ sub splitter {
 			} 
 		}
 		##imperativo 2 pessoa singular: cómelo (falta tratar monósilabos: vete, dale...)
-		if (!$found && $token =~ /^(\w+)($pron)$/i && $token =~ /[áéíóú]/) {
+		if (!$found && $token =~ /^(\w+)($pron)$/i && $token =~ /[áéíóú]/ && $token !~ /mosnos$/) {
+		   
 		    if ($token =~ /nos$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+)(nos)$/i;
 		    }
@@ -235,7 +236,7 @@ sub splitter {
 			($verb,$tmp1) =  $token =~ /^(\w+)($pron)$/i;
 		    }
 		    $verb =~ y/áéíóú/aeiou/;
-			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
+		    print STDERR "----#$verb# #$tmp1#\n";
 		    if ($Imp{lowercase($verb)}) {
 				
 				if($pipe){#<ignore-line>
@@ -299,12 +300,13 @@ sub splitter {
 		    if ($token =~ /nos$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+mo)(nos)$/i;
 			$verb =~ s/$/s/;
+			#print STDERR "----#$verb# #$tmp1#\n";
 		    }
 		    else {
 			($verb,$tmp1) =  $token =~ /^(\w+mos)($pron)$/i;
 		    }
 		    $verb =~ y/áéíóú/aeiou/;
-			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
+		    #print STDERR "----#$verb# #$tmp1#\n";
 		    if ($Imp{lowercase($verb)}) {
 				
 				if($pipe){#<ignore-line>
