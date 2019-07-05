@@ -236,7 +236,7 @@ sub splitter {
 			($verb,$tmp1) =  $token =~ /^(\w+)($pron)$/i;
 		    }
 		    $verb =~ y/áéíóú/aeiou/;
-		    print STDERR "----#$verb# #$tmp1#\n";
+		    #print STDERR "----#$verb# #$tmp1#\n";
 		    if ($Imp{lowercase($verb)}) {
 				
 				if($pipe){#<ignore-line>
@@ -248,8 +248,8 @@ sub splitter {
 				$found=1;
 			} 
 		}
-		##imperativo 2 pessoa singular monosilabos: vete, dale...)
-		if (!$found && $token =~ /^(vete|dale)$/i) {
+		##imperativo 2 pessoa singular monosilabos: vete, dale, vente??...)
+		if (!$found && $token =~ /^(vete|dale|vente)$/i) {
 		   ($verb,$tmp1) =  $token =~ /^(\w+)(te|le|nos|os)$/i;
 		
 		    if ($Imp{lowercase($verb)}) {
