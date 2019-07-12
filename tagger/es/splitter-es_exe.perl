@@ -134,14 +134,14 @@ sub splitter {
 
 		}
 		#imperativo 2 pessoa plural
-		if (!$found && ( $token =~ /^(\w+[aeí]os)(lo|los|las|los)$/i || $token =~ /^(\w+d)(nos|os|se|te|me)(lo|los|las|los)$/i) 
+		if (!$found && ( $token =~ /^(\w+[aeí]os)(lo|los|las|los)$/i || $token =~ /^(\w+d)(nos|se|te|me)(lo|los|las|los)$/i) 
 			    && $token =~ /[áéíóú]/ ) {
 		    if ( $token =~ /^(\w+[aeí]os)(lo|los|las|los)$/i) {
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+[aeí])(os)(lo|los|las|los)$/i;
 			$verb =~ s/$/d/;
 		    }
-		    elsif ($token =~ /^(\w+d)(nos|os|se|te|me)(lo|los|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+d)(nos|os|se|te|me)(lo|los|las|los)$/i;
+		    elsif ($token =~ /^(\w+d)(nos|se|te|me)(lo|los|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+d)(nos|se|te|me)(lo|los|las|los)$/i;
 		    }
 		    $verb =~ y/áéíóú/aeiou/;
 			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
@@ -279,8 +279,8 @@ sub splitter {
 				$found=1;
 			} 
 		}
-		if (!$found && $token =~ /^(\w+[aei]d)($pron)$/i) {
-			($verb,$tmp1) =  $token =~ /^(\w+[aei]d)($pron)$/i;
+		if (!$found && $token =~ /^(\w+[aei]d)(me|te|se|le|les|la|lo|las|los|nos)$/i) {
+			($verb,$tmp1) =  $token =~ /^(\w+[aei]d)(me|te|se|le|les|la|lo|las|los|nos)$/i;
 		    
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 		    if ($Imp{lowercase($verb)}) {
