@@ -227,8 +227,8 @@ sub splitter {
 			} 
 		}
 		##imperativo 2 pessoa singular: cómelo (falta tratar monósilabos: vete, dale...)
-		if (!$found && $token =~ /^(\w+)($pron)$/i && $token =~ /[áéíóú]/ && $token !~ /mosnos$/) {
-		   
+		if (!$found && $token =~ /^(\w+)($pron)$/i && $token =~ /[áéíóú]/ && $token !~ /mosnos$/ && $token ne "séase") { ##nom separar séase (de "o seáse")
+		    
 		    if ($token =~ /nos$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+)(nos)$/i;
 		    }
