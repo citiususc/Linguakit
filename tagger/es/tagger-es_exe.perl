@@ -461,6 +461,11 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	elsif ($cat =~ /^D/ && ($feat eq "R_END" || $feat eq "R_SP" || $feat eq "R_CC") ) {
 		$result = 1;
 	}
+	## um indicativo o subjuntivo seguido de PP (pronome pessoal) deve ser desbotado
+	elsif ($cat =~ /^VM[IS]/   && $feat =~ /R_PP/  ) {
+		$result = 1;
+	}
+	
 	return $result;
 
 }
@@ -474,6 +479,8 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	if ($cat =~ /^RN/   && $feat =~ /R_V/  ) {
 		$result = 1;
 	}
+	
+	
 	return $result;
 }
 
