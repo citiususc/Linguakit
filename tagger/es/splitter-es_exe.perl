@@ -249,7 +249,7 @@ sub splitter {
 			} 
 		}
 		##imperativo 2 pessoa singular monosilabos: vete, dale, vente??...)
-		if (!$found && $token =~ /^(vete|dale|dame|dales|vente|dime|dile|diles)$/i) {
+		if (!$found && $token =~ /^(vete|dale|dame|dales|date|vente|dime|dile|diles)$/i) {
 		   ($verb,$tmp1) =  $token =~ /^(\w+)(te|le|nos|os|me|les)$/i;
 		
 		    if ($Imp{lowercase($verb)}) {
