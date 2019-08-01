@@ -423,12 +423,12 @@ sub classif {
 			  #print STDERR "RULES NEG:: ----#$cat# - #$feat# PriorProb=#$PriorProb{$cat}{$feat}# \n";
 			}
 			elsif (!$unk->[$pos] && rules_pos ($cat, $feat)) {
-			  $PriorProb{$cat}{$feat}  = 1;  
+			  $PriorProb{$cat}{$feat}  = 100; ##CUIDADO COM ESTE VALOR MAS COM 1 NOM FURRULA BEM!! 
 			  #print STDERR "RULES POS:: ----#$cat# - #$feat# PriorProb=#$PriorProb{$cat}{$feat}# \n";
 			}
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-			#print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+#			print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -461,10 +461,6 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	elsif ($cat =~ /^D/ && ($feat eq "R_END" || $feat eq "R_SP" || $feat eq "R_CC") ) {
 		$result = 1;
 	}
-	## um indicativo o subjuntivo seguido de PP (pronome pessoal) deve ser desbotado
-	elsif ($cat =~ /^VM[IS]/   && $feat =~ /R_PP/  ) {
-		$result = 1;
-	}
 	
 	return $result;
 
@@ -479,7 +475,9 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	if ($cat =~ /^RN/   && $feat =~ /R_V/  ) {
 		$result = 1;
 	}
-	
+	elsif ($cat =~ /^VMM/   && $feat =~ /R_PP/  ) {
+		$result = 1;
+	}
 	
 	return $result;
 }
