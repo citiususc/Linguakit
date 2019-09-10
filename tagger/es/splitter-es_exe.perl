@@ -337,11 +337,11 @@ sub splitter {
 		}
 		##############separar o gerundio dos pronomes
 		##pronomes compostos
-		if (!$found && $token =~ /^(\w+iéndo|\w+ándo)(nos|os|se|te|me)(lo|los|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+iéndo|\w+ándo)(nos|os|se|te|me)(lo|los|las|los)$/i; 
+		if (!$found && $token =~ /^(\w+[iy]éndo|\w+ándo)(nos|os|se|te|me)(lo|los|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+[yi]éndo|\w+ándo)(nos|os|se|te|me)(lo|los|las|los)$/i; 
 			#if ($token =~ /(iéndo|ándo)(nos|os|se)(lo|los|las|los)$/) {
 
-			$verb =~ s/iéndo$/iendo/;
+			$verb =~ s/([iy])éndo$/$1endo/;
 			$verb =~ s/ándo$/ando/;
 			
 			if($pipe){#<ignore-line>
@@ -355,10 +355,10 @@ sub splitter {
 		}
 
 		##pronomes simples
-		if (!$found && $token =~ /^(\w+iéndo|\w+ándo)($pron)$/i) {
-			($verb,$tmp1) =  $token =~ /^(\w+iéndo|\w+ándo)($pron)$/i;
+		if (!$found && $token =~ /^(\w+[iy]éndo|\w+ándo)($pron)$/i) {
+			($verb,$tmp1) =  $token =~ /^(\w+[yi]éndo|\w+ándo)($pron)$/i;
 			#print STDERR "1---#$verb# - #$tmp1#\n";
-			$verb =~ s/iéndo$/iendo/;
+			$verb =~ s/([iy])éndo$/$1endo/;
 			$verb =~ s/ándo$/ando/;
 
 			if($pipe){#<ignore-line>
