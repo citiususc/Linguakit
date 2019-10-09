@@ -47,7 +47,7 @@ sub keywords {
 
 	my $texto = $_ [0];#<ref><array><string>
 	my $lang = $_ [1];#<string>
-	my $th = 30;#<integer>
+	my $th = 500;#<integer>
 
 	if (@_ > 2 && $_[2]){
 		$th = $_[2];
