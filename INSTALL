@@ -1,0 +1,18 @@
+ This file is free documentation; the Free Software Foundation gives
+unlimited permission to copy, distribute and modify it.
+
+Basic Installation
+==================
+
+The simplest way to install this package to be accessible from a `bin' directory is:
+
+1. `git clone  https://github.com/citiususc/Linguakit' to download the pacakge's source code.
+
+2. `cd Linguakit' so as to be located at the directory containing the package's source code.
+
+3. `sudo make deps'
+
+4. `sudo make install'
+
+5. `sudo make test-me'
+
