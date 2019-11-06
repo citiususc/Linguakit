@@ -92,7 +92,7 @@ Download [Linguakit-master.zip](https://github.com/citiususc/Linguakit/archive/m
 unzip Linguakit-master.zip
 ```
 
-### Using Make (intalled in an accessible bin directory):
+### Using Make (to be intalled in an accessible bin directory):
 
 ```
 git clone  https://github.com/citiususc/Linguakit
