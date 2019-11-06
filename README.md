@@ -97,7 +97,7 @@ unzip Linguakit-master.zip
 ```
 git clone  https://github.com/citiususc/Linguakit
 cd Linguakit
-sudo make deps'
+sudo make deps
 sudo make install
 sudo make test-me
 ```
