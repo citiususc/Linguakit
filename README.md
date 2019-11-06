@@ -81,7 +81,7 @@ sudo perl -MCPAN -e 'install (Storable)'
 ### Using Git
 
 ```bash
-git clone https://github.com/citiususc/Linguakit.git
+git clone https://github.com/citiususc/Linguakit
 ```
 
 ### ZIP Download
@@ -91,6 +91,18 @@ Download [Linguakit-master.zip](https://github.com/citiususc/Linguakit/archive/m
 ```bash
 unzip Linguakit-master.zip
 ```
+
+### Using Make (intalled in an accessible bin directory):
+
+```
+git clone  https://github.com/citiususc/Linguakit
+cd Linguakit
+sudo make deps'
+sudo make install
+sudo make test-me
+```
+
+Thanks to José João Almeida (Univ. do Minho) for the Make file.
 
 As all modules are been updated regularly, you'd better use `git` to install and update the system.
 
