@@ -1,6 +1,8 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
-##Entrada: saida do TreeTagger português
+use warnings;
+
+##Entrada: saida do TreeTagger espanhol
 ##Saida: entrada do parsingCascataByRegularExpressions.perl
 
 $Max = 5;

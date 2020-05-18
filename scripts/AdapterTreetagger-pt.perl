@@ -1,4 +1,6 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
+
+use warnings;
 
 ##Entrada: saida do TreeTagger português
 ##Saida: entrada do parsingCascataByRegularExpressions.perl
