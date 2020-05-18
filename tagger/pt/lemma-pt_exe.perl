@@ -56,7 +56,7 @@ while (my $t = <$AMB>) {#<string>
 
 ######################info dependente da língua!!!####################################################################################
 my $Det = "(o|a|os|as|um|uma|uns|umas|algum|alguns|alguma|algumas|todo|todos|toda|todas|vários|várias)";#<string>#determinantes par ver o contexto das ambiguas: desse, pelo...
-my $cifra = "(dois|três|quatro|cinco|seis|sete|oito|nove|dez|cem|mil)"; #<string>#hai que criar as cifras básicas: once, doce... veintidós, treinta y uno...
+my $cifra = "(dois|duas|três|quatro|cinco|seis|sete|oito|nove|dez|onze|doze|treze|catorze|quinze|dezesseis|dezessete|dezoito|dezenove|vinte|trinta|quarenta|cinquenta|sessenta|setenta|oitenta|noventa|cem|mil)";#<string>
 ######################info dependente da língua!!!####################################################################################
 
 sub lemma{
