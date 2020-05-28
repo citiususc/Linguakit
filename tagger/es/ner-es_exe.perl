@@ -150,12 +150,12 @@ sub ner {
 		}
   
 		##if   ( $tokens[$i] =~ /^$UpperCase$LowerCase+/ && ($StopWords{$lowercase} && ($tokens[$k]  =~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\¿|\¡)$/) || ($i==0)) ) {   }##se em principio de frase a palavra maiuscula e uma stopword, nao fazemos nada
-		if (($tokens[$i] =~ /^$UpperCase$LowerCase+/ && $Lex->{$lowercase} &&  !$Ambig{$lowercase}) && ($tokens[$k]  =~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\¿|\¡|\?|\!|\:|\`\`)$/  || $i==0) ) {  
+		if (($tokens[$i] =~ /^$UpperCase$LowerCase*/ && $Lex->{$lowercase} &&  !$Ambig{$lowercase}) && ($tokens[$k]  =~ /^(\#SENT\#|\<blank\>|\"|\“|\«|\.|\-|\s|\¿|\¡|\?|\!|\:|\`\`)$/  || $i==0) ) {
 			#print  STDERR "1TOKEN::: ##$lowercase## // #!$Ambig{$lowercase}# - - #$Tag{$tokens[$i]}# --  #$tokens[$k]#\n" ;      
 		}##se em principio de frase a palavra maiuscula e está no lexico sem ser ambigua, nao fazemos nada
 		##caso que seja maiuscula
 		###construimos candidatos para os NOMES PROPRIOS COMPOSTOS#############################################################
-		elsif  ($tokens[$i] =~ /^$UpperCase$LowerCase+/) {
+		elsif  ($tokens[$i] =~ /^$UpperCase$LowerCase*/) {
 			#print "##$tokens[$i]## - #$Tag{$tokens[$i]}# --  #$tokens[$k]# ---- #$StopWords{$lowercase}#\n"; 
 			$Candidate = $tokens[$i]  ;
 			#$Candidate = $tokens[$i];
@@ -171,7 +171,7 @@ sub ner {
 				#print  STDERR "****Begin: ##$i## - ##$j##- #$tokens[$i]# --- #$tokens[$j]#\n";
 				if ($tokens[$j] eq "" || ($tokens[$j] =~ /^($Art)$/i && $tokens[$j-1] !~ /^($Prep)$/i) ) { #se chegamos ao final de uma frase sem ponto ou se temos um artigo sem uma preposiçao precedente, paramos (Pablo el muchacho)
 					$found=1;
-				}elsif ( ($tokens[$j] !~ /^$UpperCase$LowerCase+/ ||  $Candidate =~ /($Punct)|($Punct_urls)/ ) &&
+				}elsif ( ($tokens[$j] !~ /^$UpperCase$LowerCase*/ ||  $Candidate =~ /($Punct)|($Punct_urls)/ ) &&
 				  #($tokens[$j] !~ /^($Prep)$/ && $tokens[$j+1] !~ /^($Art)$/ && $tokens[$j+1] !~ /^$UpperCase$LowerCase+/ )  )  { 
 				  ($tokens[$j] !~ /^($Prep)$/i && $tokens[$j] !~ /^($Art)$/i )  )  { 
 					#print  STDERR "4TOKEN::: ##$i## - ##$j## - ##$count##----> ##$tokens[$i]## - - #$tokens[$j]# --  #$tokens[$k]#\n" ;
