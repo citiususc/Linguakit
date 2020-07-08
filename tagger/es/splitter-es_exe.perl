@@ -30,6 +30,9 @@ binmode VERB,  ':utf8';#<ignore-line>
 my $IMP;#<file>
 open ($IMP, $abs_path."/lexicon/imperativos-es.txt") or die "O ficheiro verbos-es não pode ser aberto: $!\n";
 binmode IMP,  ':utf8';#<ignore-line>
+my $LOC;#<file>
+open($LOC, $abs_path."/lexicon/locutions.txt") or die "O ficheiro locutions.txt não pode ser aberto: $!\n";
+binmode $LOC, ':utf8';#<ignore-line>
 
 ##variaveis globais
 ##para sentences e tokens:
@@ -65,6 +68,33 @@ while(my $verb = <$IMP>){#<string>
 	#print STDERR "TOKEN:: #$verb#\n";
 }
 close $IMP;
+
+my @Loc;#<list><string>
+while(<$LOC>){#<string>
+	chomp;
+	my ($token, $lemma, $tag) = split/ /;
+	$token =~ s/_/ /g;
+	push(@Loc, $token);
+}
+close $LOC;
+
+sub join_locutions {
+	my $text = shift;#<ref><list>
+	my $input = join(" ", @$text);#<string>
+
+	for my $loc (sort { length $b <=> length $a } @Loc)
+	{
+		while($input =~ /\b($loc)\b/i)
+		{
+			my $pos = $-[0];
+			my $match = $1;
+
+			($match = $1) =~ s/ /_/g;
+			substr($input, $pos, length($match), $match);
+		}
+	}
+	return [split(/ /, $input), ''];
+}
 
 sub splitter {
 
@@ -414,7 +444,8 @@ sub splitter {
 			#print "\n"; 
 		#}
 	}
-	return \@saida;
+
+	return join_locutions(\@saida);
 }
 
 #<ignore-block>
@@ -431,7 +462,3 @@ sub lowercase {
 
 	return $x;
 } 
-
-        
-
-

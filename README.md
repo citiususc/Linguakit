@@ -237,10 +237,10 @@ The input must be in plain text format, and encoded in UTF8.
 
 ###  Lexicons
 
-Lexicons (electronic dictionaries) are in `tagger/*/lexicon/dicc.src` files. If you modify them, then you should recompile them by running:
+Lexicons (electronic dictionaries) are in `tagger/*/lexicon/dicc.src` and `tagger/*/lexicon/locutions.txt` files. If you modify them, then you should recompile them by running:
 
 ```bash
-./lexicon_compiler.sh
+./lexicon_compiler.perl
 ```
 
 ### Dependency parser 
