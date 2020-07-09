@@ -426,7 +426,7 @@ sub classif {
 			}
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-			#print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+		#	print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -496,6 +496,12 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	if ($cat =~ /^DP/   && $feat =~ /R_NC/  ) {
 		$result = 1;
 	}
+
+	##se aparece a (PP) ría NC, dizemos que é nome (mesmo se 'a' foi mal etiquetado como PP)
+	if ($cat =~ /^NC/   && $feat =~ /L_PP_ría/  ) {
+		$result = 1;
+	}
+	
 	return $result;
 }
 
