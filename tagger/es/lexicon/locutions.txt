@@ -1,3 +1,4 @@
+# Locutions
 a_pesar_de a_pesar_de SPS00
 a_cada_paso a_cada_paso RG
 a_cada_instante a_cada_instante RG
@@ -19,3 +20,7 @@ por_descontado por_descontado RG
 por_duplicado por_duplicado RG
 por_ejemplo por_ejemplo RG
 vox_populi vox_populi RG
+ya_que ya_que CS
+
+# Entities
+Ministerio_de_Ciencia_y_Tecnología ministerio_de_ciencia_y_tecnología NP00O00

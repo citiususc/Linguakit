@@ -72,6 +72,7 @@ close $IMP;
 my @Loc;#<list><string>
 while(<$LOC>){#<string>
 	chomp;
+	if(/^\s*#/ or /^\s*$/) { next; }
 	my ($token, $lemma, $tag) = split/ /;
 	$token =~ s/_/ /g;
 	push(@Loc, $token);

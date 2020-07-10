@@ -15,7 +15,8 @@
 use warnings;
 use strict;
 use utf8;
-use Test::More tests => 8;
+use open ':std', ':encoding(utf8)';
+use Test::More tests => 9;
 use lib '.';
 
 BEGIN {
@@ -68,13 +69,26 @@ my $splitted_with_locs = [
     [
         'A', 'pesar', 'de', 'la', 'distancia', 'a', 'cada', 'paso', 'me',
         'escapo', 'a', 'el', 'campo', '.', ''
-    ]
+    ],
+    [
+        'Un', 'paso', 'importante', 'lo', 'constituye', 'la', 'creación', 'de',
+        'el', 'nuevo', 'Ministerio', 'de', 'Ciencia', 'y', 'Tecnología', ',',
+        'ya', 'que', 'supone', 'un', 'salto', 'adelante', 'en', 'las',
+        'condiciones', 'de', 'la', 'actuación', 'pública', 'en',
+        'investigación', '.', ''
+    ],
 ];
 my $expected_splitted_with_locs = [
     [
         'A_pesar_de', 'la', 'distancia', 'a_cada_paso', 'me', 'escapo',
         'a', 'el', 'campo', '.', ''
-    ]
+    ],
+    [
+        'Un', 'paso', 'importante', 'lo', 'constituye', 'la', 'creación', 'de',
+        'el', 'nuevo', 'Ministerio_de_Ciencia_y_Tecnología', ',', 'ya_que',
+        'supone', 'un', 'salto', 'adelante', 'en', 'las', 'condiciones', 'de',
+        'la', 'actuación', 'pública', 'en', 'investigación', '.', ''
+    ],
 ];
 ###############################################################################
 

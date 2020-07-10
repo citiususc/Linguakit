@@ -82,6 +82,7 @@ if (-e $lex) {
 
 	while (my $line = <$LOC>) {#<string>
 		chomp $line;
+		if($line =~ /^\s*#/ or $line =~ /^\s*$/) { next; }
 		my @entry = split (" ", $line);#<array><string>
 		my $token = $entry[0];#<string>
 
