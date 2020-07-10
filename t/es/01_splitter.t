@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 9;
+use Test::More tests => 10;
 use lib '.';
 
 BEGIN {
@@ -43,7 +43,11 @@ my $tokens = [
         'Cómpralo', 'para', 'mejorar', 'y', 'transformar', 'tus', 'ensaladas',
         'favoritas', ',', 'y', 'siéntete', 'bien', 'al', 'dárselo', 'a',
         'tu', 'familia', '.', ''
-    ]
+    ],
+    [
+        'Úsalo', 'con', 'precaución', ',', 'ya', 'que', 'su', 'fórmula',
+        'incluye', 'algunas', 'sustancias', 'químicas', '.', ''
+    ],
 ];
 my $expected_tokens = [
     [
@@ -62,7 +66,11 @@ my $expected_tokens = [
         'Compra', 'lo', 'para', 'mejorar', 'y', 'transformar', 'tus',
         'ensaladas', 'favoritas', ',', 'y', 'siente', 'te', 'bien', 'a',
         'el', 'dar', 'se', 'lo', 'a', 'tu', 'familia', '.', ''
-    ]
+    ],
+    [
+        'Usa', 'lo', 'con', 'precaución', ',', 'ya_que', 'su', 'fórmula',
+        'incluye', 'algunas', 'sustancias', 'químicas', '.', ''
+    ],
 ];
 
 my $splitted_with_locs = [
