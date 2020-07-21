@@ -141,14 +141,14 @@ sub splitter {
 		}
 		#imperativo 2 pessoa singular: cómetelo
 			#print STDERR "----> #$token# #$found#\n";
-		if (!$found && $token =~ /^(\w+)(nos|os|se|te|me)(lo|los|las|los)$/i && $token =~ /[áéíóú]/) {
+		if (!$found && $token =~ /^(\w+)(nos|os|se|te|me)(lo|los|las|los)$/i && $token =~ /[áéíóú]/i) {
 		    if ($token =~ /nos(lo|los|las|los)$/i) {
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+)(nos)(lo|los|las|los)$/i;
 		    }
 		    else{
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+)(os|se|te|me)(lo|los|las|los)$/i;
 		    }
-			$verb =~ y/áéíóú/aeiou/;
+			$verb =~ y/áéíóúÁÉÍÓÚ/aeiouAEIOU/;
 			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
 			if ($Imp{lowercase($verb)}) {
 			 
