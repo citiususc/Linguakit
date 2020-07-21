@@ -23,12 +23,45 @@ $abs_path = dirname(__FILE__);#<ignore-line>
 # Pipe
 my $pipe = !defined (caller);#<ignore-line> 
 
+# ficheiros de recursos
+my $LOC;#<file>
+open($LOC, $abs_path."/lexicon/locutions.txt") or die "O ficheiro locutions.txt não pode ser aberto: $!\n";
+binmode $LOC, ':utf8';#<ignore-line>
+
 
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
 my $pron = "(me|te|mos|mas|mo|ma|tos|tas|to|ta|o|os|a|as|lo|la|las|los|se|lhe|lhes|lho|lha|lhos|lhas|nos|vos|no-lo|no-los|no-la|no-las|vo-lo|vo-los|vo-la|vo-las|se-nos|se-vos|se-lhe|se-lhes|se-lho|se-lhos|se-lha|se-lhas)";#<string>
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
+
+my @Loc;#<list><string>
+while(<$LOC>){#<string>
+    chomp;
+    if(/^\s*#/ or /^\s*$/) { next; }
+    my ($token, $lemma, $tag) = split/ /;
+    $token =~ s/_/ /g;
+    push(@Loc, $token);
+}
+close $LOC;
+
+sub join_locutions {
+    my $text = shift;#<ref><list>
+    my $input = join(" ", @$text);#<string>
+
+    for my $loc (sort { length $b <=> length $a } @Loc)
+    {
+        while($input =~ /\b($loc)\b/i)
+        {
+            my $pos = $-[0];
+            my $match = $1;
+
+            ($match = $1) =~ s/ /_/g;
+            substr($input, $pos, length($match), $match);
+        }
+    }
+    return [split(/ /, $input), ''];
+}
 
 sub splitter {
 
@@ -195,6 +228,10 @@ sub splitter {
 		$token =~ s/\baqueloutros\b/aqueles outros/g;
 		$token =~ s/\baqueloutra\b/aquela outra/g; 
 		$token =~ s/\baqueloutras\b/aquelas outras/g; 
+		$token =~ s/\bàqueloutro\b/a aquele outro/g;
+		$token =~ s/\bàqueloutros\b/a aqueles outros/g;
+		$token =~ s/\bàqueloutra\b/a aquela outra/g;
+		$token =~ s/\bàqueloutras\b/a aquelas outras/g;
 		$token =~ s/\bessoutro\b/esse outro/g; 
 		$token =~ s/\bessoutros\b/esses outros/g;
 		$token =~ s/\bessoutra\b/essa outra/g; 
@@ -227,7 +264,7 @@ sub splitter {
 		#}
 	}
 
-	return \@saida;
+	return join_locutions(\@saida);
 }
 
 #<ignore-block>

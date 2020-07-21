@@ -151,7 +151,7 @@ sub lemma{
 			#print  STDERR "1TOKEN::: ##$lowercase## // #!$Ambig{$lowercase}# - - #$Tag{$tokens[$i]}# --  #$tokens[$k]#\n" ;      
 		}##se em principio de frase a palavra maiuscula e está no lexico sem ser ambigua, nao fazemos nada
 		##NP se é composto
-		if ($tokens[$i] =~ /[^\s]_[^\s]/ ) { 
+		if ($tokens[$i] =~ /[^\s]_[^\s]/ and !$Lex->{lowercase($tokens[$i])}) {
 			$Tag{$tokens[$i]} = "NP00000" ;
 		}
 		##se não lhe foi assigado o tag NP, entao UNK (provisional)
