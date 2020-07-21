@@ -30,6 +30,10 @@ my $NonVerb;#<ref><hash><boolean>
 my $Verb;#<ref><hash><boolean>
 ($NonVerb,$Verb) = StoreSplit::read();
 
+my $LOC;#<file>
+open($LOC, $abs_path."/lexicon/locutions.txt") or die "O ficheiro locutions.txt não pode ser aberto: $!\n";
+binmode $LOC, ':utf8';#<ignore-line>
+
 
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
@@ -42,6 +46,34 @@ my $procl = "mas|mos|ma|mo|chos|chas|cho|cha|llo|lla|llos|llas|llelo|llela|llelo
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
 my $excep = "|podemos|";#<string>
+
+my @Loc;#<list><string>
+while(<$LOC>){#<string>
+    chomp;
+    if(/^\s*#/ or /^\s*$/) { next; }
+    my ($token, $lemma, $tag) = split/ /;
+    $token =~ s/_/ /g;
+    push(@Loc, $token);
+}
+close $LOC;
+
+sub join_locutions {
+    my $text = shift;#<ref><list>
+    my $input = join(" ", @$text);#<string>
+
+    for my $loc (sort { length $b <=> length $a } @Loc)
+    {
+        while($input =~ /\b($loc)\b/i)
+        {
+            my $pos = $-[0];
+            my $match = $1;
+
+            ($match = $1) =~ s/ /_/g;
+            substr($input, $pos, length($match), $match);
+        }
+    }
+    return [split(/ /, $input), ''];
+}
 
 sub splitter {
 
@@ -483,7 +515,7 @@ sub splitter {
 		#push (@saida, ""); 
 	#}
 
-	return \@saida;
+	return join_locutions(\@saida);
 }
 
 #<ignore-block>

@@ -1,0 +1,15 @@
+a_berros a_berros RG
+a_carradas a_carradas RG
+a_eito a_eito RG
+a_machada a_machada RG
+a_modo a_modo RG
+a_partir_de a_partir_de SPS00
+a_pesar_de a_pesar_de SPS00
+a_pesar_de_que a_pesar_de_que CS
+a_o_lonxe a_o_lonxe RG
+a_modo_de a_modo_de SPS00
+a_favor_de a_favor_de SPS00
+alén_de alén_de SPS00
+de_modo_que de_modo_que CS
+en_breve en_breve RG
+en_vivo en_vivo RG

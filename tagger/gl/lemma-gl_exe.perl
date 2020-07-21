@@ -158,7 +158,7 @@ sub lemma{
 
 
 		##NP se é composto
-		if ($tokens[$i] =~ /[^\s]_[^\s]/ ) { 
+		if ($tokens[$i] =~ /[^\s]_[^\s]/ and !$Lex->{lowercase($tokens[$i])}) {
 			$Tag{$tokens[$i]} = "NP00000" ;   
 		}
 		##se não lhe foi assigado o tag NP, entao UNK (provisional)
