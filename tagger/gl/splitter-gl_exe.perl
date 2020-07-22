@@ -45,7 +45,7 @@ my $procl = "mas|mos|ma|mo|chos|chas|cho|cha|llo|lla|llos|llas|llelo|llela|llelo
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
-my $excep = "|podemos|";#<string>
+my $excep = "|podemos|este|";#<string>
 
 my @Loc;#<list><string>
 while(<$LOC>){#<string>
@@ -220,6 +220,7 @@ sub splitter {
 					if ($sufixo =~ /^monol[ao](s)?$/) {
 						$raiz_semtil =~ s/s$/mos/;
 					}
+					#print STDERR "---#$token# - $raiz\n";
 
 					if ($sufixo =~ /^$pron3$/) {
 						##separar cliticos compostos: mo, mos, to, tos, lho, lhos..
