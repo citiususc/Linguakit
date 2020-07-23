@@ -45,7 +45,7 @@ my $procl = "mas|mos|ma|mo|chos|chas|cho|cha|llo|lla|llos|llas|llelo|llela|llelo
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
-my $excep = "|podemos|este|";#<string>
+my $excep = "|podemos|este|crechas|vellas|vella|alfama|área|rías|ría|torrente|apóstolo|";#<string>
 
 my @Loc;#<list><string>
 while(<$LOC>){#<string>
@@ -95,7 +95,7 @@ sub splitter {
 				my ($raiz, $sufixo) = $token =~ /\b([^\W]+ei)n([oa](s)?)\b/;#<string>
 				my $raiz_lower = lowercase ($raiz);#<string>
 
-				if ($Verb->{$raiz_lower}) {
+				if ($Verb->{$raiz_lower} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . " " . $sufixo;
 				}
 			}
@@ -105,7 +105,7 @@ sub splitter {
 				#print STDERR "COMEUNO: #$raiz# - #$sufixo#\n";
 				my $raiz_lower = lowercase ($raiz);#<string>
 
-				if ($Verb->{$raiz_lower}) {
+				if ($Verb->{$raiz_lower} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . " " . $sufixo;
 				}
 			}
@@ -114,7 +114,7 @@ sub splitter {
 				my ($raiz, $sufixo) = $token =~ /\b([^\W]+iu)n([oa](s)?)\b/;#<string>
 				my $raiz_lower = lowercase ($raiz);#<string>
 
-				if ($Verb->{$raiz_lower}) {
+				if ($Verb->{$raiz_lower} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . " " . $sufixo;
 				}
 			}
@@ -123,7 +123,7 @@ sub splitter {
 				my ($raiz, $sufixo) = $token =~ /\b([^\W]+ai)n([oa](s)?)\b/;#<string>
 				my $raiz_lower = lowercase ($raiz);#<string>
 
-				if ($Verb->{$raiz_lower}) {
+				if ($Verb->{$raiz_lower} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . " " . $sufixo;
 				}
 			}
@@ -132,7 +132,7 @@ sub splitter {
 				my ($raiz, $sufixo) = $token =~ /\b([^\W]+[uü]íu)n([oa](s)?)\b/;#<string>
 				my $raiz_lower = lowercase ($raiz);#<string>
 
-				if ($Verb->{$raiz_lower}) {
+				if ($Verb->{$raiz_lower} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . " " . $sufixo;
 				}
 			}
@@ -144,7 +144,7 @@ sub splitter {
 				my $raiz_lower_semtil = tirar_acentos ($raiz_lower);#<string>
 				my $raiz_semtil = tirar_acentos ($raiz);#<string>
 				my $forma = $raiz_lower_semtil . "s";#<string>
-				if ($Verb->{$forma}) {
+				if ($Verb->{$forma} && $excep !~ /\|$token\|/i) {
 					$token = $raiz_semtil . "s " . $sufixo;
 				}
 			}
@@ -153,7 +153,7 @@ sub splitter {
 				my ($raiz, $sufixo) = $token =~ /\b([^\W]+[aei])l([oa](s)?)\b/;#<string>
 				my $raiz_lower = lowercase ($raiz);#<string>
 				my $inf = $raiz_lower . "r";#<string>
-				if ($Verb->{$inf}) {
+				if ($Verb->{$inf} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . "r " . $sufixo;
 				}
 			}
@@ -168,7 +168,7 @@ sub splitter {
 				if ($Verb->{$forma}) {
 					$token = $raiz . "s " . $sufixo;
 				}
-				elsif ($Verb->{$forma_semtil}) {
+				elsif ($Verb->{$forma_semtil} && $excep !~ /\|$token\|/i) {
 					$token = $raiz_semtil . "s " . $sufixo;
 				}
 			}
@@ -176,7 +176,7 @@ sub splitter {
 			elsif ($token =~ /\b([^\W]+)ía[oa](s)?\b/) {
 				my ($raiz, $sufixo) = $token =~ /\b([^\W]+ía)([oa](s)?)\b/;#<string>
 				my $raiz_lower = lowercase ($raiz);#<string>
-				if ($Verb->{$raiz_lower}) {
+				if ($Verb->{$raiz_lower} && $excep !~ /\|$token\|/i) {
 					$token = $raiz . " " . $sufixo;
 				}
 			}
@@ -186,7 +186,7 @@ sub splitter {
 				my $raiz_lower = lowercase ($raiz);#<string>
 				my $raiz_lower_semtil = tirar_acentos ($raiz_lower);#<string>
 				my $raiz_semtil = tirar_acentos ($raiz);#<string>
-				if ($Verb->{$raiz_lower_semtil}) {
+				if ($Verb->{$raiz_lower_semtil} && $excep !~ /\|$token\|/i ) {
 					$token = $raiz_semtil . " " . $sufixo;
 				}
 			}
@@ -220,7 +220,7 @@ sub splitter {
 					if ($sufixo =~ /^monol[ao](s)?$/) {
 						$raiz_semtil =~ s/s$/mos/;
 					}
-					#print STDERR "---#$token# - $raiz\n";
+				#	print STDERR "---#$token# - $raiz\n";
 
 					if ($sufixo =~ /^$pron3$/) {
 						##separar cliticos compostos: mo, mos, to, tos, lho, lhos..
