@@ -207,6 +207,10 @@ sub splitter {
 		$token =~ s/\bnaqueles\b/em aqueles/g;
 		$token =~ s/\bnaquelas\b/em aquelas/g;
 		$token =~ s/\bnaquilo\b/em aquilo/g;
+		$token =~ s/\bnoutro\b/em outro/g;
+		$token =~ s/\bnoutra\b/em outra/g; 
+		$token =~ s/\bnoutros\b/em outros/g;
+		$token =~ s/\bnoutras\b/em outras/g;
 
 		#pelo(a), polo(s)  TODOS AMBIGUOS menos pelos!
 		#$token =~ s/\bpelo\b/por o$1/g;
