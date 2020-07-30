@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 10;
+use Test::More tests => 11;
 use lib '.';
 
 BEGIN {
@@ -40,6 +40,9 @@ my $tokens = [
     [
         'Meu', 'fillo', 'aproboumas', 'todas', '.', ''
     ],
+    [
+        'Onte', 'estiven', 'nun', 'concerto', 'na', 'Casa', 'das', 'Crechas', '.', ''
+    ],
 ];
 my $expected_tokens = [
     [
@@ -54,6 +57,9 @@ my $expected_tokens = [
     ],
     [
         'Meu', 'fillo', 'aprobou', 'me', 'as', 'todas', '.', ''
+    ],
+    [
+        'Onte', 'estiven', 'en', 'un', 'concerto', 'en', 'a', 'Casa', 'de', 'as', 'Crechas', '.', ''
     ],
 ];
 
