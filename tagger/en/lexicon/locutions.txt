@@ -1,0 +1,19 @@
+# Locutions
+as_soon_as_possible as_soon_as_possible RB
+at_last at_last RB
+as_well as_well RB
+for_example for_example RB
+for_free for_free RB
+for_good for_good RB
+for_instance for_instance RB
+for_now for_now RB
+for_short for_short RB
+for_some_time for_some_time RB
+for_sure for_sure RB
+for_the_time_being for_the_time_being RB
+later_on later_on RB
+according_to according_to IN
+along_with along_with IN
+because_of because_of IN
+instead_of instead_of IN
+and_so_forth and_so_forth RB

@@ -75,6 +75,31 @@ if (-e $lex) {
 		} 
 	}
 	close $LEX;
+
+    my $LOC;#<file>
+    open($LOC, $abs_path."/lexicon/locutions.txt") or die "O ficheiro locutions.txt não pode ser aberto: $!\n";
+    binmode $LOC,  ':utf8';#<ignore-line>
+
+    while (my $line = <$LOC>) {#<string>
+        chomp $line;
+        if($line =~ /^\s*#/ or $line =~ /^\s*$/) { next; }
+        my @entry = split (" ", $line);#<array><string>
+        my $token = $entry[0];#<string>
+
+        (my $entry) = ($line =~ /^[^ ]+ ([\w\W]+)$/);#<string>
+        $Entry{$token} = $entry;
+        my $i=1;#<integer>
+        while ($i<=$#entry) {
+            my $lemma = $entry[$i];#<string>
+            $i++  ;
+            my $tag = $entry[$i];#<string>
+            $Lex{$token}++;
+            $StopWords{$token} = $tag if ($tag =~ /^(P|SP|R|D|I|C)/);
+            $i++;
+        }
+    }
+    close $LOC;
+
 	$Entry = \%Entry;
 	$Lex = \%Lex;
 	$StopWords = \%StopWords;
