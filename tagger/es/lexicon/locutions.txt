@@ -24,3 +24,5 @@ ya_que ya_que CS
 
 # Entities
 Ministerio_de_Ciencia_y_Tecnología ministerio_de_ciencia_y_tecnología NP00O00
+Castilla-La_Mancha castilla-la_mancha NP00G00
+Castilla_La_Mancha castilla_la_mancha NP00G00
