@@ -44,6 +44,7 @@ my $Punct_urls = qr/[\:\/\~]/;#<string>
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
 my $pron = "(me|te|se|le|les|la|lo|las|los|nos|os)";#<string>
+my $ambig_ents = "|Correos|";#<string>
 ###########################################################
 #my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
@@ -101,6 +102,7 @@ sub splitter {
 
 	my ($tokens) = @_;#<ref><list><string>
 	my @saida=();#<list><string>
+	my $index=0;#<integer>
 	
 	foreach my $token (@{$tokens}){#<string>
 		chomp $token;
@@ -295,12 +297,11 @@ sub splitter {
 			} 
 		}
 		##imperativo 2 pessoa plural: comedlo, arrodillaos (falta tratar monósilabos: vete...)
-		if (!$found && $token =~ /[aeí]os$/i) {
+		if (!$found && $token =~ /[aeí]os$/i and !is_entity($token, $index)) {
 			($verb,$tmp1) =  $token =~ /^(\w+[aeí])(os)$/i;
 			$verb =~ y/í/i/;
 			$verb =~ s/$/d/;
 			if ($Imp{lowercase($verb)}) {
-				
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
@@ -444,6 +445,15 @@ sub splitter {
 			#push (@saida, "");
 			#print "\n"; 
 		#}
+
+		if($index == 0) {
+			# when starting with punctuation, don't increment index
+			if($token !~ /^\p{P}+$/) {
+				$index++;
+			}
+		} else {
+			$index++;
+		}
 	}
 
 	return join_locutions(\@saida);
@@ -463,3 +473,13 @@ sub lowercase {
 
 	return $x;
 } 
+
+sub is_entity {
+	my $token = shift;
+	my $index = shift;
+
+	if ($index > 0 and $ambig_ents =~ /\|$token\|/) {
+		return 1;
+	}
+	return 0;
+}

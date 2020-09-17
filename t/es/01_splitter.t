@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 10;
+use Test::More tests => 16;
 use lib '.';
 
 BEGIN {
@@ -48,6 +48,10 @@ my $tokens = [
         'Úsalo', 'con', 'precaución', ',', 'ya', 'que', 'su', 'fórmula',
         'incluye', 'algunas', 'sustancias', 'químicas', '.', ''
     ],
+    [
+        '¡', 'Correos', 'a', 'un', 'lado', ',', 'tenemos', 'que', 'ir', 'a',
+        'Correos', '!', ''
+    ],
 ];
 my $expected_tokens = [
     [
@@ -70,6 +74,10 @@ my $expected_tokens = [
     [
         'Usa', 'lo', 'con', 'precaución', ',', 'ya_que', 'su', 'fórmula',
         'incluye', 'algunas', 'sustancias', 'químicas', '.', ''
+    ],
+    [
+        '¡', 'Corred', 'os', 'a', 'un', 'lado', ',', 'tenemos', 'que', 'ir',
+        'a', 'Correos', '!', ''
     ],
 ];
 
@@ -98,6 +106,15 @@ my $expected_splitted_with_locs = [
         'la', 'actuación', 'pública', 'en', 'investigación', '.', ''
     ],
 ];
+my $tokens_with_position = [
+    [ 'Correos', 0 ],
+    [ 'Correos', 7 ],
+    [ 'actuación', 3 ],
+    [ 'Bueu', 5 ],
+];
+my $expected_tokens_with_position = [
+    0, 1, 0, 0,
+];
 ###############################################################################
 
 
@@ -108,6 +125,8 @@ can_ok('Splitter', 'splitter')
     or BAIL_OUT("failed to use Splitter::splitter");
 can_ok('Splitter', 'join_locutions')
     or BAIL_OUT("failed to use Splitter::join_locutions");
+can_ok('Splitter', 'is_entity')
+    or BAIL_OUT("failed to use Splitter::is_entity");
 
 # test function splitter
 ok(scalar @{Splitter::splitter([])} == 1, "test_empty_sentence_returns_one_token");
@@ -127,5 +146,15 @@ for(my $i=0; $i < scalar @$splitted_with_locs; $i++)
         $splitted_with_locs->[$i]),
         $expected_splitted_with_locs->[$i],
         "test_splitted_tokens_with_locs"
+    );
+}
+
+# test function is_entity
+for(my $i=0; $i < scalar @$tokens_with_position; $i++)
+{
+    is(Splitter::is_entity(
+        $tokens_with_position->[$i][0], $tokens_with_position->[$i][1]),
+        $expected_tokens_with_position->[$i],
+        "test_tokens_ambiguous_with_entities"
     );
 }
