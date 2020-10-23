@@ -11,6 +11,7 @@ deps:
 # Storable -- in the kernel	
 	perl -MCPAN -e 'install (LWP::UserAgent)'
 	perl -MCPAN -e 'install (HTTP::Request::Common)'
+	apt install libperlio-gzip-perl
 
 
 test-me:
