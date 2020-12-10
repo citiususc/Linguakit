@@ -297,6 +297,7 @@ bóbilis_bóbilis bóbilis_bóbilis RG
 boca_arriba boca_arriba RG
 en_lugar_de en_lugar_de SPS00
 en_remojo en_remojo RG
+en_demasía en_demasía RG
 in_extremis in_extremis RG
 in_fraganti in_fraganti RG
 in_memóriam in_memóriam RG
@@ -311,6 +312,12 @@ ya_que ya_que CS
 # Entities
 Castilla_La_Mancha castilla_la_mancha NP00G00
 Castilla-La_Mancha castilla-la_mancha NP00G00
+Castilla_y_León castilla_y_león NP00G00
 Ministerio_de_Ciencia_y_Tecnología ministerio_de_ciencia_y_tecnología NP00O00
 Ministerio_de_Economía_y_Competitividad ministerio_de_economía_y_competitividad NP00O00
 Puente_la_Reina puente_la_reina NP00G00
+Sobrado_dos_Monxes sobrado_dos_monxes NP00G00
+Isabel_la_Católica isabel_la_católica NP00SP0
+Costa_da_Morte costa_da_morte NP00G00
+McDonald_'_s mcdonald's NP00O00
+Monte_do_Gozo monte_do_gozo NP00G00
