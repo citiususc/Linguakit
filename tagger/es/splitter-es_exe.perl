@@ -12,6 +12,7 @@ package Splitter;
 use strict; 
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
+use open ':std', ':encoding(utf8)';
 use utf8;
 #<ignore-block>
 
@@ -122,7 +123,6 @@ sub splitter {
 		
 		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i ) {
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i;
-
 			#print STDERR "---#$verb# - - #$tmp1# - #$tmp2#\n";
 			if ($Verb{lowercase($verb)}  && $token =~ /(ár|ér|ír)(nos|os|se|te|me)(lo|la|las|los)$/) {
 				# print STDERR "----> $verb\n#$tmp1#\n#$tmp2#\n";
