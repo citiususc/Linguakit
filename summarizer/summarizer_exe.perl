@@ -29,6 +29,7 @@ sub summarizer{
 	my $lang = $_[1]; ### es, gl, pt, en
 	my $percentage_to_summarize =  $_[2]; ##percentage of the abstract
 
+	$text =~ s/[\(\)\[\]]//g;
         my @sentences = getLines($text, $lang);
 	my @keys = getKeywords($text, $lang, 50);#Jugar con el numero de keywords para optimizar el cacharro
 	#my @multikeys = getMultiwords($text, $lang, 50);#Jugar con el numero de keywords para optimizar el cacharro
