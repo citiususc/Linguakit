@@ -245,7 +245,7 @@ sub splitter {
 	      
 		
 		################separar cliticos simples de verbos  em infinitivo 
-		if (!$found && $token =~ /^(\w+[aeií]r)($pron)$/i) {
+		if (!$found && $token =~ /^(\w*[aeií]r)($pron)$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+r)($pron)$/i;
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 			if ($Verb{lowercase($verb)}) {
