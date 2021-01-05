@@ -121,10 +121,10 @@ sub splitter {
 		my $found=0;#<boolean>
 		###################separar verbos em infinitivo dos cliticos compostos oslo, noslo, selo, ... 
 		
-		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i ) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i;
+		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i or $token =~ /^(\w+r)se(me|te|le|nos|os|les)$/i ) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i;
 			#print STDERR "---#$verb# - - #$tmp1# - #$tmp2#\n";
-			if ($Verb{lowercase($verb)}  && $token =~ /(ár|ér|ír)(nos|os|se|te|me)(lo|la|las|los)$/) {
+			if ($Verb{lowercase($verb)}  && $token =~ /(ár|ér|ír)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/) {
 				# print STDERR "----> $verb\n#$tmp1#\n#$tmp2#\n";
 				$verb =~ s/ár/ar/;
 				$verb =~ s/ér/er/;

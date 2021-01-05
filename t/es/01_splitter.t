@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 20;
+use Test::More tests => 21;
 use lib '.';
 
 BEGIN {
@@ -67,6 +67,10 @@ my $tokens = [
         'la', 'puerta', 'o', 'yéndose', 'a', 'otra', 'habitación', ',', 'su',
         'murmullo', 'me', 'siguió', 'alcanzando', '.', ''
     ],
+    [
+        'La', 'melancolía', 'generalizada', 'estaba', 'a', 'punto', 'de',
+        'contagiárseles', 'a', 'las', 'ovejas', '.', ''
+    ],
 ];
 my $expected_tokens = [
     [
@@ -108,6 +112,10 @@ my $expected_tokens = [
         'Pero', 'como', 'tampoco', 'quería', 'ser', 'grosera', 'cerrando',
         'me', 'la', 'puerta', 'o', 'yendo', 'se', 'a', 'otra', 'habitación',
         ',', 'su', 'murmullo', 'me', 'siguió', 'alcanzando', '.', ''
+    ],
+    [
+        'La', 'melancolía', 'generalizada', 'estaba', 'a_punto_de',
+        'contagiar', 'se', 'les', 'a', 'las', 'ovejas', '.', ''
     ],
 ];
 
