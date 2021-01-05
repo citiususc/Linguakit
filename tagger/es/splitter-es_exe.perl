@@ -368,8 +368,8 @@ sub splitter {
 		}
 		##############separar o gerundio dos pronomes
 		##pronomes compostos
-		if (!$found && $token =~ /^(\w*[iy]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w*[yi]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los)$/i; 
+		if (!$found && $token =~ /^(\w*[iy]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los)$/i or $token =~ /^(\w*[iy]éndo|\w+ándo)se(me|te|le|nos|os|les)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w*[yi]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i; 
 			#if ($token =~ /(iéndo|ándo)(nos|os|se)(lo|la|las|los)$/) {
 
 			$verb =~ s/([iy])éndo$/$1endo/;
