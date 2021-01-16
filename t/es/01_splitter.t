@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 23;
+use Test::More tests => 26;
 use lib '.';
 
 BEGIN {
@@ -80,6 +80,15 @@ my $tokens = [
         'zambulléndose', 'en', 'la', 'dulce', 'y', 'triste', 'melodía', 'del',
         'estudio', '.', ''
     ],
+    [
+        'Luego', 'envíalos', 'de', 'vuelta', 'a', 'Nueva', 'York', 'en', 'una',
+        'maldita', 'ambulancia', '.', ''
+    ],
+    [
+        'Coge', 'sus', 'pertenencias', 'personales', 'de', 'su', 'mesa', ',',
+        'mételas', 'en', 'una', 'caja', 'y', 'envíasela', 'a', 'su', 'casa',
+        'esta', 'misma', 'mañana', '.', ''
+    ],
 ];
 my $expected_tokens = [
     [
@@ -135,6 +144,15 @@ my $expected_tokens = [
         'zambullendo', 'se', 'en', 'la', 'dulce', 'y', 'triste', 'melodía',
         'de', 'el', 'estudio', '.', ''
     ],
+    [
+        'Luego', 'envía', 'los', 'de', 'vuelta', 'a', 'Nueva', 'York', 'en',
+        'una', 'maldita', 'ambulancia', '.', ''
+    ],
+    [
+        'Coge', 'sus', 'pertenencias', 'personales', 'de', 'su', 'mesa', ',',
+        'mete', 'las', 'en', 'una', 'caja', 'y', 'envía', 'se', 'la', 'a',
+        'su', 'casa', 'esta', 'misma', 'mañana', '.', ''
+    ],
 ];
 
 my $splitted_with_locs = [
@@ -167,9 +185,10 @@ my $tokens_with_position = [
     [ 'Correos', 7 ],
     [ 'actuación', 3 ],
     [ 'Bueu', 5 ],
+    [ 'oídos', 1 ],
 ];
 my $expected_tokens_with_position = [
-    0, 1, 0, 0,
+    0, 1, 0, 0, 1
 ];
 ###############################################################################
 
@@ -181,8 +200,8 @@ can_ok('Splitter', 'splitter')
     or BAIL_OUT("failed to use Splitter::splitter");
 can_ok('Splitter', 'join_locutions')
     or BAIL_OUT("failed to use Splitter::join_locutions");
-can_ok('Splitter', 'is_entity')
-    or BAIL_OUT("failed to use Splitter::is_entity");
+can_ok('Splitter', 'is_ambiguous')
+    or BAIL_OUT("failed to use Splitter::is_ambiguous");
 
 # test function splitter
 ok(scalar @{Splitter::splitter([])} == 1, "test_empty_sentence_returns_one_token");
@@ -205,12 +224,12 @@ for(my $i=0; $i < scalar @$splitted_with_locs; $i++)
     );
 }
 
-# test function is_entity
+# test function is_ambiguous
 for(my $i=0; $i < scalar @$tokens_with_position; $i++)
 {
-    is(Splitter::is_entity(
+    is(Splitter::is_ambiguous(
         $tokens_with_position->[$i][0], $tokens_with_position->[$i][1]),
         $expected_tokens_with_position->[$i],
-        "test_tokens_ambiguous_with_entities"
+        "test_tokens_ambiguous"
     );
 }

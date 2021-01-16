@@ -9,20 +9,20 @@
 package Splitter;
 
 #<ignore-block>
-use strict; 
+use strict;
 binmode STDIN, ':utf8';
 binmode STDOUT, ':utf8';
 use open ':std', ':encoding(utf8)';
 use utf8;
 #<ignore-block>
 
-# Absolute path 
+# Absolute path
 use File::Basename;#<ignore-line>
 my $abs_path = ".";#<string>
 $abs_path = dirname(__FILE__);#<ignore-line>
 
 # Pipe
-my $pipe = !defined (caller);#<ignore-line> 
+my $pipe = !defined (caller);#<ignore-line>
 
 ##ficheiros de recursos
 my $VERB;#<file>
@@ -45,7 +45,7 @@ my $Punct_urls = qr/[\:\/\~]/;#<string>
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
 my $pron = "(me|te|se|le|les|la|lo|las|los|nos|os)";#<string>
-my $ambig_ents = "|Correos|";#<string>
+my $ambig_ents = "|Correos|pétalos|oídos|";#<string>
 ###########################################################
 #my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
@@ -57,7 +57,7 @@ while(my $verb = <$VERB>){#<string>
 	$verb =~ s/ar$/ár/;
 	$verb =~ s/er$/ér/;
 	$verb =~ s/ir$/ír/;
-	$Verb{$verb}++; 
+	$Verb{$verb}++;
 	#print STDERR "TOKEN:: #$verb#\n";
 }
 close $VERB;
@@ -104,23 +104,33 @@ sub splitter {
 	my ($tokens) = @_;#<ref><list><string>
 	my @saida=();#<list><string>
 	my $index=0;#<integer>
-	
+
 	foreach my $token (@{$tokens}){#<string>
 		chomp $token;
-	
+
 		##lendo verbos
 
 		##lendo entrada (tokens)
 		#for (my $i=0;$i<=$#text;$i++) {
 			#chomp $text[$i];
-			#my $token = $text[$i];  
+			#my $token = $text[$i];
 		#print STDERR "TOKEN:: #$token\n";
 		my $verb;#<string>
 		my $tmp1;#<string>
 		my $tmp2;#<string>
 		my $found=0;#<boolean>
-		###################separar verbos em infinitivo dos cliticos compostos oslo, noslo, selo, ... 
-		
+		###################separar verbos em infinitivo dos cliticos compostos oslo, noslo, selo, ...
+
+		# exceptions
+		if(is_ambiguous($token, $index)) {
+			if($pipe){#<ignore-line>
+				print "$token\n";#<ignore-line>
+			}else{#<ignore-line>
+				push (@saida, $token);
+			}#<ignore-line>
+			next;
+		}
+
 		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i or $token =~ /^(\w+r)se(me|te|le|nos|os|les)$/i ) {
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i;
 			#print STDERR "---#$verb# - - #$tmp1# - #$tmp2#\n";
@@ -128,7 +138,7 @@ sub splitter {
 				# print STDERR "----> $verb\n#$tmp1#\n#$tmp2#\n";
 				$verb =~ s/ár/ar/;
 				$verb =~ s/ér/er/;
-				$verb =~ s/ír/ir/; 
+				$verb =~ s/ír/ir/;
 
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
@@ -143,17 +153,45 @@ sub splitter {
 		}
 		#imperativo 2 pessoa singular: cómetelo
 			#print STDERR "----> #$token# #$found#\n";
-		if (!$found && $token =~ /^(\w+)(nos|os|se|te|me)(lo|la|las|los)$/i && $token =~ /[áéíóú]/i) {
+		if (!$found && $token =~ /^(\w+?)(nos|os|se|te|me)(lo|la|las|los)$/i && $token =~ /[áéíóú]/i) {
 		    if ($token =~ /nos(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+)(nos)(lo|la|las|los)$/i;
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+?)(nos)(lo|la|las|los)$/i;
 		    }
 		    else{
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+)(os|se|te|me)(lo|la|las|los)$/i;
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+?)(os|se|te|me)(lo|la|las|los)$/i;
 		    }
-			$verb =~ y/áéíóúÁÉÍÓÚ/aeiouAEIOU/;
+
+			my $orig = $verb;
+			($verb = $orig) =~ y/áéíóúÁÉÍÓÚ/aeiouAEIOU/;
 			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
-			if ($Imp{lowercase($verb)}) {
-			 
+			if ($Imp{lowercase($verb)} or $Imp{lowercase($orig)}) {
+				if($Imp{lowercase($orig)}) {
+					$verb = $orig;
+				}
+
+				if($pipe){#<ignore-line>
+					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+				}else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+					push (@saida, $tmp2);
+				}#<ignore-line>
+				$found=1;
+			}
+		}
+		#imperativo 2 pessoa plural
+		if (!$found && ( $token =~ /^(\w+[aeí]os)(lo|la|las|los)$/i || $token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i)
+			    && $token =~ /[áéíóú]/ ) {
+		    if ( $token =~ /^(\w+[aeí]os)(lo|la|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+[aeí])(os)(lo|la|las|los)$/i;
+			$verb =~ s/$/d/;
+		    }
+		    elsif ($token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i) {
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i;
+		    }
+		    $verb =~ y/áéíóú/aeiou/;
+			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
+		    if ($Imp{lowercase($verb)}) {
 			
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
@@ -166,33 +204,7 @@ sub splitter {
 			}
 
 		}
-		#imperativo 2 pessoa plural
-		if (!$found && ( $token =~ /^(\w+[aeí]os)(lo|la|las|los)$/i || $token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i) 
-			    && $token =~ /[áéíóú]/ ) {
-		    if ( $token =~ /^(\w+[aeí]os)(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+[aeí])(os)(lo|la|las|los)$/i;
-			$verb =~ s/$/d/;
-		    }
-		    elsif ($token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i;
-		    }
-		    $verb =~ y/áéíóú/aeiou/;
-			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
-		    if ($Imp{lowercase($verb)}) {
-			 
-			
-				if($pipe){#<ignore-line>
-					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
-				}else{#<ignore-line>
-					push (@saida, $verb);
-					push (@saida, $tmp1);
-					push (@saida, $tmp2);
-				}#<ignore-line>
-				$found=1;
-			}
 
-		}	
-		
 		#imperativo: 1 pessoa plural
 		if (!$found &&  $token =~ /^(\w+mo(s)?)(nos|os|se|te|me)(lo|la|las|los)$/i  && $token =~ /[áéíóú]/ ) {
 		     if ($token =~ /nos(lo|la|las|los)$/i) {
@@ -205,8 +217,7 @@ sub splitter {
 		    $verb =~ y/áéíóú/aeiou/;
 			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
 		    if ($Imp{lowercase($verb)}) {
-			 
-			
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
 				}else{#<ignore-line>
@@ -227,8 +238,7 @@ sub splitter {
 		    $verb =~ y/áéíóú/aeiou/;
 			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
 		    if ($Imp{lowercase($verb)}) {
-			 
-			
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
 				}else{#<ignore-line>
@@ -239,12 +249,10 @@ sub splitter {
 				$found=1;
 			}
 
-		}	
-		
+		}
 
-	      
-		
-		################separar cliticos simples de verbos  em infinitivo 
+
+		################separar cliticos simples de verbos  em infinitivo
 		if (!$found && $token =~ /^(\w*[aeií]r)($pron)$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+r)($pron)$/i;
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
@@ -254,49 +262,53 @@ sub splitter {
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
 		##imperativo 2 pessoa singular: cómelo (falta tratar monósilabos: vete, dale...)
-		if (!$found && $token =~ /^(\w+)($pron)$/i && $token =~ /[áéíóú]/i && $token !~ /mosnos$/ && $token ne "séase") { ##nom separar séase (de "o seáse")
-		    
+		if (!$found && $token =~ /^(\w+?)($pron)$/i && $token =~ /[áéíóú]/i && $token !~ /mosnos$/ && $token ne "séase") { ##nom separar séase (de "o seáse")
+
 		    if ($token =~ /nos$/i) {
-			($verb,$tmp1) =  $token =~ /^(\w+)(nos)$/i;
+			($verb,$tmp1) =  $token =~ /^(\w+?)(nos)$/i;
 		    }
 		    else {
-			($verb,$tmp1) =  $token =~ /^(\w+)($pron)$/i;
+			($verb,$tmp1) =  $token =~ /^(\w+?)($pron)$/i;
 		    }
-		    $verb =~ y/áéíóúÁÉÍÓÚ/aeiouAEIOU/;
+
+		    my $orig = $verb;
+		    ($verb = $orig) =~ y/áéíóúÁÉÍÓÚ/aeiouAEIOU/;
 		    #print STDERR "----#$verb# #$tmp1#\n";
-		    if ($Imp{lowercase($verb)}) {
-				
+		    if ($Imp{lowercase($verb)} or $Imp{lowercase($orig)}) {
+			     if($Imp{lowercase($orig)}) {
+					$verb = $orig;
+				}
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
 		##imperativo 2 pessoa singular monosilabos: vete, dale, vente...)
 		if (!$found && $token =~ /^(vete|vente|dale|dame|dales|date|danos|daos|dime|dile|diles|dinos|ponme|ponte|ponle|ponles|ponnos)$/i) {
 		   ($verb,$tmp1) =  $token =~ /^(\w+)(te|le|nos|os|me|les)$/i;
 		    $verb =~ s/$/d/ if ($token eq "daos");
 		    if ($Imp{lowercase($verb)}) {
-				
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
 		##imperativo 2 pessoa plural: comedlo, arrodillaos (falta tratar monósilabos: vete...)
-		if (!$found && $token =~ /[aeí]os$/i and !is_entity($token, $index)) {
+		if (!$found && $token =~ /[aeí]os$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+[aeí])(os)$/i;
 			$verb =~ y/í/i/;
 			$verb =~ s/$/d/;
@@ -306,24 +318,24 @@ sub splitter {
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
 		if (!$found && $token =~ /^(\w+[aei]d)(me|te|se|le|les|la|lo|las|los|nos)$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+[aei]d)(me|te|se|le|les|la|lo|las|los|nos)$/i;
-		    
+
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 		    if ($Imp{lowercase($verb)}) {
-				
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
 
 		##imperativo 1 pessoa plural: comámoslo, comámonos
@@ -339,49 +351,49 @@ sub splitter {
 		    $verb =~ y/áéíóú/aeiou/;
 		    #print STDERR "----#$verb# #$tmp1#\n";
 		    if ($Imp{lowercase($verb)}) {
-				
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
-		
+
 		##imperativo 3 pessoa plural: cómanlo, véanlo
 		if (!$found && $token =~ /^(\w+n)($pron)$/i && $token =~ /[áéíóú]/) {
 		    ($verb,$tmp1) =  $token =~ /^(\w+n)($pron)$/i;
 		    $verb =~ y/áéíóú/aeiou/;
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 		    if ($Imp{lowercase($verb)}) {
-				
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
 					push (@saida, $verb);
 					push (@saida, $tmp1);
-				}#<ignore-line>    
+				}#<ignore-line>
 				$found=1;
-			} 
+			}
 		}
 		##############separar o gerundio dos pronomes
 		##pronomes compostos
 		if (!$found && $token =~ /^(\w*[iyñlh]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los)$/i or $token =~ /^(\w*[iyñlh]éndo|\w+ándo)se(me|te|le|nos|os|les)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w*[yiñlh]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i; 
+			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w*[yiñlh]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i;
 			#if ($token =~ /(iéndo|ándo)(nos|os|se)(lo|la|las|los)$/) {
 
 			$verb =~ s/([iyñlh])éndo$/$1endo/;
 			$verb =~ s/ándo$/ando/;
-			
+
 			if($pipe){#<ignore-line>
-				print "$verb\n$tmp1\n$tmp2\n";#<ignore-line> 
-			}else{#<ignore-line> 
+				print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+			}else{#<ignore-line>
 				push (@saida, $verb);
 				push (@saida, $tmp1);
 				push (@saida, $tmp2);
-			}#<ignore-line> 
+			}#<ignore-line>
 			$found=1;
 		}
 
@@ -393,42 +405,42 @@ sub splitter {
 			$verb =~ s/ándo$/ando/;
 
 			if($pipe){#<ignore-line>
-				print "$verb\n$tmp1\n";#<ignore-line> 
-			}else{#<ignore-line> 
+				print "$verb\n$tmp1\n";#<ignore-line>
+			}else{#<ignore-line>
 				push (@saida, $verb);
 				push (@saida, $tmp1);
-			}#<ignore-line> 
+			}#<ignore-line>
 			#print STDERR "2---#$verb# - #$tmp1#\n";
-			$found=1; 
+			$found=1;
 		}
 
 		###############separar contraçoes nao ambiguas###########
 
 		#del, al
 		if (!$found && $token =~ /^[dD]el$/) {
-			($tmp1,$tmp2) =  $token =~ /^([dD]e)(l)$/; 
-			
+			($tmp1,$tmp2) =  $token =~ /^([dD]e)(l)$/;
+
 			if($pipe){#<ignore-line>
 				print "$tmp1\n";#<ignore-line>
 				print "e" . "$tmp2\n"   if  $token =~ /^d/;#<ignore-line>
 				print "E" . "$tmp2\n"   if  $token =~ /^D/;#<ignore-line>
-			}else{#<ignore-line> 
+			}else{#<ignore-line>
 				push (@saida, $tmp1);
-				push (@saida, "e" . $tmp2) if  $token =~ /^d/; 
+				push (@saida, "e" . $tmp2) if  $token =~ /^d/;
 				push (@saida, "E" . $tmp2) if  $token =~ /^D/;
-			}#<ignore-line> 
+			}#<ignore-line>
 			$found=1;
 		}elsif ($token =~ /^[aA]l$/) {
-			($tmp1,$tmp2) =  $token =~ /^([aA])(l)$/; 
-			
+			($tmp1,$tmp2) =  $token =~ /^([aA])(l)$/;
+
 			if($pipe){#<ignore-line>
 				print "$tmp1\n";#<ignore-line>
 				print "e" . "$tmp2\n"   if  $token =~ /^a/;#<ignore-line>
 				print "E" . "$tmp2\n"   if  $token =~ /^A/;#<ignore-line>
 			}else{#<ignore-line>
 				push (@saida, $tmp1);
-				push (@saida, "e" . $tmp2) if  $token =~ /^a/; 
-				push (@saida, "E" . $tmp2) if  $token =~ /^A/;	
+				push (@saida, "e" . $tmp2) if  $token =~ /^a/;
+				push (@saida, "E" . $tmp2) if  $token =~ /^A/;
 			}#<ignore-line>
 			$found=1;
 		}
@@ -442,7 +454,7 @@ sub splitter {
 		}
 		#if ($i == $#text && $token eq "")  {
 			#push (@saida, "");
-			#print "\n"; 
+			#print "\n";
 		#}
 
 		if($index == 0) {
@@ -471,10 +483,10 @@ sub lowercase {
 	$x =~  tr/ÁÉÍÓÚÇÑ/áéíóúçñ/;
 
 	return $x;
-} 
+}
 
-sub is_entity {
-	my $token = shift;
+sub is_ambiguous {
+	my $token = quotemeta(shift);
 	my $index = shift;
 
 	if ($index > 0 and $ambig_ents =~ /\|$token\|/) {
