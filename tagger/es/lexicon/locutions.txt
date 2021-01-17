@@ -302,6 +302,7 @@ in_extremis in_extremis RG
 in_fraganti in_fraganti RG
 in_memóriam in_memóriam RG
 o_sea o_sea CC
+o_sea_se o_sea CC
 por_cuenta_de por_cuenta_de SPS00
 por_descontado por_descontado RG
 por_duplicado por_duplicado RG
