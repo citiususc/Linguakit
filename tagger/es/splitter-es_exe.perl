@@ -151,6 +151,34 @@ sub splitter {
 			}
 
 		}
+		#imperativo 2 pessoa plural
+		if (!$found && ( $token =~ /^(\w+?[áéí]os)(lo|la|las|los)$/i || $token =~ /^(\w+?d)(nos|se|te|me)(lo|la|las|los)$/i)
+			    && $token =~ /[áéíóú]/ ) {
+		    if ( $token =~ /^(\w+?[áéí]os)(lo|la|las|los)$/i) {
+			    ($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+?[áéí])(os)(lo|la|las|los)$/i;
+			    $verb =~ s/$/d/;
+		    }
+		    elsif ($token =~ /^(\w+?d)(nos|se|te|me)(lo|la|las|los)$/i) {
+			    ($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+?d)(nos|se|te|me)(lo|la|las|los)$/i;
+		    }
+		    my $orig = $verb;
+		    ($verb = $orig) =~ y/áéíóúÁÉÍÓÚ/aeiouAEIOU/;
+		    #print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
+		    if ($Imp{lowercase($verb)} or $Imp{lowercase($orig)}) {
+		        if($Imp{lowercase($orig)}) {
+		            $verb = $orig;
+		        }
+		        if($pipe){#<ignore-line>
+		            print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
+		        }else{#<ignore-line>
+					push (@saida, $verb);
+					push (@saida, $tmp1);
+					push (@saida, $tmp2);
+				}#<ignore-line>
+				$found=1;
+			}
+		}
+
 		#imperativo 2 pessoa singular: cómetelo
 			#print STDERR "----> #$token# #$found#\n";
 		if (!$found && $token =~ /^(\w+?)(nos|os|se|te|me)(lo|la|las|los)$/i && $token =~ /[áéíóú]/i) {
@@ -179,32 +207,6 @@ sub splitter {
 				$found=1;
 			}
 		}
-		#imperativo 2 pessoa plural
-		if (!$found && ( $token =~ /^(\w+[aeí]os)(lo|la|las|los)$/i || $token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i)
-			    && $token =~ /[áéíóú]/ ) {
-		    if ( $token =~ /^(\w+[aeí]os)(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+[aeí])(os)(lo|la|las|los)$/i;
-			$verb =~ s/$/d/;
-		    }
-		    elsif ($token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+d)(nos|se|te|me)(lo|la|las|los)$/i;
-		    }
-		    $verb =~ y/áéíóú/aeiou/;
-			#print STDERR "OK----> #$verb#\n#$tmp1#\n#$tmp2#\n";
-		    if ($Imp{lowercase($verb)}) {
-			
-				if($pipe){#<ignore-line>
-					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
-				}else{#<ignore-line>
-					push (@saida, $verb);
-					push (@saida, $tmp1);
-					push (@saida, $tmp2);
-				}#<ignore-line>
-				$found=1;
-			}
-
-		}
-
 		#imperativo: 1 pessoa plural
 		if (!$found &&  $token =~ /^(\w+mo(s)?)(nos|os|se|te|me)(lo|la|las|los)$/i  && $token =~ /[áéíóú]/ ) {
 		     if ($token =~ /nos(lo|la|las|los)$/i) {
