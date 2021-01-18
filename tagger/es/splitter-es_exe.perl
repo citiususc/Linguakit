@@ -209,8 +209,8 @@ sub splitter {
 		}
 		#imperativo: 1 pessoa plural
 		if (!$found &&  $token =~ /^(\w+mo(s)?)(nos|os|se|te|me)(lo|la|las|los)$/i  && $token =~ /[áéíóú]/ ) {
-		     if ($token =~ /nos(lo|la|las|los)$/i) {
-			($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mo)(nos)(lo|la|las|los)$/i;
+		     if ($token =~ /(nos|se)(lo|la|las|los)$/i) {
+			($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mo)(nos|se)(lo|la|las|los)$/i;
 			$verb =~ s/$/s/;
 		    }
 		    else {
