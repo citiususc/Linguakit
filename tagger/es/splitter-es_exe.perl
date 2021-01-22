@@ -36,6 +36,8 @@ open($LOC, $abs_path."/lexicon/locutions.txt") or die "O ficheiro locutions.txt 
 binmode $LOC, ':utf8';#<ignore-line>
 
 ##variaveis globais
+my $DEBUG = 0;#<bool>
+
 ##para sentences e tokens:
 my $UpperCase = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜ]";#<string>
 my $LowerCase = "[a-záéíóúàèìòùâêîôûñçü]";#<string>
@@ -133,13 +135,16 @@ sub splitter {
 		}
 
 		if ($token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los)$/i or $token =~ /^(\w+r)se(me|te|le|nos|os|les)$/i ) {
+			print STDERR "rule #0: infinitive + 2 clitics\n" if($DEBUG);
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+r)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i;
 			#print STDERR "---#$verb# - - #$tmp1# - #$tmp2#\n";
 			if ($Verb{lowercase($verb)}  && $token =~ /(ár|ér|ír)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/) {
 				# print STDERR "----> $verb\n#$tmp1#\n#$tmp2#\n";
 				$verb =~ s/ár/ar/;
 				$verb =~ s/ér/er/;
-				$verb =~ s/ír/ir/;
+				if($verb !~ /[aeo]ír$/) {
+					$verb =~ s/ír/ir/;
+				}
 
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n$tmp2\n";#<ignore-line>
@@ -155,6 +160,7 @@ sub splitter {
 		#imperativo 2 pessoa plural
 		if (!$found && ( $token =~ /^(\w+?[áéí]os)(lo|la|las|los)$/i || $token =~ /^(\w+?d)(nos|se|te|me)(lo|la|las|los)$/i)
 			    && $token =~ /[áéíóú]/ ) {
+		    print STDERR "rule #1: second plural + 2 clitics\n" if($DEBUG);
 		    if ( $token =~ /^(\w+?[áéí]os)(lo|la|las|los)$/i) {
 			    ($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+?[áéí])(os)(lo|la|las|los)$/i;
 			    $verb =~ s/$/d/;
@@ -183,6 +189,7 @@ sub splitter {
 		#imperativo 2 pessoa singular: cómetelo
 			#print STDERR "----> #$token# #$found#\n";
 		if (!$found && $token =~ /^(\w+?)(nos|os|se|te|me)(lo|la|las|los)$/i && $token =~ /[áéíóú]/i) {
+		    print STDERR "rule #2: second singular + 2 clitics\n" if($DEBUG);
 		    if ($token =~ /nos(lo|la|las|los)$/i) {
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w+?)(nos)(lo|la|las|los)$/i;
 		    }
@@ -211,6 +218,7 @@ sub splitter {
 		#imperativo: 1 pessoa plural
 		if (!$found &&  $token =~ /^(\w+mo(s)?)(nos|os|se|te|me)(lo|la|las|los)$/i  && $token =~ /[áéíóú]/ ) {
 		     if ($token =~ /(nos|se)(lo|la|las|los)$/i) {
+		    print STDERR "rule #3: first plural + 2 clitics\n" if($DEBUG);
 			($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mo)(nos|se)(lo|la|las|los)$/i;
 			$verb =~ s/$/s/;
 		    }
@@ -235,6 +243,7 @@ sub splitter {
 
 		#imperativo: 3 pessoa plural
 		if (!$found &&  $token =~ /^(\w+n)(nos|os|se|te|me)(lo|la|las|los)$/i  && $token =~ /[áéíóú]/ ) {
+		    print STDERR "rule #4: third plural + 2 clitics\n" if($DEBUG);
 		    if ($token =~ /nos(lo|la|las|los)$/i) {
 			 ($verb,$tmp1,$tmp2) =  $token =~ /^(\w+mos)(nos|os|se|te|me)(lo|la|las|los)$/i;
 		    }
@@ -257,6 +266,7 @@ sub splitter {
 
 		################separar cliticos simples de verbos  em infinitivo
 		if (!$found && $token =~ /^(\w*[aeií]r)($pron)$/i) {
+			print STDERR "rule #5: infinitive + 1 clitics\n" if($DEBUG);
 			($verb,$tmp1) =  $token =~ /^(\w+r)($pron)$/i;
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 			if ($Verb{lowercase($verb)}) {
@@ -271,6 +281,7 @@ sub splitter {
 		}
 		##imperativo 2 pessoa singular: cómelo
 		if (!$found && $token =~ /^(\w+?)($pron)$/i && $token =~ /[áéíóú]/i && $token !~ /mosnos$/) { ##nom separar séase (de "o seáse")
+		    print STDERR "rule #6: second singular + 1 clitics\n" if($DEBUG);
 
 		    if ($token =~ /nos$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+?)(nos)$/i;
@@ -299,6 +310,7 @@ sub splitter {
         if (!$found && $token =~ /^(esta|prevé|ve|\w*di|da|\w*yaz|\w*pon|\w*ven|\w*ten|\w*haz)(lo|la|los|las|le|les|me|te|nos)$/i) {
             $verb = $1;
             $tmp1 = $2;
+            print STDERR "rule #7: second singular + 1 clitics\n" if($DEBUG);
 
             if($verb =~ /\w+?(di|pon|ven|ten|sta)$/) {
                 $verb =~ s/($1)/accent_last_vowel($1)/e;
@@ -319,6 +331,7 @@ sub splitter {
 		if (!$found && $token =~ /^(\w+?[aeí]|i[rd])(os)$/i) {
             $verb = $1;
             $tmp1 = $2;
+            print STDERR "rule #8: second plural + 1 clitics\n" if($DEBUG);
 
             my $orig = $verb;
             if($verb =~ /^i[rd]$/i) {
@@ -343,6 +356,7 @@ sub splitter {
 			}
 		}
 		if (!$found && $token =~ /^(\w+[aei]d)(me|te|se|le|les|la|lo|las|los|nos)$/i) {
+			print STDERR "rule #9: second plural + 1 clitics\n" if($DEBUG);
 			($verb,$tmp1) =  $token =~ /^(\w+[aei]d)(me|te|se|le|les|la|lo|las|los|nos)$/i;
 
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
@@ -360,6 +374,7 @@ sub splitter {
 
 		##imperativo 1 pessoa plural: comámoslo, comámonos
 		if (!$found && $token =~ /^(\w+mo(s)?)($pron)$/i && $token =~ /[áéíóú]/) {
+		    print STDERR "rule #10: first plural + 1 clitics\n" if($DEBUG);
 		    if ($token =~ /nos$/i) {
 			($verb,$tmp1) =  $token =~ /^(\w+mo)(nos)$/i;
 			$verb =~ s/$/s/;
@@ -383,7 +398,8 @@ sub splitter {
 		}
 
 		##imperativo 3 pessoa plural: cómanlo, véanlo
-		if (!$found && ($token =~ /^(\w+n)($pron)$/i && $token =~ /[áéíóú]/) or $token =~ /^(den|esten)($pron)$/i) {
+		if (!$found && (($token =~ /^(\w+n)($pron)$/i && $token =~ /[áéíóú]/) or $token =~ /^(den|esten)($pron)$/i)) {
+		    print STDERR "rule #11: third plural + 1 clitics\n" if($DEBUG);
 		    ($verb,$tmp1) =  $token =~ /^(\w+n)($pron)$/i;
 		    $verb =~ y/áéíóú/aeiou/;
             if($verb =~ /(esten)$/) {
@@ -405,6 +421,7 @@ sub splitter {
 		##############separar o gerundio dos pronomes
 		##pronomes compostos
 		if (!$found && $token =~ /^(\w*[iyñlh]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los)$/i or $token =~ /^(\w*[iyñlh]éndo|\w+ándo)se(me|te|le|nos|os|les)$/i) {
+			print STDERR "rule #12: gerund + 2 clitics\n" if($DEBUG);
 			($verb,$tmp1,$tmp2 ) =  $token =~ /^(\w*[yiñlh]éndo|\w+ándo)(nos|os|se|te|me)(lo|la|las|los|me|te|le|nos|os|les)$/i;
 			#if ($token =~ /(iéndo|ándo)(nos|os|se)(lo|la|las|los)$/) {
 
@@ -423,6 +440,7 @@ sub splitter {
 
 		##pronomes simples
 		if (!$found && $token =~ /^(\w*[iyñlh]éndo|\w+ándo)($pron)$/i) {
+			print STDERR "rule #13: gerund + 1 clitics\n" if($DEBUG);
 			($verb,$tmp1) =  $token =~ /^(\w*[yiñlh]éndo|\w+ándo)($pron)$/i;
 			#print STDERR "1---#$verb# - #$tmp1#\n";
 			$verb =~ s/([iyñlh])éndo$/$1endo/;
