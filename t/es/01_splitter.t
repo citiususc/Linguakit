@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 28;
+use Test::More tests => 40;
 use lib '.';
 
 BEGIN {
@@ -96,6 +96,23 @@ my $tokens = [
         'Agradezcámoselo', 'entonces', 'a', 'los', 'presentes', 'y',
         'dejémoslo', 'así', '.', ''
     ],
+    [
+        'Llévatelos', 'lejos', 'de', 'aquí', 'y', 'ponlos', 'a', 'salvo',
+        '.', ''
+    ],
+    [
+        'Repartíoslas', 'y', 'que', 'cada', 'medio', 'publique',
+        'varias', '.', ''
+    ],
+    [
+        'Pues', 'déjala', 'tú', 'a', 'ella', ',', 'acaba', 'con', 'esta',
+        'tortura', 'de', 'una', 'vez', 'y', 'daos', 'la', 'oportunidad',
+        'de', 'ser', 'felices', '.', ''
+    ],
+    [
+        'Madres', 'del', 'mundo', 'uníos', ',', 'sonreíos', 'y', 'olvidaos',
+        'de', 'los', 'deberes', 'maternales', 'por', 'un', 'día', '.'
+    ],
 ];
 my $expected_tokens = [
     [
@@ -168,6 +185,24 @@ my $expected_tokens = [
         'Agradezcamos', 'se', 'lo', 'entonces', 'a', 'los', 'presentes', 'y',
         'dejemos', 'lo', 'así', '.', ''
     ],
+    [
+        'Lleva', 'te', 'los', 'lejos', 'de', 'aquí', 'y', 'pon', 'los', 'a',
+        'salvo', '.', ''
+    ],
+    [
+        'Repartid', 'os', 'las', 'y', 'que', 'cada', 'medio', 'publique',
+        'varias', '.', ''
+    ],
+    [
+        'Pues', 'deja', 'la', 'tú', 'a', 'ella', ',', 'acaba', 'con', 'esta',
+        'tortura', 'de', 'una', 'vez', 'y', 'dad', 'os', 'la', 'oportunidad',
+        'de', 'ser', 'felices', '.', ''
+    ],
+    [
+        'Madres', 'de', 'el', 'mundo', 'unid', 'os', ',', 'sonreíd', 'os',
+        'y', 'olvidad', 'os', 'de', 'los', 'deberes', 'maternales', 'por',
+        'un', 'día', '.', ''
+    ],
 ];
 
 my $splitted_with_locs = [
@@ -201,9 +236,17 @@ my $tokens_with_position = [
     [ 'actuación', 3 ],
     [ 'Bueu', 5 ],
     [ 'oídos', 1 ],
+    [ 'Vela', 1 ],
+    [ 'correos', 2 ]
 ];
 my $expected_tokens_with_position = [
-    0, 1, 0, 0, 1
+    0, 1, 0, 0, 1, 1, 0
+];
+my $tokens_to_be_accented = [
+    'contrapon', 'entredi', 'sé', 'ANTEPON', 'Subyaz'
+];
+my $expected_tokens_to_be_accented = [
+    'contrapón', 'entredí', 'sé', 'ANTEPÓN', 'Subyáz'
 ];
 ###############################################################################
 
@@ -217,6 +260,8 @@ can_ok('Splitter', 'join_locutions')
     or BAIL_OUT("failed to use Splitter::join_locutions");
 can_ok('Splitter', 'is_ambiguous')
     or BAIL_OUT("failed to use Splitter::is_ambiguous");
+can_ok('Splitter', 'accent_last_vowel')
+    or BAIL_OUT("failed to use Splitter::accent_last_vowel");
 
 # test function splitter
 ok(scalar @{Splitter::splitter([])} == 1, "test_empty_sentence_returns_one_token");
@@ -246,5 +291,15 @@ for(my $i=0; $i < scalar @$tokens_with_position; $i++)
         $tokens_with_position->[$i][0], $tokens_with_position->[$i][1]),
         $expected_tokens_with_position->[$i],
         "test_tokens_ambiguous"
+    );
+}
+
+# test function accent_last_vowel
+for(my $i=0; $i < scalar @$tokens_to_be_accented; $i++)
+{
+    is(Splitter::accent_last_vowel(
+        $tokens_to_be_accented->[$i]),
+        $expected_tokens_to_be_accented->[$i],
+        "test_tokens_to_be_accented"
     );
 }

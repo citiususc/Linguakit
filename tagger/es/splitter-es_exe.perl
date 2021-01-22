@@ -45,7 +45,8 @@ my $Punct_urls = qr/[\:\/\~]/;#<string>
 ##para splitter:
 ##########INFORMAÇAO DEPENDENTE DA LINGUA###################
 my $pron = "(me|te|se|le|les|la|lo|las|los|nos|os)";#<string>
-my $ambig_ents = "|Correos|pétalos|oídos|";#<string>
+my $ambig_ents = "|Correos|";#<string>
+my $ambig_forms = "|pétalos|oídos|velas|vela|velo|velos|vele|veles|";#<string>
 ###########################################################
 #my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";
 
@@ -268,7 +269,7 @@ sub splitter {
 				$found=1;
 			}
 		}
-		##imperativo 2 pessoa singular: cómelo (falta tratar monósilabos: vete, dale...)
+		##imperativo 2 pessoa singular: cómelo
 		if (!$found && $token =~ /^(\w+?)($pron)$/i && $token =~ /[áéíóú]/i && $token !~ /mosnos$/) { ##nom separar séase (de "o seáse")
 
 		    if ($token =~ /nos$/i) {
@@ -294,27 +295,44 @@ sub splitter {
 				$found=1;
 			}
 		}
-		##imperativo 2 pessoa singular monosilabos: vete, dale, vente...)
-		if (!$found && $token =~ /^(vete|vente|dale|dame|dales|date|danos|daos|dime|dile|diles|dinos|ponme|ponte|ponle|ponles|ponnos)$/i) {
-		   ($verb,$tmp1) =  $token =~ /^(\w+)(te|le|nos|os|me|les)$/i;
-		    $verb =~ s/$/d/ if ($token eq "daos");
-		    if ($Imp{lowercase($verb)}) {
+        ##imperativo 2 pessoa singular monosilabos com 1 clítico (vete, dale) e compostos (propónle, deshazlo)
+        if (!$found && $token =~ /^(esta|prevé|ve|\w*di|da|\w*yaz|\w*pon|\w*ven|\w*ten|\w*haz)(lo|la|los|las|le|les|me|te|nos)$/i) {
+            $verb = $1;
+            $tmp1 = $2;
 
-				if($pipe){#<ignore-line>
-					print "$verb\n$tmp1\n";#<ignore-line>
-				}else{#<ignore-line>
-					push (@saida, $verb);
-					push (@saida, $tmp1);
-				}#<ignore-line>
-				$found=1;
-			}
-		}
-		##imperativo 2 pessoa plural: comedlo, arrodillaos (falta tratar monósilabos: vete...)
-		if (!$found && $token =~ /[aeí]os$/i) {
-			($verb,$tmp1) =  $token =~ /^(\w+[aeí])(os)$/i;
-			$verb =~ y/í/i/;
-			$verb =~ s/$/d/;
-			if ($Imp{lowercase($verb)}) {
+            if($verb =~ /\w+?(di|pon|ven|ten|sta)$/) {
+                $verb =~ s/($1)/accent_last_vowel($1)/e;
+            }
+
+            if ($Imp{lowercase($verb)}) {
+                if($pipe) {#<ignore-line>
+                    print "$verb\n$tmp1\n";#<ignore-line>
+                } else {
+                    push (@saida, $verb);
+                    push (@saida, $tmp1);
+                }#<ignore-line>
+                $found=1;
+            }
+        }
+
+		##imperativo 2 pessoa plural: comedlo, arrodillaos
+		if (!$found && $token =~ /^(\w+?[aeí]|i[rd])(os)$/i) {
+            $verb = $1;
+            $tmp1 = $2;
+
+            my $orig = $verb;
+            if($verb =~ /^i[rd]$/i) {
+                $verb = "id";
+            } else {
+                ($verb = $orig) =~ y/íÍ/iI/;
+			    $verb .= "d";
+			    $orig .= "d";
+            }
+			if ($Imp{lowercase($verb)} or $Imp{lowercase($orig)}) {
+                if($Imp{lowercase($orig)}) {
+                    $verb = $orig;
+                }
+
 				if($pipe){#<ignore-line>
 					print "$verb\n$tmp1\n";#<ignore-line>
 				}else{#<ignore-line>
@@ -365,9 +383,13 @@ sub splitter {
 		}
 
 		##imperativo 3 pessoa plural: cómanlo, véanlo
-		if (!$found && $token =~ /^(\w+n)($pron)$/i && $token =~ /[áéíóú]/) {
+		if (!$found && ($token =~ /^(\w+n)($pron)$/i && $token =~ /[áéíóú]/) or $token =~ /^(den|esten)($pron)$/i) {
 		    ($verb,$tmp1) =  $token =~ /^(\w+n)($pron)$/i;
 		    $verb =~ y/áéíóú/aeiou/;
+            if($verb =~ /(esten)$/) {
+                $verb =~ s/($1)/accent_last_vowel($1)/e;
+            }
+
 			#print STDERR "----#$verb# #$tmp1#\n" if ($Verb{$verb});
 		    if ($Imp{lowercase($verb)}) {
 
@@ -494,5 +516,27 @@ sub is_ambiguous {
 	if ($index > 0 and $ambig_ents =~ /\|$token\|/) {
 		return 1;
 	}
+	if ($ambig_forms =~ /\|$token\|/i) {
+		return 1;
+	}
 	return 0;
+}
+
+sub accent_last_vowel {
+    my $token = shift;
+    my $len = length($token);
+
+    return $token if ($token =~ /[áéíóú]/i);
+    while($len > 0)
+    {
+        my $letter = substr($token, ($len - 1), 1);
+        if($letter =~ /[aeiou]/i)
+        {
+            $letter =~ y/aeiouAEIOU/áéíóúÁÉÍÓÚ/;
+            substr($token, ($len - 1), 1, $letter);
+            return $token;
+        }
+        $len--;
+    }
+    return $token;
 }
