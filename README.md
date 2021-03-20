@@ -227,7 +227,7 @@ Return an abstract or summary of the input text (50%):
 Return the european portuguese inflection of the input verb:
 ```
 ./linguakit conj pt "fazer" -s -pe
-echo "fazer" | ./linguakit pt conj -pe
+echo "fazer" | ./linguakit conj pt -pe
 ```
 
 ###  Input file
