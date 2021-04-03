@@ -37,7 +37,6 @@ avda. avenida
 Barna. Barcelona
 Bco. banco
 Bibl. biblioteca
-Bo. barrio
 B.º barrio
 Brig. brigada
 c. calle
