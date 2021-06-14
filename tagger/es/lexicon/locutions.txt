@@ -155,6 +155,7 @@ a_la_inversa a_la_inversa RG
 a_la_manera_de a_la_manera_de SPS00
 a_la_mano_de_Dios a_la_mano_de_Dios RG
 a_la_mitad_de a_la_mitad_de SPS00
+a_la_plancha a_la_plancha RG a_la_plancha AQ0CN0
 a_la_parrilla a_la_parrilla RG
 a_la_pata_coja a_la_pata_coja RG
 a_la_perfección a_la_perfección RG

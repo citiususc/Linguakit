@@ -45,7 +45,7 @@ my $procl = "mas|mos|ma|mo|chos|chas|cho|cha|llo|lla|llos|llas|llelo|llela|llelo
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
-my $excep = "|podemos|este|crechas|vellas|vella|alfama|área|rías|ría|torrente|apóstolo|";#<string>
+my $excep = "|podemos|este|vilas|crechas|vellas|vella|alfama|área|rías|ría|río|ríos|día|días|torrente|apóstolo|";#<string>
 
 my @Loc;#<list><string>
 while(<$LOC>){#<string>

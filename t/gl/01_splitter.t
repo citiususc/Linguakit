@@ -16,7 +16,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 11;
+use Test::More tests => 13;
 use lib '.';
 
 BEGIN {
@@ -43,6 +43,10 @@ my $tokens = [
     [
         'Onte', 'estiven', 'nun', 'concerto', 'na', 'Casa', 'das', 'Crechas', '.', ''
     ],
+    [
+        'A', 'chaqueta', 'estaba', 'do', 'trinque', 'cando', 'lla',
+        'emprestei', 'e', 'estivo', 'a', 'piques', 'de', 'estragala', '.', ''
+    ],
 ];
 my $expected_tokens = [
     [
@@ -60,6 +64,10 @@ my $expected_tokens = [
     ],
     [
         'Onte', 'estiven', 'en', 'un', 'concerto', 'en', 'a', 'Casa', 'de', 'as', 'Crechas', '.', ''
+    ],
+    [
+        'A', 'chaqueta', 'estaba', 'de_o_trinque', 'cando', 'lle', 'a',
+        'emprestei', 'e', 'estivo', 'a_piques_de', 'estragar', 'a', '.', ''
     ],
 ];
 
@@ -79,7 +87,11 @@ my $splitted_with_locs = [
         'roupa', 'que', 'lle', 'confiscaron', 'a', 'Frodo', 'en', 'a', 'torre',
         'de', 'Cirith', 'Ungol', '.', ''
 
-    ]
+    ],
+    [
+        'De', 'súpeto', 'marchou', ',', 'e', 'mentres', 'tanto', 'todo',
+        'semellaba', 'ir', 'a', 'pique', '.', ''
+    ],
 ];
 my $expected_splitted_with_locs = [
     [
@@ -96,6 +108,10 @@ my $expected_splitted_with_locs = [
         'amosou', 'lles', 'a_modo_de', 'proba', 'as', 'pezas', 'de', 'roupa',
         'que', 'lle', 'confiscaron', 'a', 'Frodo', 'en', 'a', 'torre', 'de',
         'Cirith', 'Ungol', '.', ''
+    ],
+    [
+        'De_súpeto', 'marchou', ',', 'e', 'mentres_tanto', 'todo',
+        'semellaba', 'ir', 'a_pique', '.', ''
     ],
 ];
 ###############################################################################
