@@ -43,7 +43,7 @@ sub compile_en
 {
     my $lex = "$path/tagger/en/store_lex.perl";
     my $lex_stored = "$path/tagger/en/lexicon/lex_stored";
-    unlink $lex_stored or die "Could not delete $lex_stored: $!";
+    if(-e $lex_stored) { unlink $lex_stored or die "Could not delete $lex_stored: $!"; }
 
     print ("\tEnglish   \t");
     do $lex;
@@ -54,7 +54,7 @@ sub compile_pt
 {
     my $lex = "$path/tagger/pt/store_lex.perl";
     my $lex_stored = "$path/tagger/pt/lexicon/lex_stored";
-    unlink $lex_stored or die "Could not delete $lex_stored: $!";
+    if(-e $lex_stored) { unlink $lex_stored or die "Could not delete $lex_stored: $!"; }
 
     print ("\tPortuguese\t");
     do $lex;
@@ -65,7 +65,7 @@ sub compile_es
 {
     my $lex = "$path/tagger/es/store_lex.perl";
     my $lex_stored = "$path/tagger/es/lexicon/lex_stored";
-    unlink $lex_stored or die "Could not delete $lex_stored: $!";
+    if(-e $lex_stored) { unlink $lex_stored or die "Could not delete $lex_stored: $!"; }
 
     print ("\tSpanish   \t");
     do $lex;
@@ -77,8 +77,8 @@ sub compile_gl
     my $lex = "$path/tagger/gl/store_lex.perl";
     my $lex_stored = "$path/tagger/gl/lexicon/lex_stored";
     my $split_stored = "$path/tagger/gl/lexicon/split_stored";
-    unlink $lex_stored or die "Could not delete $lex_stored: $!";
-    unlink $split_stored or die "Could not delete $split_stored: $!";
+    if(-e $lex_stored) { unlink $lex_stored or die "Could not delete $lex_stored: $!"; }
+    if(-e $split_stored) { unlink $split_stored or die "Could not delete $split_stored: $!"; }
 
     print ("\tGalician  \t");
     do $lex;
@@ -94,8 +94,8 @@ sub compile_histgz
     my $lex = "$path/tagger/histgz/store_lex.perl";
     my $lex_stored = "$path/tagger/histgz/lexicon/lex_stored";
     my $split_stored = "$path/tagger/histgz/lexicon/split_stored";
-    unlink $lex_stored or die "Could not delete $lex_stored: $!";
-    unlink $split_stored or die "Could not delete $split_stored: $!";
+    if(-e $lex_stored) { unlink $lex_stored or die "Could not delete $lex_stored: $!"; }
+    if(-e $split_stored) { unlink $split_stored or die "Could not delete $split_stored: $!"; }
 
     print ("\tHistoric galician-portuguese  \t");
     do $lex;
