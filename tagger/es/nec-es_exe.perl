@@ -281,7 +281,7 @@ sub nec{
 								push (@saida, "$Token[$i] $Lema[$i] $new_tag");
 							}#<ignore-line>     
 						}  
-						elsif (Ambiguous ($Lema[$i]) && defined $GazPer{$Lema[$i]} && $Lema[$i-1] =~ /^(en|em|in)$/) {
+						elsif (Ambiguous ($Lema[$i]) && defined $GazLoc{$Lema[$i]} && $Lema[$i-1] =~ /^(en|em|in)$/) {
 							#print STDERR "LOC - OKK\n";
 							$new_tag =  "NP00G00";
 							if($pipe){#<ignore-line>

@@ -374,7 +374,7 @@ sub nec{
 						}  
 
 						### Se o NP é ambíguo PER, mas vai precedido de preposição em, então é LOC
-						elsif (Ambiguous ($Lema[$i]) && defined $GazPer{$Lema[$i]} && $Lema[$i-1] =~ /^(en|em|n.|en.|en.s|enn..|enn.s|n.s|d.|d.s)$/) {
+						elsif (Ambiguous ($Lema[$i]) && defined $GazLoc{$Lema[$i]} && $Lema[$i-1] =~ /^(en|em|n.|en.|en.s|enn..|enn.s|n.s|d.|d.s)$/) {
 							#print STDERR "LOC - OKK\n";
 							$new_tag =  "NP00G00";
 							if($pipe){#<ignore-line>
