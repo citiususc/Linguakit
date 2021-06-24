@@ -443,7 +443,7 @@ sub classif {
 		#print STDERR "----#$cat# $PostProb{$cat} \n";
 	}
 	my $First=0;#<integer>
-	foreach my $c (sort {$PostProb{$b} <=> 	$PostProb{$a} }	keys %PostProb ) {
+	foreach my $c (sort {$PostProb{$b} <=> 	$PostProb{$a} }	sort keys %PostProb ) {
 		if (!$First) {
 			my $score = $PostProb{$c};#<double>
 			#print STDERR "$c\t$score\n";
