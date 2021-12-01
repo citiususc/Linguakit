@@ -18,7 +18,8 @@ sub avalingua{
 	my $input = $_[0];
 	my $lang = $_[1]; ### es, gl, pt, en
 	my $format = $_[2]; ## -json, -xml;
-	my $url = "https://tec.citius.usc.es/linguakit";
+	my $url = "https://demos.citius.usc.es/avalingua_api";
+	#my $url = "https://tec.citius.usc.es/linguakit";
 	#my $url = "fegalaz.usc.es/nlpapi";
 	my $ua = LWP::UserAgent->new;
 	$ua->timeout(2000);
