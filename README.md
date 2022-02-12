@@ -2,7 +2,7 @@
 
 Developed by ProLNat@GE Group (http://gramatica.usc.es/pln/), CiTIUS, University of Santiago de Compostela, Galiza.
 
-LinguaKit is a Natural Language Processing tool containing several NLP modules (constantly updated and improved):
+LinguaKit is a Natural Language Processing tool provided with several NLP modules (constantly updated and improved):
 
  * Dependency parser (DepPattern)
  * PoS tagger
