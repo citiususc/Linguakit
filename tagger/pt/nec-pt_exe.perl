@@ -60,7 +60,7 @@ my $Border = "(Fp|<blank>)";#<string>
 ####INFO DEPENDENTE DA LINGUA#############
 my $stopwords = "_em_|_en_|_de_|_da_|_das_|_dos_|_da_|_do_|_del_|_o_|_a_|_e_|_por_|_para_|_and_|_the_|_in_|_on_|^el_|^la_|^las_|^los_"; #<string>#CUIDADO COM ESTA VARIAVEL!!!!!!!!!!! hai que especializa-la por lingua
 my $prep = "de|por|para"; #<string>
-my $titulo = "señor|señora|señorita|señorito|don|doña|dona";#<string>
+my $titulo = "senhor|senhora|don|dona";#<string>
 ##########################################
 
 
