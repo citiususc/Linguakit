@@ -70,9 +70,16 @@ sub tokens {
 		$sentence =~ s/([0-9]+)\,([0-9]+)/${1}$comma_quant$2 /g ;
 		$sentence =~ s/([0-9]+)\'([0-9]+)/${1}$quote_quant$2 /g ;
 
-		#print STDERR "#$sentence#\n";
+        #print STDERR "#$sentence#\n";
 		$sentence =~ s/($Punct)/ $1 /g ;
-		#print STDERR "2#$sentence#\n";
+
+		# McDonald's, Macy's
+		$sentence =~ s/(?!:\P{L}) ' (?=s\b)/'/g;
+
+		# Alpe d'Huez, Galo d'Ouro
+		$sentence =~ s/(?!:\b[dD]) ' (?=\p{Lu})/'/g;
+
+        #print STDERR "2#$sentence#\n";
 		$sentence =~ s/($Punct_urls)(?:[\s\n]|$)/ $1 /g  ; 
 
 		##hypen - no fim de palavra ou no principio:

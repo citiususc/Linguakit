@@ -76,7 +76,15 @@ sub tokens {
 
 		#print STDERR "#$sentence#\n";
 		$sentence =~ s/($Punct)/ $1 /g ;
+
 		#print STDERR "2#$sentence#\n";
+
+		# McDonald's, Macy's
+		$sentence =~ s/(?!:\P{L}) ' (?=s\b)/'/g;
+
+		# Alpe d'Huez, Galo d'Ouro
+		$sentence =~ s/(?!:\b[dD]) ' (?=\p{Lu})/'/g;
+
 		$sentence =~ s/($Punct_urls)(?:[\s\n]|$)/ $1 /g  ; 
 
 		##hypen - no fim de palavra ou no principio:
