@@ -296,6 +296,7 @@ bajo_ningún_concepto bajo_ningún_concepto RG
 bien_entendido_que bien_entendido_que CS
 bóbilis_bóbilis bóbilis_bóbilis RG
 boca_arriba boca_arriba RG
+de_higos_a_brevas de_higos_a_brevas RG
 en_lugar_de en_lugar_de SPS00
 en_remojo en_remojo RG
 en_demasía en_demasía RG
@@ -321,5 +322,6 @@ Puente_la_Reina puente_la_reina NP00G00
 Sobrado_dos_Monxes sobrado_dos_monxes NP00G00
 Isabel_la_Católica isabel_la_católica NP00SP0
 Costa_da_Morte costa_da_morte NP00G00
-McDonald_'_s mcdonald's NP00O00
 Monte_do_Gozo monte_do_gozo NP00G00
+Alpe_d'Huez alpe_d'huez NP00G00
+Galo_d'Ouro galo_d'ouro NP00G00

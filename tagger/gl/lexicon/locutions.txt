@@ -102,3 +102,8 @@ de_cando_en_cando de_cando_en_cando RG
 de_vez_en_cando de_cando_en_cando RG
 tan_pronto_como tan_pronto_como CS
 de_pronto de_pronto RG
+
+# Entities
+Puente_la_Reina puente_la_reina NP00G00
+Alpe_d'Huez alpe_d'huez NP00G00
+Galo_d'Ouro galo_d'ouro NP00G00

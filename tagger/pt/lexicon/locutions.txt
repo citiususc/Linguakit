@@ -10,3 +10,8 @@ de_graça de_graça RG
 em_breve em_breve RG
 para_além_de para_além_de SPS00
 a_o_vivo a_o_vivo RG
+
+# Entities
+Puente_la_Reina puente_la_reina NP00G00
+Alpe_d'Huez alpe_d'huez NP00G00
+Galo_d'Ouro galo_d'ouro NP00G00
