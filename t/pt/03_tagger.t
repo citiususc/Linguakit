@@ -11,7 +11,7 @@ use warnings;
 use strict;
 use utf8;
 use open ':std', ':encoding(utf8)';
-use Test::More tests => 11;
+use Test::More tests => 12;
 use lib '.';
 
 
@@ -37,6 +37,17 @@ my $sentences = [
         'carta carta NCFS000 cartar VMIP3S0 cartar VMM02S0', 'de de SPS00',
         'Amaro amaro NP00000', 'Vieira vieira NP00000', '. . Fp', ''
     ],
+    [
+        'Não não RN', 'se se CS se PP3CN000',
+        'tinha tinha NCFS000 ter VMII1S0 ter VMII2S0 ter VMII3S0',
+        'clareza clareza NCFS000', 'de de SPS00',
+        'o o DA0MS0 o NCMS000 o PD0MS000 o PP3MSA00',
+        'que que CS que PE0CN000 que PI0CN000 que PR0CN000 que PT0CN000 que RG',
+        'era era NCFS000 ser VMII1S0 ser VMII2S0 ser VMII3S0',
+        'a o DA0FS0 a NCMS000 o PD0FS000 o PP3FSA00 a SPS00',
+        'doença doença NCFS000',
+        '. . Fp', ''
+    ],
 ];
 my $expected_sentences = [
     [
@@ -47,6 +58,12 @@ my $expected_sentences = [
         'o o DA0MS0', 'coadjutor coadjutor NCMS000', 'sobre sobre SPS00',
         'a o DA0FS0', 'carta carta NCFS000', 'de de SPS00',
         'Amaro amaro NP00000', 'Vieira vieira NP00000', '. . Fp', ''
+    ],
+    [
+        'Não não RN', 'se se PP3CN000', 'tinha ter VMII3S0',
+        'clareza clareza NCFS000', 'de de SPS00', 'o o PD0MS000',
+        'que que PR0CN000', 'era ser VMII3S0', 'a o DA0FS0',
+        'doença doença NCFS000', '. . Fp', ''
     ],
 ];
 
