@@ -419,11 +419,11 @@ sub classif {
 		$found{$cat}=0;
 		foreach my $feat_restr (@{$F}) {
 			($feat) = $feat_restr =~ /^[a-z]+\_[0-9]+\_[0-9]\_([RL]\_[^ ]+)/;
-			#print STDERR "FEAT: #$cat# - #$feat#\n"; 
-			if (!$featFreq{$feat}) { 
+		#	print STDERR "FEAT: #$cat# - #$feat#\n"; 
+		#	if (!$featFreq{$feat}) { 
 			  #print STDERR "NOFREQ----#$cat# - #$feat#\n" ;
-			   next;
-			}    
+		#	   next;
+		#	}    
 			$PriorProb{$cat}{$feat}  = $smooth if ($PriorProb{$cat}{$feat}  ==0 ) ; 
 			if (rules_neg ($cat, $feat)) {
 			  $PriorProb{$cat}{$feat}  = 0;  
@@ -433,9 +433,10 @@ sub classif {
 			  $PriorProb{$cat}{$feat}  = 1000;  
 			  #print STDERR "RULES POS:: ----#$cat# - #$feat# PriorProb=#$PriorProb{$cat}{$feat}# \n";
 			}
+			  
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-		#	print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+			#print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -443,7 +444,7 @@ sub classif {
 		#print STDERR "----#$cat# $PostProb{$cat} \n";
 	}
 	my $First=0;#<integer>
-	foreach my $c (sort {$PostProb{$b} <=> 	$PostProb{$a} }	sort keys %PostProb ) {
+	foreach my $c (sort  {$PostProb{$b} <=> 	$PostProb{$a} }	sort keys %PostProb ) {
 		if (!$First) {
 			my $score = $PostProb{$c};#<double>
 			#print STDERR "$c\t$score\n";
@@ -469,7 +470,7 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 		$result = 1;
 	}
         #impedir forma os/as /aquele/aquelas prome seguido de Nome
-	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as|aquele|aqueles|aquela|aquelas)" ) {
+	elsif ($cat =~ /^(PD|PP)/ && $feat =~ /R_NC_(os|as|aquele|aqueles|aquela|aquelas)$/ ) {
 		$result = 1;
 	}
 	## todo o: impedir que 'o' seja pronome diante de todo
@@ -491,8 +492,17 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	if ($cat =~ /^RN/   && $feat =~ /R_V/  ) {
 	 $result = 1;
 	}
-	elsif ($cat =~ /^DA/   && $feat =~ /R_NC_a/  ) {
+	elsif ($cat =~ /^DA/   && $feat eq "R_NC_a"  ) {
 	 $result = 1;
+	}
+
+	elsif ($cat =~ /^VMI/   && $feat =~ /R_(CC|CS|NP|NC|RB|AQ|SP|F|RN)_era(s)?$/  ) {
+	    $result = 1;
+	  #  print STDERR "---> #$cat# - #$feat#\n";
+	}
+	elsif ($cat =~ /^PP/   && $feat =~ /R_(CC|CS|PP|F|RG|RN)_ela(s)?$/  ) {
+	    $result = 1;
+	  #  print STDERR "---> #$cat# - #$feat#\n";
 	}
 
 	return $result;

@@ -411,10 +411,10 @@ sub classif {
 		foreach my $feat_restr (@{$F}) {
 			($feat) = $feat_restr =~ /^[a-z]+\_[0-9]+\_[0-9]\_([RL]\_[^ ]+)/;
 			#print STDERR "FEAT: #$cat# - #$feat#\n"; 
-			if (!$featFreq{$feat}) { 
+			#if (!$featFreq{$feat}) { 
 			  #print STDERR "NOFREQ----#$cat# - #$feat#\n" ;
-			   next;
-			}    
+			  #  next;
+			#}    
 			$PriorProb{$cat}{$feat}  = $smooth if ($PriorProb{$cat}{$feat}  ==0 ) ; 
 			if (rules_neg ($cat, $feat)) {
 			  $PriorProb{$cat}{$feat}  = 0;  
@@ -434,7 +434,7 @@ sub classif {
 		#print STDERR "----#$cat# $PostProb{$cat} \n";
 	}
 	my $First=0;#<integer>
-	foreach my $c (sort {$PostProb{$b} <=> 	$PostProb{$a} }	sort keys %PostProb ) {
+	foreach my $c (sort {$PostProb{$b} <=> 	$PostProb{$a} }	keys %PostProb ) {
 		if (!$First) {
 			my $score = $PostProb{$c};#<double>
 			#print STDERR "$c\t$score\n";
@@ -501,7 +501,12 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	if ($cat =~ /^NC/   && $feat =~ /L_PP_ría/  ) {
 		$result = 1;
 	}
-	
+	## era/eras como verbo
+        elsif ($cat =~ /^VSI/   && $feat =~ /R_(CC|CS|NP|NC|RB|AQ|SP|F|RN)_era(s)?$/  ) {
+	    $result = 1;
+	  #  print STDERR "---> #$cat# - #$feat#\n";
+	}
+
 	return $result;
 }
 
