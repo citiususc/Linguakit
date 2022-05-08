@@ -469,7 +469,7 @@ sub rules_neg {    #regras lexico-sintacticas negativas
 	}
 
         #impedir forma os/as prome seguido de Nome
-	elsif ($cat =~ /^(PD|PP)/ && $feat =~ "R_NC_(os|as)" ) {
+	elsif ($cat =~ /^(PD|PP)/ && $feat =~ /R_NC_(os|as)$/ ) {
 		$result = 1;
 	}
 	#impedir pronome 'se' nao  hai verbo a esquerda nem a direita
@@ -493,12 +493,12 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	}
 
 	##se hai um artigo persoal (seu/sua) diante de nome comum
-	if ($cat =~ /^DP/   && $feat =~ /R_NC/  ) {
+	elsif ($cat =~ /^DP/   && $feat =~ /R_NC/  ) {
 		$result = 1;
 	}
 
 	##se aparece a (PP) ría NC, dizemos que é nome (mesmo se 'a' foi mal etiquetado como PP)
-	if ($cat =~ /^NC/   && $feat =~ /L_PP_ría/  ) {
+	elsif ($cat =~ /^NC/   && $feat =~ /L_PP_ría/  ) {
 		$result = 1;
 	}
 	## era/eras como verbo
@@ -506,7 +506,10 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	    $result = 1;
 	  #  print STDERR "---> #$cat# - #$feat#\n";
 	}
-
+	##a Vigo : a como SP em contexto a NP
+        elsif ($cat =~ /^SP/   && $feat =~ /R_NP_a$/  ) {
+		$result = 1;
+	}
 	return $result;
 }
 
