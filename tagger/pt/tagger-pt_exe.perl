@@ -504,7 +504,11 @@ sub rules_pos {    #regras lexico-sintacticas positivas
 	    $result = 1;
 	  #  print STDERR "---> #$cat# - #$feat#\n";
 	}
-
+        ## alto como adj
+        elsif ($cat =~ /^AQ/   && $feat =~ /(L_VMI_alt[oa](s?)|L_VSI[oa](s?))$/  ) {
+	    $result = 1;
+	  #  print STDERR "---> #$cat# - #$feat#\n";
+	}
 	return $result;
 }
 

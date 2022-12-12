@@ -426,7 +426,7 @@ sub classif {
 			}
 			$found{$cat}=1; 
 			$PostProb{$cat} = $PostProb{$cat} * $PriorProb{$cat}{$feat};
-		#	print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
+#			print STDERR "----#$cat# - #$feat# PriorProb#$PriorProb{$cat}{$feat}# PostProb#$PostProb{$cat}#  -- featFreq:#$featFreq{$feat}# N=#$N#  \n";
 		}
 		$PostProb{$cat} =  $PostProb{$cat} * $ProbCat{$cat} ;
 		$PostProb{$cat} = 0 if (!$found{$cat});    
@@ -510,6 +510,12 @@ sub rules_pos {    #regras lexico-sintacticas positivas
         elsif ($cat =~ /^SP/   && $feat =~ /R_NP_a$/  ) {
 		$result = 1;
 	}
+	## alto como adj
+        elsif ($cat =~ /^AQ/   && $feat =~ /(L_VMI_alt[oa](s?)|L_VSI[oa](s?))$/  ) {
+	    $result = 1;
+	  #  print STDERR "---> #$cat# - #$feat#\n";
+	}
+	
 	return $result;
 }
 
