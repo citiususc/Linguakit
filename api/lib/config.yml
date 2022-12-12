@@ -1,0 +1,13 @@
+appname: "linguakit_api"
+linguakit_path: ".."
+charset: "UTF-8"
+
+port:
+  pt: 3000
+  gl: 3001
+  es: 3002
+  en: 3003
+  histgz: 3004
+
+log: "debug"
+logger: "Console"
