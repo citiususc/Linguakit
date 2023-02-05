@@ -25,7 +25,7 @@ LinguaKit is a Natural Language Processing tool provided with several NLP module
 
 ## Demo
 
-A web interface to LinguaKit is available at [LinguaKit.com](https://linguakit.com/)
+A web interface to LinguaKit is available at [LinguaKit.com](https://linguakit.com/) (it is not working proprely)
 
 ## Description
 The command `linguakit` is able to process 4 languages: Portuguese, English, Spanish and Galician. Since February 2018, a new language has been added: historical galician-portuguese (`histgz`), by Xavier Canosa, which is still a prototype that will be improved. The following tools are available. Scroll down for additional documentation and usage examples.
