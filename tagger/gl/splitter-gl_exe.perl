@@ -45,7 +45,7 @@ my $procl = "mas|mos|ma|mo|chos|chas|cho|cha|llo|lla|llos|llas|llelo|llela|llelo
 ###########################################################
 my $w = "[A-ZÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÑÇÜa-záéíóúàèìòùâêîôûñçü]";#<string>
 
-my $excep = "|podemos|este|vilas|crechas|vellas|vella|alfama|área|rías|ría|río|ríos|día|días|torrente|apóstolo|";#<string>
+my $excep = "|podemos|este|crechas|vellas|vella|alfama|área|rías|ría|torrente|apóstolo|";#<string>
 
 my @Loc;#<list><string>
 while(<$LOC>){#<string>
@@ -358,13 +358,13 @@ sub splitter {
 		$token =~ s/^dos$/de os/g;
 		$token =~ s/^da$/de a/g;
 		$token =~ s/^das$/de as/g;
-
+               
 		#dun(ns), duna(s)
-		$token =~ s/\bdun/de un  /g;
-		$token =~ s/\bduns$/de uns/g;
-		$token =~ s/\bduna$/de una/g;
-		$token =~ s/\bdunas$/de unas/g;
-
+		$token =~ s/\bdun\b/de un  /g;
+		$token =~ s/\bduns\b/de uns/g;
+		$token =~ s/\bdunha\b/de unha/g;
+		$token =~ s/\bdunhas\b/de unhas/g;
+ 
 		#dele(s), dela(s)
 		$token =~ s/\bdele\b/de ele/g;
 		$token =~ s/\bdeles\b/de eles/g;
@@ -404,8 +404,9 @@ sub splitter {
 		$token =~ s/\bnos$/en os/g;
 		$token =~ s/\bna$/en a/g;
 		$token =~ s/\bnas$/en as/g;
-
-		#dun(ns), duna(s)
+		
+		
+		#nun(ns), nuna(s)
 		$token =~ s/\bnun$/en un/g;
 		$token =~ s/\bnuns$/en uns/g;
 		$token =~ s/\bnunha$/en unha/g;
@@ -415,7 +416,7 @@ sub splitter {
 		$token =~ s/\bcun$/con un/g;
 		$token =~ s/\bcuns$/con uns/g;
 		$token =~ s/\bcunha$/con unha/g;
-		$token =~ s/\bcunas$/con unhas/g;
+		$token =~ s/\bcunhas$/con unhas/g;
 
 		#nele(s)
 		# $token =~ s/\bnele\b/en ele/g;

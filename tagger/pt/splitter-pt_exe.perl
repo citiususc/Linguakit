@@ -136,10 +136,10 @@ sub splitter {
 		$token =~ s/^das$/de as/g;
 
 		#dum(ns), duma(s)
-		$token =~ s/\bdum/de um  /g;
-		$token =~ s/\bduns$/de uns/g;
-		$token =~ s/\bduma$/de uma/g;
-		$token =~ s/\bdumas$/de umas/g;
+		$token =~ s/\bdum\b/de um  /g;
+		$token =~ s/\bduns\b/de uns/g;
+		$token =~ s/\bduma\b/de uma/g;
+		$token =~ s/\bdumas\b/de umas/g;
 
 		#dele(s), dela(s)
 		$token =~ s/\bdele\b/de ele/g;
