@@ -643,7 +643,7 @@ axitar	NEGATIVE
 axordar	NEGATIVE
 axuda	POSITIVE
 axudar	POSITIVE
-axuizado	POSITIVEs
+axuizado	POSITIVE
 axustar	POSITIVE
 azaroso	NEGATIVE
 azoutar	NEGATIVE
@@ -1084,7 +1084,7 @@ comprensivo	POSITIVE
 compresibel	POSITIVE
 compresíbel	POSITIVE
 comprimir	NEGATIVE
-con_xeito	POSITIVO
+con_xeito	POSITIVE
 conacha	NEGATIVE
 cona	NEGATIVE
 coña	POSITIVE
@@ -2591,7 +2591,7 @@ garantia	POSITIVE
 garantía	POSITIVE
 garantir	POSITIVE
 garantizar	POSITIVE
-garbo	POSITIVEç
+garbo	POSITIVE
 garboso	POSITIVE
 gardar	POSITIVE
 gardián	POSITIVE
@@ -3727,7 +3727,7 @@ minguado	NEGATIVE
 mingua	NEGATIVE
 minguar	NEGATIVE
 minimo	NEGATIVE
-mínimo	NEGATIVEç
+mínimo	NEGATIVE
 misantropía	NEGATIVE
 misántropo	NEGATIVE
 miserabelmente	NEGATIVE
