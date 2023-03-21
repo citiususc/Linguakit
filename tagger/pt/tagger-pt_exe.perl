@@ -325,10 +325,10 @@ sub tagger {
 						$Tag[$pos] = $Tag{$pos}{$tag} ;
 					}
 					###RESULTADO:
-					if (!$Token[$pos]) {
-					    print "\n";
-					    next
-					}
+					#if (!$Token[$pos]) {
+					 #   print "\n";
+					  #  next
+				#	}
 					if($pipe){#<ignore-line>
 					    print "$Token[$pos] ".$Lema{$pos}{$Tag[$pos]}." $Tag[$pos]\n";#<ignore-line>
 					}else{#<ignore-line>
