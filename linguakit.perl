@@ -491,7 +491,9 @@ if($MOD eq "dep"){
 	do $SENT;
 	do $KWIC;
 	while(my $line = <$input>){
-		my $list = Kwic::kwic(Sentences::sentences([$line]),$args->tokens);
+		#	my $list = Kwic::kwic(Sentences::sentences([$line]),$args->tokens);
+		my (@line) = split ("\n", $line);
+	        my $list = Kwic::kwic(\@line,$args->tokens);
 		for my $result (@{$list}){
 			print "$result\n";
 		}
